@@ -1,0 +1,73 @@
+Front-end:
+
+Design Choices:
+The purpose of our program was to create basic web front-end interface through which a user can
+call commands to load, view, and search CSV files. During this specific Sprint, we achieved this
+by mocking the functionality of the back-end portion of this web interface. This mocked data was
+set up in our module, mockedJson.ts, which served as a database containing various sets of mocked
+data representing hypothetical user interactions and program responses. Ultimately, our program
+functions through a series of components: App, ControlledInput, REPL, REPLHistory, and REPLInput.
+App is the top-level component responsible for displaying the logic in REPL. REPL uses React to
+handle the front-end logic of a user's input. The logistics of this input are delegated to
+ControlledInput, which handles the input box itself, and REPLInput, which handles a user's
+interaction with the input box. REPLInput contains the majority of the logic behind handling a
+user's specific input; REPLInput breaks down a user's command and is responsible for adding the
+appropriate response to the web's history, which is exported to REPL, and eventually App.
+REPLInput, REPLHistory, and ControlledInput all contain interfaces, which ensures that these
+compoents implement their necessary props.
+
+One of the most significant data structures we used was an HTML table, which we implemented to
+fulfill front-end user stakeholder needs, and to make our program more intuitive and easy to
+interact with. In our program, the data being returned to the user from the commands load_file,
+view, search_file and mode is returned in the format of a table to make it significantly more
+reasabled for a end-user interating with the web. Without the HTML table, the data would be
+displayed as a continous string. Additionally, to satisfy the stakeholder request that the web
+displays a history of commands/output, we used React's 'useState' hook to create a list of
+React Elements that can be continually updated when a user send a new command. This takes in a
+generic ReactElement so that any react element, inluding the HTML data table can be added to the
+program history, and displayed on the web. We designed our program to convert all data to a table
+format, so that the history could be handled in one history, as opposed to different histories for
+the load, search, and view functions - the purpose of this is to make the program cleaner and make
+the code more generic/extensible. Furthermore, we added a 'clear; button that resets the history
+and clears the screen. Lastly, another significant design choice we made was in REPLInput, where
+we store the isBrief boolean (true if mode is brief, false if mode is verbose), user command
+string, and loaded file string by using the 'useState' hook. These values may only contain one
+value at a time, and 'useState' allows them to be update on live time as the program is running.
+
+Errors/Bugs:
+None that we are aware of
+
+Tests:
+To create our testing suite, we used the Playwright test library, which allowed us to create and
+run tests that mimic a user interaction with the program. By running checks on the expected
+output of these hypothetical user interactions, we can ensure that our program is properly
+functioning. In order to create a comprehensive testing suite, we re-created expected
+successful/unsuccesful cases, and also edge cases for commands to load_file, view, search_file,
+and mode. This includes situations such as incorrct inputs, missing inputs, incorrect calls, data
+that doesn't exist, and more. The expect(...).tobeVisible tests check to ensure that the
+appropprite table or display message appear on the screen in response to the command.
+
+How to: Run testing suites
+
+1. Hit the green play button next to individual playwright tests
+2. Open the unitTests directory and press 'command + s'
+
+How to: Build and run program
+
+1. In the terminal, enter the following command: 'npm start'. Click the link that appears in the terminal.
+
+2. First, you must load a file. In the box that says "Enter command here!" at the bottom of the screen,enter the following command: 'load_file [file path]'. Click the button "Get Command Results" - an appropriate response message should appear at the top of your screen!
+
+\*\* Note: If you wish to load a new file, repeat step (2), this will update the currently loaded file.
+(Remember that files must be loaded in order to view or search them!)
+
+3. To view a file, enter the following command in the same input box as above. Enter the following command: 'view'. Click the button "Get Command Results" - a table with the file should appear on the screen!
+
+\*\* Note: you do not need to view a file before loading a file!
+
+4. To search a file, use the input box and enter the following command: 'search_file [col/index,value]'. Click the button "Get Command Results" - a message or table with the rows containing the value should appear! \*\* Note: you may enter either a column name or index, but NOT both. Please separate the column indicator and search value with a commma, but do not add any spaces! Multi-word queries must be seperated by underscores (i.e. Sweet_Potato)
+
+\*\* Note: the 'mode' command may be called at any time while the browser is open. The default
+setting is 'brief mode' 5) The program defaults to 'brief mode', where the history prints the output of user commands. To include the user command in the history as well, a user may switch to 'verbose mode'.This mode will display both the user input and program output in the history on the web front-end. A user may switch back and forth between breif and verbose mode by entering the command 'mode' to the input box and clicking "Get Command Results". A success message should appear on the screen.
+
+6. \*\* Note: a history may be cleared at any time! To clear a command/output history, a user may click the "Clear Screen" button at the top of the browser. This will clear the screen. It will not clear the loaded file.
