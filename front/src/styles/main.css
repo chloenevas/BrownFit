@@ -1,0 +1,37 @@
+/*
+  This is a reasonable starting point for the CSS in Mock.
+  Positioning in CSS can sometimes be annoying to manage, so we've opted to 
+  give you this starter CSS. Feel free to modify it as you wish, though.
+*/
+
+.repl {
+  position: relative;
+  min-height: 95vh;
+}
+
+.repl-history {
+  height: 55vh;
+  margin: auto;
+  display: block;
+  overflow: scroll;
+}
+
+.repl-input {
+  position: relative;
+  margin: auto;
+  height: 10vh;
+}
+.repl-command-box {
+  position: relative;
+  top: "10px";
+  z-index: 2;
+  width: 40%;
+  margin: auto;
+  display: block;
+}
+button {
+  position: relative;
+  z-index: 2;
+  margin: auto;
+  display: block;
+}
