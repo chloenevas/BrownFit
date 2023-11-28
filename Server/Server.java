@@ -1,8 +1,18 @@
 package Server;
 
 
+import APIRequest.Exercise;
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.Moshi;
+import com.squareup.moshi.Types;
 import handlers.NelsonHandler;
+import okio.Buffer;
 import spark.Spark;
+
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.net.*;
+import java.util.List;
 
 /**
  * A class that models our server. It constructs a unique port, sets up the server's endpoints and
@@ -24,9 +34,9 @@ public class Server {
     }
 
     /** Our main method that constructs and runs a new server */
-    public static void main(String[] args) {
-        // At time of creation, we decide on a specific datasource class:
+    public static void main(String[] args) throws IOException {
         new Server();
         System.out.println("Server started at http://localhost:" + port + "; exiting main...");
+
     }
 }
