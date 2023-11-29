@@ -1,39 +1,99 @@
 import "../styles/App.css";
-import { useEffect } from "react";
+import "../styles/Workout.css";
+import { ReactElement, useEffect, useState } from "react";
+import HomePage from "./home/home";
+import basicWorkoutPage from "./generator/basicWorkoutPage";
+import machinePage from "./machines/machinePage";
+import progressPage from "./progress/progressPage";
 
 /**
- * This is the highest level component. It contains the REPL component, which will then be
- * the next top-level class responsible for all of the Mock logic.
+ * This returns a basic template/outline for each of out pages (the title and buttons on the side)
  */
-export default function HomePage() {
-// tracking key pressing for zooming
-useEffect(() => {
-  const detectKeyDown = (e: { key: string }) => {
-    //if someone is pressing down shift, we are zooming in
-    if (e.key === "CapsLock") {
-      console.log("CapsLock is pressed. Calling zoom-in function...");
-      document.body.style.fontSize = `${
-        parseInt(getComputedStyle(document.body).fontSize) + 2
-      }px`;
-      // if someone is pressing down control, we are zooming out
-    } else if (e.key === "Control") {
-      console.log("Ctrl key pressed. Calling zoom-out function...");
-      document.body.style.fontSize = `${
-        parseInt(getComputedStyle(document.body).fontSize) - 2
-      }px`;
-    }
-  };
+export default function App() {
+  //this is a state variable/setter used to change the content of the page depending on which button is clicked
+  const [pageContent, setPageContent] = useState<ReactElement>();
 
-  document.addEventListener("keydown", detectKeyDown, true);
+  //these are state variables/setters for each button that change which color the button is
+  const [homeButtonColor, setHomeButtonColor] = useState<string>("Red");
+  const [workoutButtonColor, setWorkoutButtonColor] =
+    useState<string>("#453131");
+  const [machineButtonColor, setMachineButtonColor] =
+    useState<string>("#453131");
+  const [progressButtonColor, setProgressButtonColor] =
+    useState<string>("#453131");
 
-  // Cleanup the event listener
-  return () => {
-    document.removeEventListener("keydown", detectKeyDown, true);
-  };
-}, []);
+  // tracking key pressing for zooming
+  useEffect(() => {
+    setPageContent(HomePage());
+    const detectKeyDown = (e: { key: string }) => {
+      //if someone is pressing down shift, we are zooming in
+      if (e.key === "CapsLock") {
+        console.log("CapsLock is pressed. Calling zoom-in function...");
+        document.body.style.fontSize = `${
+          parseInt(getComputedStyle(document.body).fontSize) + 2
+        }px`;
+        // if someone is pressing down control, we are zooming out
+      } else if (e.key === "Control") {
+        console.log("Ctrl key pressed. Calling zoom-out function...");
+        document.body.style.fontSize = `${
+          parseInt(getComputedStyle(document.body).fontSize) - 2
+        }px`;
+      }
+    };
 
-  console.log("hello");
-  //registers commands
+    document.addEventListener("keydown", detectKeyDown, true);
+
+    // Cleanup the event listener
+    return () => {
+      document.removeEventListener("keydown", detectKeyDown, true);
+    };
+  }, []);
+
+  //function invoked when homebutton is clicked
+  function handleHomeButtonClick() {
+    //sets the page's content to the home page content
+    setPageContent(HomePage());
+    //sets the home button to red and everythign else to Brown
+    setHomeButtonColor("Red");
+    setWorkoutButtonColor("#453131");
+    setMachineButtonColor("#453131");
+    setProgressButtonColor("#453131");
+    return undefined;
+  }
+
+  function handleWorkoutButtonClick() {
+    setPageContent(basicWorkoutPage());
+
+    //sets the workout button to red and everythign else to Brown
+    setWorkoutButtonColor("Red");
+    setHomeButtonColor("#453131");
+    setMachineButtonColor("#453131");
+    setProgressButtonColor("#453131");
+    return undefined;
+  }
+
+  function handleMachineButtonClick() {
+    setPageContent(machinePage());
+
+    //sets the machine button to red and everythign else to Brown
+    setMachineButtonColor("Red");
+    setHomeButtonColor("#453131");
+    setWorkoutButtonColor("#453131");
+    setProgressButtonColor("#453131");
+    return undefined;
+  }
+
+  function handleProgressButtonClick() {
+    setPageContent(progressPage());
+
+    //sets the progress button to red and everythign else to Brown
+    setProgressButtonColor("Red");
+    setHomeButtonColor("#453131");
+    setWorkoutButtonColor("#453131");
+    setMachineButtonColor("#453131");
+    return undefined;
+  }
+
   return (
     <div className="App">
       <p className="App-header">
@@ -42,52 +102,37 @@ useEffect(() => {
       <button
         className="Navigation-Button"
         aria-label="home button"
-        onClick={HomePage}
+        style={{ backgroundColor: homeButtonColor }}
+        onClick={() => handleHomeButtonClick()}
       >
         Home:
       </button>
       <button
         className="Navigation-Button"
-        aria-label=" button"
-        //onClick={}
+        aria-label="workout button"
+        style={{ backgroundColor: workoutButtonColor }}
+        onClick={() => handleWorkoutButtonClick()}
       >
         Generate Workout:
       </button>
       <button
         className="Navigation-Button"
-        aria-label="home button"
-        //onClick={}
+        aria-label="machine button"
+        style={{ backgroundColor: machineButtonColor }}
+        onClick={() => handleMachineButtonClick()}
       >
         Nelson Machines:
       </button>
       <button
         className="Navigation-Button"
-        aria-label="home button"
-        //onClick={}
+        aria-label="progress button"
+        style={{ backgroundColor: progressButtonColor }}
+        onClick={() => handleProgressButtonClick()}
       >
         Check Progress:
       </button>
-      <p className="aboutSection">
-        <h1>What is BrownFit?</h1>
-      </p>
-      <p className="aboutText">
-        <h1>
-          Brownfit is a webApp dedicated to helping members of the Brown
-          community get started on their workout journeys! Using the machines
-          specifically available at the Nelson Fitness Center, you can generate
-          a personalized workout. You can also create an account in order to
-          track your gym-going progress!
-        </h1>
-      </p>
-      <p className="healthyWorkoutSection">
-        <h1>General Healthy Workout tips:</h1>
-      </p>
-      <p className="aboutText">
-        <h1>1. Listen to your body.Don't overlift!</h1>
-        <h1>2. Stay hydrated.</h1>
-        <h1>3. Build in rest time.</h1>
-        <h1>4. idk</h1>
-      </p>
+      {/* this is where the content of the page changes*/}
+      <div>{pageContent}</div>
     </div>
   );
 }
