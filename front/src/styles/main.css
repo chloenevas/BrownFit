@@ -1,0 +1,101 @@
+.repl {
+  position: relative;
+  min-height: 95vh;
+}
+
+:focus {
+  outline: 2px solid blue;
+}
+
+.flex-container {
+  display: flex;
+}
+
+.repl-history {
+  height: 55vh;
+  margin: auto;
+  display: flex;
+  overflow-y: auto; /* Enable vertical scrolling */
+  flex-direction: column; /* Reverse the order of the items */
+  align-items: center;
+  width: 80%;
+}
+
+.repl-input {
+  margin: auto;
+  height: 10vh;
+}
+
+.repl-command-box {
+  width: 90%;
+  margin: auto;
+  display: block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.clear-button {
+  margin-top: 55px;
+  margin-right: 10px;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.instruction-button {
+  margin-top: 55px;
+  margin-left: 10px;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.get-command-button {
+  margin-top: 10px;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.get-command-button:hover {
+  border-color: green;
+}
+
+button {
+  margin: auto;
+  margin-top: 10px;
+  display: block;
+  display: flex;
+}
+
+table,
+th,
+td {
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid black;
+}
+
+button:hover {
+  border-color: red;
+  border-radius: 20px;
+  border-width: 5px;
+}
+
+button:active {
+  border-color: green;
+}
