@@ -38,7 +38,7 @@ import spark.Spark;
  * <p>Because these tests exercise more than one "unit" of code, they're not "unit tests"...
  *
  * <p>If the backend were "the system", we might call these system tests. But I prefer "integration
- * test" since, locally, we're testing how the Soup functionality connects to the handler. These
+ * test" since, locally, we're testing how the Soup functionality connects to the handlers. These
  * distinctions are sometimes fuzzy and always debatable; the important thing is that these ARE NOT
  * the usual sort of unit tests.
  *
@@ -733,7 +733,7 @@ class TestingServer {
   }
 
   /**
-   * Mock the view handler
+   * Mock the view handlers
    * @throws IOException
    */
   @Test
