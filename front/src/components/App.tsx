@@ -21,6 +21,8 @@ export default function App() {
     useState<string>("#453131");
   const [progressButtonColor, setProgressButtonColor] =
     useState<string>("#453131");
+  const [loginButtonColor, setLoginButtonColor] =
+    useState<string>("#fff0e0");
 
   // tracking key pressing for zooming
   useEffect(() => {
@@ -94,10 +96,27 @@ export default function App() {
     return undefined;
   }
 
+  function handleLoginButtonClick() {
+    // setPageContent(progressPage());
+    // call authentication here
+
+    //sets the login button to red 
+    setLoginButtonColor("Red");
+    return undefined;
+  }
+
   return (
     <div className="App">
       <p className="App-header">
-        <h1>BrownFit</h1>
+        <button
+          className="App-header-login"
+          aria-label="login button"
+          style={{ backgroundColor: loginButtonColor }}
+          onClick={() => handleLoginButtonClick()}
+        >
+          Login
+        </button>
+        <h1 className="App-header-title">BrownFit</h1>
       </p>
       <button
         className="Navigation-Button"
