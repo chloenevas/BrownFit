@@ -6,7 +6,7 @@ import MachinePage from "./machines/machinePage";
 import ProgressPage from "./progress/progressPage";
 import WorkoutPage from "./generator/basicWorkoutPage";
 import React, { Component } from "react";
-import LOGINMODAL from "./authentication/loginModal";
+import AUTHMODAL from "./authentication/authModal";
 
 class App extends Component<any, any> {
   constructor(props: any) {
@@ -50,7 +50,7 @@ class App extends Component<any, any> {
   render() {
     return (
       <div className="App">
-        <LOGINMODAL /> {/* Contains App header (BrownFit title) */}
+        <AUTHMODAL /> {/* Contains App header (BrownFit title) */}
         <button
           className="Navigation-Button"
           aria-label="home button"
