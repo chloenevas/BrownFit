@@ -48,7 +48,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * If the backend were "the system", we might call these system tests. But
  * I prefer "integration test" since, locally, we're testing how the Soup
- * functionality connects to the handler. These distinctions are sometimes
+ * functionality connects to the handlers. These distinctions are sometimes
  * fuzzy and always debatable; the important thing is that these ARE NOT
  * the usual sort of unit tests.
  *

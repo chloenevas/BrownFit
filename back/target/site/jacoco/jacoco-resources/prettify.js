@@ -745,7 +745,7 @@ window['_pr_isIE6'] = function () {
   }
 
   /**
-   * Apply the given language handler to sourceCode and add the resulting
+   * Apply the given language handlers to sourceCode and add the resulting
    * decorations to out.
    * @param {number} basePos the index of sourceCode within the chunk of source
    *    whose decorations are already present on out.
@@ -776,7 +776,7 @@ window['_pr_isIE6'] = function () {
     * language of the portion of the token in $1 after pattern executes.
     * E.g., if style is 'lang-lisp', and group 1 contains the text
     * '(hello (world))', then that portion of the token will be passed to the
-    * registered lisp handler for formatting.
+    * registered lisp handlers for formatting.
     * The text before and after group 1 will be restyled using this decorator
     * so decorators should take care that this doesn't result in infinite
     * recursion.  For example, the HTML lexer rule for SCRIPT elements looks
@@ -784,7 +784,7 @@ window['_pr_isIE6'] = function () {
     * '<script>foo()<\/script>', which would cause the current decorator to
     * be called with '<script>' which would not match the same rule since
     * group 1 must not be empty, so it would be instead styled as PR_TAG by
-    * the generic tag rule.  The handler registered for the 'js' extension would
+    * the generic tag rule.  The handlers registered for the 'js' extension would
     * then be called with 'foo()', and finally, the current decorator would
     * be called with '<\/script>' which would not match the original rule and
     * so the generic tag rule would identify it as a tag.
@@ -1207,7 +1207,7 @@ window['_pr_isIE6'] = function () {
 
   /** Maps language-specific file extensions to handlers. */
   var langHandlerRegistry = {};
-  /** Register a language handler for the given file extensions.
+  /** Register a language handlers for the given file extensions.
     * @param {function (Object)} handler a function from source code to a list
     *      of decorations.  Takes a single argument job which describes the
     *      state of the computation.   The single parameter has the form
@@ -1216,7 +1216,7 @@ window['_pr_isIE6'] = function () {
     *        decorations: {Array.<number|string>} an array of style classes
     *                     preceded by the position at which they start in
     *                     job.source in order.
-    *                     The language handler should assigned this field.
+    *                     The language handlers should assigned this field.
     *        basePos: {int} the position of source in the larger source chunk.
     *                 All positions in the output decorations array are relative
     *                 to the larger source chunk.
@@ -1229,7 +1229,7 @@ window['_pr_isIE6'] = function () {
       if (!langHandlerRegistry.hasOwnProperty(ext)) {
         langHandlerRegistry[ext] = handler;
       } else if ('console' in window) {
-        console['warn']('cannot override language handler %s', ext);
+        console['warn']('cannot override language handlers %s', ext);
       }
     }
   }
@@ -1354,7 +1354,7 @@ window['_pr_isIE6'] = function () {
         */
       job.extractedTags = sourceAndExtractedTags.tags;
 
-      // Apply the appropriate language handler
+      // Apply the appropriate language handlers
       langHandlerForExtension(opt_langExtension, source)(job);
       // Integrate the decorations and tags back into the source code to produce
       // a decorated html string which is left in job.prettyPrintedHtml.
@@ -1408,7 +1408,7 @@ window['_pr_isIE6'] = function () {
           // If the classes includes a language extensions, use it.
           // Language extensions can be specified like
           //     <pre class="prettyprint lang-cpp">
-          // the language extension "cpp" is used to find a language handler as
+          // the language extension "cpp" is used to find a language handlers as
           // passed to PR_registerLangHandler.
           var langExtension = cs.className.match(/\blang-(\w+)\b/);
           if (langExtension) { langExtension = langExtension[1]; }

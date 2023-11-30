@@ -13,6 +13,23 @@ class App extends Component<any, any> {
 
     this.state = {
       currentPage: "home",
+      // // tracking key pressing for zooming
+      // useEffect(() => {
+      //   setPageContent(HomePage());
+      //   const detectKeyDown = (e: { key: string }) => {
+      //     //if someone is pressing down shift, we are zooming in
+      //     if (e.key === "CapsLock") {
+      //       console.log("CapsLock is pressed. Calling zoom-in function...");
+      //       document.body.style.fontSize = `${
+      //         parseInt(getComputedStyle(document.body).fontSize) + 2
+      //       }px`;
+      //       // if someone is pressing down control, we are zooming out
+      //     } else if (e.key === "Control") {
+      //       console.log("Ctrl key pressed. Calling zoom-out function...");
+      //       document.body.style.fontSize = `${
+      //         parseInt(getComputedStyle(document.body).fontSize) - 2
+      //       }px`;
+      //     }
     };
 
     // Binding the methods to the class instance
@@ -21,6 +38,12 @@ class App extends Component<any, any> {
 
   changePage(page: string) {
     this.setState({ currentPage: page });
+  }
+
+  handleLoginButtonClick() {
+    // setPageContent(progressPage());
+    // call authentication here
+    return undefined;
   }
 
   render() {
@@ -56,6 +79,14 @@ class App extends Component<any, any> {
           onClick={() => this.changePage("progress")}
         >
           Check Progress:
+        </button>
+        <button
+          className="App-header-login"
+          aria-label="login button"
+          style={{ backgroundColor: "Blue" }}
+          onClick={() => this.handleLoginButtonClick()}
+        >
+          Login
         </button>
         {this.state.currentPage === "home" && <HomePage />}
         {this.state.currentPage === "workout" && <WorkoutPage />}

@@ -13,6 +13,22 @@
   color: rgb(255, 254, 254);
 }
 
+.App-header-title {
+  margin-top: 0px;
+  align-items: center;
+}
+
+.App-header-login {
+  margin-left: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: left;
+  padding: 15px 30px;
+  font-size: larger;
+  background-color: #453131;
+  color: rgb(68, 21, 21);
+}
+
 .Navigation-Button {
   margin-top: 50px;
   margin-left: 10px;

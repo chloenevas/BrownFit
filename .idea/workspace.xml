@@ -4,7 +4,49 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="899cf0c2-5061-4d85-a39b-4f0232cfdbb1" name="Changes" comment="" />
+    <list default="true" id="899cf0c2-5061-4d85-a39b-4f0232cfdbb1" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/database/ApiRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/handler/NelsonHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/records/Exercise.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/server/Server.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/data/GeoJSON/geodata.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/data/Mocks/mocktest1.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/data/Mocks/mocktest2.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/data/census/RI-city-income.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/data/census/RI_income.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/data/census/dol_ri_earnings_disparity.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/data/census/fullDownload.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/data/census/income_by_race_edited.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/data/census/postsecondary_education.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/data/csvtest/duplicate.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/data/csvtest/noHeaderTest.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/data/csvtest/test.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/data/stars/stardata.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/data/stars/ten-star.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/data/testData/abc.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/data/testData/col.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/data/testData/empty.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/data/testData/mocktest1.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/data/testData/numbers.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/Main.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/creator/Creator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/creator/CreatorFromRow.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/creator/RawCreator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/exceptions/DatasourceException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/handler/AreaSearch.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/handler/BoundBox.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/handler/LoadCensusHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/handler/LoadData.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/handler/LoadFromURL.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/handler/LoadHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/handler/ReloadHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/handler/SearchHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/handler/ViewHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/parser/FactoryFailureException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/parser/ParserCSV.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/parser/SearchCSV.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/server/Storage.java" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -20,12 +62,16 @@
   &quot;associatedIndex&quot;: 5
 }</component>
   <component name="ProjectId" id="2YpYzcDKTvtKldnfchPG11HaQkZ" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
     "Downloaded.Files.Path.Enabled": "false",
     "Repository.Attach.Annotations": "false",
     "Repository.Attach.JavaDocs": "false",
@@ -34,18 +80,27 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "front-end-skeleton",
+    "jdk.selected.JAVA_MODULE": "openjdk-19",
     "last_opened_file_path": "/Users/efratavigdor/Desktop/CS32/Final/term-project-jwschwar-amahns-cnevas-ibrauns",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Project",
+    "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/records" />
+      <recent name="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/database" />
+      <recent name="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/handler" />
+      <recent name="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/server" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration default="true" type="JetRunConfigurationType">
       <module name="term-project-jwschwar-amahns-cnevas-ibrauns" />
@@ -71,10 +126,14 @@
       <updated>1701224251393</updated>
       <workItem from="1701224252503" duration="419000" />
       <workItem from="1701224737056" duration="85000" />
+      <workItem from="1701224843777" duration="1275000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
   </component>
 </project>
