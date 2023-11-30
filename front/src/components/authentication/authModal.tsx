@@ -6,7 +6,7 @@ import {
   signOut
 } from "firebase/auth";
 import "../../styles/login.css";
-import { ControlledInput } from "../controlledInput";
+import { ControlledInput } from "../ControlledInput";
 
 
 export default function AUTHMODAL() {
@@ -155,12 +155,14 @@ createUserWithEmailAndPassword(auth, emailValue, passwordValue)
             <fieldset className="input">
               <legend>Email:</legend>
               <ControlledInput
+                type="text"
                 value={emailValue}
                 setValue={setEmailValue}
                 ariaLabel={"email input box"}
               />
               <legend>Password:</legend>
               <ControlledInput
+                type="password"
                 value={passwordValue}
                 setValue={setPasswordValue}
                 ariaLabel={"password input box"}
