@@ -1,37 +1,130 @@
-export default function basicWorkoutPage() {
-  return <div></div>;
-  //   const [selectedOption, setSelectedOption] = useState("");
+import React, { SetStateAction, useState, Component } from "react";
+import "/Users/default/Desktop/cs32/term-project-jwschwar-amahns-cnevas-ibrauns/front/src/styles/Workout.css";
 
-  //   const handleSelectChange = (event: {
-  //     target: { value: SetStateAction<string> };
-  //   }) => {
-  //     // Update the selected option when the user makes a selection
-  //     setSelectedOption(event.target.value);
-  //   };
-  //   return (
-  //     <div>
-  //       <p className="dayWorkoutHeader">Generate a workout for today!</p>
-  //       <p style={{ marginTop: "7%" }} className="informationHeader">
-  //         Workout length:
-  //       </p>
-  //       <label htmlFor="dropdown">Select an option:</label>
-  //       <select
-  //         id="dropdown"
-  //         value={selectedOption}
-  //         onChange={handleSelectChange}
-  //       >
-  //         <option value="">Select...</option>
-  //         <option value="option1">Option 1</option>
-  //         <option value="option2">Option 2</option>
-  //         <option value="option3">Option 3</option>
-  //       </select>
-  //       <p>Selected option: {selectedOption}</p>
-  //       <p style={{ marginTop: "7%" }} className="informationHeader">
-  //         Muscle groups:
-  //       </p>
-  //       <p style={{ marginTop: "7%" }} className="informationHeader">
-  //         Goal:
-  //       </p>
-  //     </div>
-  //   );
+export default function WorkoutPage() {
+  const [durationValue, setDurationValue] =
+    React.useState("30 minutes or less");
+  const [muscleValue, setMuscleValue] = React.useState("full body");
+  const [muscleValue2, setMuscleValue2] = React.useState("N/A");
+  const [goalValue, setGoalValue] = React.useState("strength");
+
+  const handleChange = (event: {
+    target: { value: React.SetStateAction<string> };
+  }) => {
+    setDurationValue(event.target.value);
+  };
+
+  const handleMuscleGroupChange = (event: {
+    target: { value: React.SetStateAction<string> };
+  }) => {
+    setMuscleValue(event.target.value);
+  };
+
+  const handleMuscleGroup2Change = (event: {
+    target: { value: React.SetStateAction<string> };
+  }) => {
+    setMuscleValue2(event.target.value);
+  };
+
+  const handleGoalChange = (event: {
+    target: { value: React.SetStateAction<string> };
+  }) => {
+    setGoalValue(event.target.value);
+  };
+
+  function clickHandler() {
+    console.log(durationValue);
+    console.log(muscleValue);
+    console.log(muscleValue2);
+    console.log(goalValue);
+  }
+
+  return (
+    <div>
+      <p className="dayWorkoutHeader">
+        <h1>Get a workout for today!</h1>
+      </p>
+      <p className="informationHeader">
+        <h1>
+          Enter the following information to generate a presonalized Nelson
+          Fitness Center workout!
+        </h1>
+      </p>
+      <p className="dropdownLabel">
+        <label>
+          How long would you like to workout for?
+          <select value={durationValue} onChange={handleChange}>
+            <option value="30 minutes or less">30 minutes or less</option>
+
+            <option value="30-60 minutes">30-60 minutes</option>
+
+            <option value="60-90 minutes">60-90 minutes</option>
+
+            <option value="90-120 minutes">90-120 minutes</option>
+
+            <option value="120 minutes or more">120 minutes or more</option>
+          </select>
+        </label>
+      </p>
+      <p className="dropdownLabel">
+        <label className="dropdownLabel">
+          What muscle groups would you like to work on?
+          <select value={muscleValue} onChange={handleMuscleGroupChange}>
+            <option value="full body">full body</option>
+            <option value="calves">calves</option>
+            <option value="quads">quads</option>
+            <option value="hamstrings">hamstrings</option>
+            <option value="triceps">triceps</option>
+            <option value="biceps">biceps</option>
+            <option value="chest">chest</option>
+            <option value="shoulders">shoulders</option>
+            <option value="upper back">upper back</option>
+            <option value="lower back">lower back</option>
+            <option value="delts">delts</option>
+            <option value="glutes">glutes</option>
+            <option value="abdominals">abdominals</option>
+          </select>
+          <select value={muscleValue2} onChange={handleMuscleGroup2Change}>
+            <option value="full body">N/A</option>
+            <option value="full body">full body</option>
+            <option value="calves">calves</option>
+            <option value="quads">quads</option>
+            <option value="hamstrings">hamstrings</option>
+            <option value="triceps">triceps</option>
+            <option value="biceps">biceps</option>
+            <option value="chest">chest</option>
+            <option value="shoulders">shoulders</option>
+            <option value="upper back">upper back</option>
+            <option value="lower back">lower back</option>
+            <option value="delts">delts</option>
+            <option value="glutes">glutes</option>
+            <option value="abdominals">abdominals</option>
+          </select>
+        </label>
+      </p>
+      <p className="dropdownLabel">
+        <label>
+          What is your workout goal?
+          <select value={goalValue} onChange={handleGoalChange}>
+            <option value="strengthen muscles">strengthen muscles</option>
+
+            <option value="increase muscle endurance">
+              increase muscle endurance
+            </option>
+
+            <option value="build muscles">build muscles</option>
+
+            <option value="burn calories">burn calories</option>
+
+            <option value="just get a good sweat in!">
+              just get a good sweat in!
+            </option>
+          </select>
+        </label>
+      </p>
+      <button className="generateButton" onClick={clickHandler}>
+        Make me a workout!
+      </button>
+    </div>
+  );
 }

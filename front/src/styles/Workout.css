@@ -1,12 +1,35 @@
 .dayWorkoutHeader {
   color: #453131;
   margin-top: -35%;
-  font-size: x-large;
+  font-size: large;
   margin: left 0;
 }
 
 .informationHeader {
   color: #453131;
-  font-size: large;
-  margin-left: -35%;
+  font-size: xx-small;
+  margin-left: 20%;
+  margin-right: 20%;
+}
+
+.dropdownLabel {
+  color: #453131;
+  font-size: x-large;
+  margin-right: 0%;
+  margin-top: 0%;
+}
+
+.generateButton {
+  margin-top: 50px;
+  margin-left: 600px;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 40px;
+  font-size: larger;
+  background-color: #453131;
+  color: rgb(237, 237, 237);
+  border-color: aliceblue;
 }

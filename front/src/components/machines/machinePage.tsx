@@ -1,3 +1,3 @@
-export default function machinePage() {
+export default function MachinePage() {
   return <div></div>;
 }
