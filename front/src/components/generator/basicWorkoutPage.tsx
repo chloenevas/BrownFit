@@ -1,5 +1,6 @@
 import React, { SetStateAction, useState, Component } from "react";
-import "/Users/default/Desktop/cs32/term-project-jwschwar-amahns-cnevas-ibrauns/front/src/styles/Workout.css";
+//import "/Users/default/Desktop/cs32/term-project-jwschwar-amahns-cnevas-ibrauns/front/src/styles/Workout.css"; 
+import "../../styles/Workout.css";
 
 export default function WorkoutPage() {
   const [durationValue, setDurationValue] =

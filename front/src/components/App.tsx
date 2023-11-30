@@ -6,6 +6,7 @@ import MachinePage from "./machines/machinePage";
 import ProgressPage from "./progress/progressPage";
 import WorkoutPage from "./generator/basicWorkoutPage";
 import React, { Component } from "react";
+import LOGINMODAL from "./authentication/loginModal";
 
 class App extends Component<any, any> {
   constructor(props: any) {
@@ -49,9 +50,7 @@ class App extends Component<any, any> {
   render() {
     return (
       <div className="App">
-        <p className="App-header">
-          <h1>BrownFit</h1>
-        </p>
+        <LOGINMODAL /> {/* Contains App header (BrownFit title) */}
         <button
           className="Navigation-Button"
           aria-label="home button"
@@ -79,14 +78,6 @@ class App extends Component<any, any> {
           onClick={() => this.changePage("progress")}
         >
           Check Progress:
-        </button>
-        <button
-          className="App-header-login"
-          aria-label="login button"
-          style={{ backgroundColor: "Blue" }}
-          onClick={() => this.handleLoginButtonClick()}
-        >
-          Login
         </button>
         {this.state.currentPage === "home" && <HomePage />}
         {this.state.currentPage === "workout" && <WorkoutPage />}
