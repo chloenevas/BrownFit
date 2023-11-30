@@ -1,3 +1,27 @@
+.App-header-title {
+  margin-top: 0px;
+  align-items: center;
+}
+
+.App-header-login {
+  margin-left: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: left;
+  padding: 15px 30px;
+  font-size: larger;
+  background-color: #453131;
+  color: rgb(68, 21, 21);
+}
+
+.current-user {
+    margin-left: 10px;
+    display: flex;
+    align-items: left;
+    margin-right: 88%;
+    margin-top: 1px;
+}
+
 .modal{
     display:none; 
     position: absolute;
@@ -50,7 +74,8 @@ color:black;
     align-items: center;
     justify-content: center;
     outline: none;
-    border: none;
+    border: none;    
+    
 }
 
 .submit-button {
@@ -82,6 +107,7 @@ color:black;
   width: 30%;
   margin-right: 25px;
   margin-top: 13.5%;
+
 }
 
 .signup-button {
