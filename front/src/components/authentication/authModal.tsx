@@ -7,6 +7,8 @@ import {
 } from "firebase/auth";
 import "../../styles/login.css";
 import { ControlledInput } from "../controlledInput";
+import BrownLogo from "./B.png";
+
 
 
 export default function AUTHMODAL() {
@@ -132,9 +134,30 @@ createUserWithEmailAndPassword(auth, emailValue, passwordValue)
         <p className = "current-user">
           {currentUser}
         </p>
-
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "100px", // Adjust the width and height as needed
+            height: "100px", // Adjust the width and height as needed
+            border: "2px solid red", // Red border
+            backgroundColor: "#fff", // White background
+          }}
+        >
+          {/* Image inside the container */}
+          <img
+            src={BrownLogo}
+            alt="BrownFit Logo"
+            style={{
+              width: "50px", // Adjust the width of the image as needed
+              height: "50px", // Adjust the height of the image as needed
+            }}
+          />
+        </div>
         <h1 className="App-header-title">BrownFit</h1>
       </p>
+
       <div className="modal" style={{ display: modalVisibility }}>
         <span className="close-button" onClick={() => handleCloseClick()}>
           &times;

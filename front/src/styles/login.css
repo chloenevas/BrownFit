@@ -1,5 +1,5 @@
 .App-header-title {
-  margin-top: 0px;
+  margin-top: 30px;
   align-items: center;
 }
 
@@ -7,7 +7,7 @@
   margin-left: 10px;
   display: flex;
   justify-content: center;
-  align-items: left;
+  align-items: center; /* Update this line */
   padding: 15px 30px;
   font-size: larger;
   background-color: #453131;
@@ -17,33 +17,50 @@
 .current-user {
     margin-left: 10px;
     display: flex;
-    align-items: left;
     margin-right: 88%;
     margin-top: 1px;
+    align-items: center; /* Update this line */
+
+}
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9); /* Semi-transparent black overlay */
+  z-index: 100; /* Place it above everything else except the modal */
 }
 
-.modal{
-    display:none; 
-    position: absolute;
-    top: 25%;
-    left: 25%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 30px 40px;
-    z-index:1;
-    height: 30%;
-    width: 40%;
-    align-items: center;
-    overflow: auto;
-    background-color: rgba(235, 150, 150, 1)
+
+
+.modal {
+  display: none;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Shadow effect */
+
+  position: absolute;
+  top: 50%; /* Adjust vertical position */
+  left: 50%; /* Adjust horizontal position */
+  transform: translate(-50%, -50%); /* Center the modal */
+  padding: 40px; /* Increase padding for larger modal */
+  z-index: 1000;
+  width: 60%; /* Adjust the width of the modal */
+  max-width: 500px; /* Set maximum width for responsiveness */
+  height: auto; /* Allow the modal to adjust its height */
+  overflow: auto;
+  background-color: white;
+  border-radius: 10px; /* Add some border radius for style */
 }
 
 .modal-content{
-    background-color: #8c7777;
-    left: 5%;
+    background-color: white;
     height: 90%;
     width: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  
 }
 
 .close-button{
@@ -78,52 +95,18 @@ color:black;
     
 }
 
-.submit-button {
-  border-radius: 8px;
+
+.login-button, .signup-button {
+  color: #fff;
   border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
+  font-size: 2em; /* Adjust the font size */
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: #4e3629;
   cursor: pointer;
   transition: border-color 0.25s;
-  margin-top: 15px;
-}
-
-.login-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1.5em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: rgba(235, 150, 150, 1);
-  cursor: pointer;
-  transition: border-color 0.25s;
-  margin-top: 15px;
-  size: 20;
-  display: inline-block;
-  width: 30%;
-  margin-right: 25px;
-  margin-top: 13.5%;
-
-}
-
-.signup-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1.5em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: rgba(235, 150, 150, 1);
-  cursor: pointer;
-  transition: border-color 0.25s;
-  margin-top: 15px;
-  size: 20;
-  display: inline-block;
-  width: 30%;
-  margin-left: 25px;
-  margin-top: 13.5%;
+  margin-top: 20px; /* Increase top margin for spacing */
+  display: block; /* Change to block for centering */
+margin-left: 75px;
+z-index: 100000;
 }
