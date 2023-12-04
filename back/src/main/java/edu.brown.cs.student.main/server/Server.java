@@ -4,6 +4,7 @@ package edu.brown.cs.student.main.server;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
+import edu.brown.cs.student.main.database.NelsonMachineDatabase;
 import edu.brown.cs.student.main.handlers.NelsonHandler;
 import okio.Buffer;
 import spark.Spark;
@@ -34,8 +35,9 @@ public class Server {
 
     /** Our main method that constructs and runs a new server */
     public static void main(String[] args) throws IOException {
-        new Server();
-        System.out.println("Server started at http://localhost:" + port + "; exiting main...");
+        new NelsonMachineDatabase();
+//        new Server();
+//        System.out.println("Server started at http://localhost:" + port + "; exiting main...");
 
     }
 }
