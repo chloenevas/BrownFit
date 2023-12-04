@@ -70,46 +70,56 @@ class App extends Component<any, any> {
     }
   }
 
+  handleLoginButtonClick() {
+    // setPageContent(progressPage());
+    // call authentication here
+    return undefined;
+  }
   render() {
     return (
       <div className="App">
         <AUTHMODAL /> {/* Contains App header (BrownFit title) */}
-        <button
-          className="Navigation-Button"
-          aria-label="home button"
-          onClick={() => this.changePage("home")}
-          style={{ backgroundColor: this.homeButtonColor }}
-        >
-          Home:
-        </button>
-        <button
-          className="Navigation-Button"
-          aria-label="workout button"
-          onClick={() => this.changePage("workout")}
-          style={{ backgroundColor: this.workoutButtonColor }}
-        >
-          Generate Workout:
-        </button>
-        <button
-          className="Navigation-Button"
-          aria-label="machine button"
-          onClick={() => this.changePage("machine")}
-          style={{ backgroundColor: this.machineButtonColor }}
-        >
-          Nelson Machines:
-        </button>
-        <button
-          className="Navigation-Button"
-          aria-label="progress button"
-          onClick={() => this.changePage("progress")}
-          style={{ backgroundColor: this.progressButtonColor }}
-        >
-          Check Progress:
-        </button>
-        {this.state.currentPage === "home" && <HomePage />}
-        {this.state.currentPage === "workout" && <WorkoutPage />}
-        {this.state.currentPage === "machine" && <MachinePage />}
-        {this.state.currentPage === "progress" && <ProgressPage />}
+        {/* Menu Bar */}
+        <div className="MenuBar">
+          <button
+            className="Navigation-Button"
+            aria-label="home button"
+            onClick={() => this.changePage("home")}
+            style={{ backgroundColor: this.homeButtonColor }}
+          >
+            Home
+          </button>
+          <button
+            className="Navigation-Button"
+            aria-label="workout button"
+            onClick={() => this.changePage("workout")}
+            style={{ backgroundColor: this.workoutButtonColor }}
+          >
+            Generate Workout
+          </button>
+          <button
+            className="Navigation-Button"
+            aria-label="machine button"
+            onClick={() => this.changePage("machine")}
+            style={{ backgroundColor: this.machineButtonColor }}
+          >
+            Nelson Machines
+          </button>
+          <button
+            className="Navigation-Button"
+            aria-label="progress button"
+            onClick={() => this.changePage("progress")}
+            style={{ backgroundColor: this.progressButtonColor }}
+          >
+            Check Progress
+          </button>
+        </div>
+        <div className="Content">
+          {this.state.currentPage === "home" && <HomePage />}
+          {this.state.currentPage === "workout" && <WorkoutPage />}
+          {this.state.currentPage === "machine" && <MachinePage />}
+          {this.state.currentPage === "progress" && <ProgressPage />}
+        </div>
       </div>
     );
   }

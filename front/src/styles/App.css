@@ -1,9 +1,14 @@
+/* App styling */
+
+
 .App {
   text-align: center;
+  position: relative;
 }
 
+/* Header styling */
 .App-header {
-  background-color: #453131;
+  background-color: #4e3629;
   min-height: 8vh;
   display: flex;
   flex-direction: column;
@@ -11,37 +16,81 @@
   justify-content: center;
   font-size: calc(1px + 2vmin);
   color: rgb(255, 254, 254);
+  position: relative;
+  z-index: 2; /* Ensure the header stays above the menu bar */
+  padding-bottom: 0%;
 }
 
-.Navigation-Button {
-  margin-top: 50px;
-  margin-left: 10px;
-  top: 10px;
-  right: 10px;
+/* MenuBar styling */
+.MenuBar {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 30px 40px;
+  background-color: #4e3629; /* Background color for the menu bar */
+  position: relative;
+  z-index: 1; /* Ensure the menu bar stays below the header */
+  top: -20px;
+  padding: 40px;
+}
+
+.Navigation-Button {
+  margin: 0 10px; /* Add some space between buttons */
+  padding: 10px 20px; /* Adjust padding as needed */
   font-size: larger;
-  background-color: #453131;
-  color: rgb(237, 237, 237);
-  border-color: aliceblue;
+  background-color: transparent; /* Make the button background transparent */
+  color: #fff; /* White text color for buttons */
+  border: 2px solid #fff; /* Add white border to buttons */
+  cursor: pointer; /* Add cursor on hover */
 }
+
+
+
+/* Content styling */
+.Content {
+  /* Ensure content doesn't overlap with the menu bar */
+  align-items: center;
+}
+
+/* Other content styling */
 .aboutSection {
-  color: #453131;
-  margin-top: -35%;
-  font-size: x-small;
-  margin-left: 25%;
-}
+  color: #4e3629;
+  margin: 0 20%;
+  }
+
 .healthyWorkoutSection {
-  color: #453131;
+  color: #4e3629;
   margin-top: 5%;
   font-size: x-small;
   margin-left: 25%;
 }
+
 .aboutText {
-  color: #453131;
-  font-size: xx-small;
-  margin-left: 30%;
-  margin-right: 5%;
+  color: #4e3629;
+
+
+
 }
+
+
+
+/* Styling for homeContent class */
+.homeContent h1,
+.homeContent p {
+  color: #4e3629; /* Brown color for headings and paragraphs */
+  font-weight: bold; /* Add bold font-weight for headings */
+  font-family: Arial, sans-serif; /* Set a professional font family */
+  line-height: 1.6; /* Adjust line height for better readability */
+}
+
+.noBulletPoints {
+  list-style: none; /* Remove bullet points */
+  padding-left: 0; /* Remove default padding from the list */
+}
+
+.noBulletPoints li {
+  margin-bottom: 8px; /* Add some spacing between list items */
+  font-size: 2em; /* Increase font size of list items */
+  color: #4e3629; /* Brown color for headings and paragraphs */
+
+}
+
