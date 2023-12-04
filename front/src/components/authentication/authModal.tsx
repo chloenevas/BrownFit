@@ -2,12 +2,12 @@ import { useState } from "react";
 import { auth } from "../../index";
 import {
   signInWithEmailAndPassword,
-  createUserWithEmailAndPassword, 
-  signOut
+  createUserWithEmailAndPassword,
+  signOut,
 } from "firebase/auth";
 import "../../styles/login.css";
-import { ControlledInput } from "../controlledInput";
-
+import { ControlledInput } from "../ControlledInput";
+import BrownLogo from "/Users/default/Desktop/cs32/term-project-jwschwar-amahns-cnevas-ibrauns/front/src/components/authentication/B.png";
 
 export default function AUTHMODAL() {
   const [modalVisibility, setModalVisibility] = useState<string>("none");
@@ -22,18 +22,14 @@ export default function AUTHMODAL() {
     useState("Login/Sign up");
   const [currentUser, setCurrentUser] = useState<string | null>("");
 
-
-
   function handleSigninSignoutClick(loginStatus: string) {
     if (loginStatus === "Logout") {
       signOut(auth).then(() => {
-        setSigninSignoutButton("Login/Sign up")
-        setCurrentUser("")
-        
-      })
+        setSigninSignoutButton("Login/Sign up");
+        setCurrentUser("");
+      });
       // logout
-    }
-    else {
+    } else {
       setLoginButtonColor("Red");
       // makes modal appear
       setModalVisibility("flex");
@@ -46,7 +42,7 @@ export default function AUTHMODAL() {
     setModalVisibility("none");
     setEmailValue("");
     setPasswordValue("");
-    setAuthState("Enter email and password to sign up")
+    setAuthState("Enter email and password to sign up");
     setOptionsPageVisibility("flex");
     setLoginPageVisibility("none");
     return undefined;
@@ -69,35 +65,32 @@ export default function AUTHMODAL() {
   function handleSubmit(submitType: string) {
     // sign up user
     if (submitType === "Sign up") {
-createUserWithEmailAndPassword(auth, emailValue, passwordValue)
-  .then((cred) => {
-    setAuthState("Success!");
-    setSigninSignoutButton("Logout");
-    const user = auth.currentUser
-    if (user !== null) {
-      const userEmail = user.email;
-      setCurrentUser(userEmail);
-    }
-    
-  })
-  .catch((err) => {
-    console.log(err.code);
-    if (err.code == "auth/weak-password") {
-      setAuthState("Password must be at least 6 characters.");
-    } else if (err.code == "auth/email-already-in-use") {
-      setAuthState("Email already in use. Please sign in.");
-    } else if (err.code == "auth/invalid-email") {
-      setAuthState("Please enter a valid email.");
-    }
-  });
-    }
-
-    else if (submitType === "Login") {
+      createUserWithEmailAndPassword(auth, emailValue, passwordValue)
+        .then((cred) => {
+          setAuthState("Success!");
+          setSigninSignoutButton("Logout");
+          const user = auth.currentUser;
+          if (user !== null) {
+            const userEmail = user.email;
+            setCurrentUser(userEmail);
+          }
+        })
+        .catch((err) => {
+          console.log(err.code);
+          if (err.code == "auth/weak-password") {
+            setAuthState("Password must be at least 6 characters.");
+          } else if (err.code == "auth/email-already-in-use") {
+            setAuthState("Email already in use. Please sign in.");
+          } else if (err.code == "auth/invalid-email") {
+            setAuthState("Please enter a valid email.");
+          }
+        });
+    } else if (submitType === "Login") {
       signInWithEmailAndPassword(auth, emailValue, passwordValue)
         .then((cred) => {
           console.log(cred.user);
           setAuthState("Success!");
-          setSigninSignoutButton("Logout")
+          setSigninSignoutButton("Logout");
           const user = auth.currentUser;
           if (user !== null) {
             const userEmail = user.email;
@@ -109,13 +102,12 @@ createUserWithEmailAndPassword(auth, emailValue, passwordValue)
             setAuthState("Invalid email or password. Please try again.");
           } else if (err.code == "auth/invalid-email") {
             setAuthState("Please enter a valid email.");
-          } else if (err.code = "auth/missing-password") {
-            setAuthState("Please enter a password.")
+          } else if ((err.code = "auth/missing-password")) {
+            setAuthState("Please enter a password.");
           }
-         // setAuthState(err.code)
+          // setAuthState(err.code)
         });
     }
-    
   }
 
   return (
@@ -129,12 +121,31 @@ createUserWithEmailAndPassword(auth, emailValue, passwordValue)
         >
           {signinSignoutButton}
         </button>
-        <p className = "current-user">
-          {currentUser}
-        </p>
-
+        <p className="current-user">{currentUser}</p>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "100px", // Adjust the width and height as needed
+            height: "100px", // Adjust the width and height as needed
+            border: "2px solid red", // Red border
+            backgroundColor: "#fff", // White background
+          }}
+        >
+          {/* Image inside the container */}
+          <img
+            src={BrownLogo}
+            alt="BrownFit Logo"
+            style={{
+              width: "50px", // Adjust the width of the image as needed
+              height: "50px", // Adjust the height of the image as needed
+            }}
+          />
+        </div>
         <h1 className="App-header-title">BrownFit</h1>
       </p>
+
       <div className="modal" style={{ display: modalVisibility }}>
         <span className="close-button" onClick={() => handleCloseClick()}>
           &times;
