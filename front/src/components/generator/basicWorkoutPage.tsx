@@ -1,5 +1,5 @@
 import React, { SetStateAction, useState, Component } from "react";
-//import "/Users/default/Desktop/cs32/term-project-jwschwar-amahns-cnevas-ibrauns/front/src/styles/Workout.css"; 
+//import "/Users/default/Desktop/cs32/term-project-jwschwar-amahns-cnevas-ibrauns/front/src/styles/Workout.css";
 import "../../styles/Workout.css";
 
 export default function WorkoutPage() {
@@ -68,7 +68,7 @@ export default function WorkoutPage() {
         </label>
       </p>
       <p className="dropdownLabel">
-        <label className="dropdownLabel">
+        <label>
           What muscle groups would you like to work on?
           <select value={muscleValue} onChange={handleMuscleGroupChange}>
             <option value="full body">full body</option>
