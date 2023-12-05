@@ -9,8 +9,16 @@ import React, { Component } from "react";
 import AUTHMODAL from "./authentication/authModal";
 
 class App extends Component<any, any> {
+  homeButtonColor: string;
+  workoutButtonColor: string;
+  machineButtonColor: string;
+  progressButtonColor: string;
   constructor(props: any) {
     super(props);
+    this.homeButtonColor = "red";
+    this.workoutButtonColor = "#453131";
+    this.machineButtonColor = "#453131";
+    this.progressButtonColor = "#453131";
 
     this.state = {
       currentPage: "home",
@@ -39,6 +47,27 @@ class App extends Component<any, any> {
 
   changePage(page: string) {
     this.setState({ currentPage: page });
+    if (page == "home") {
+      this.homeButtonColor = "red";
+      this.workoutButtonColor = "#453131";
+      this.machineButtonColor = "#453131";
+      this.progressButtonColor = "#453131";
+    } else if (page == "workout") {
+      this.homeButtonColor = "#453131";
+      this.workoutButtonColor = "red";
+      this.machineButtonColor = "#453131";
+      this.progressButtonColor = "#453131";
+    } else if (page == "machine") {
+      this.homeButtonColor = "#453131";
+      this.workoutButtonColor = "#453131";
+      this.machineButtonColor = "red";
+      this.progressButtonColor = "#453131";
+    } else {
+      this.homeButtonColor = "#453131";
+      this.workoutButtonColor = "#453131";
+      this.machineButtonColor = "#453131";
+      this.progressButtonColor = "red";
+    }
   }
 
   handleLoginButtonClick() {
@@ -46,43 +75,51 @@ class App extends Component<any, any> {
     // call authentication here
     return undefined;
   }
-
   render() {
     return (
       <div className="App">
         <AUTHMODAL /> {/* Contains App header (BrownFit title) */}
-        <button
-          className="Navigation-Button"
-          aria-label="home button"
-          onClick={() => this.changePage("home")}
-        >
-          Home:
-        </button>
-        <button
-          className="Navigation-Button"
-          aria-label="workout button"
-          onClick={() => this.changePage("workout")}
-        >
-          Generate Workout:
-        </button>
-        <button
-          className="Navigation-Button"
-          aria-label="machine button"
-          onClick={() => this.changePage("machine")}
-        >
-          Nelson Machines:
-        </button>
-        <button
-          className="Navigation-Button"
-          aria-label="progress button"
-          onClick={() => this.changePage("progress")}
-        >
-          Check Progress:
-        </button>
-        {this.state.currentPage === "home" && <HomePage />}
-        {this.state.currentPage === "workout" && <WorkoutPage />}
-        {this.state.currentPage === "machine" && <MachinePage />}
-        {this.state.currentPage === "progress" && <ProgressPage />}
+        {/* Menu Bar */}
+        <div className="MenuBar">
+          <button
+            className="Navigation-Button"
+            aria-label="home button"
+            onClick={() => this.changePage("home")}
+            style={{ backgroundColor: this.homeButtonColor }}
+          >
+            Home
+          </button>
+          <button
+            className="Navigation-Button"
+            aria-label="workout button"
+            onClick={() => this.changePage("workout")}
+            style={{ backgroundColor: this.workoutButtonColor }}
+          >
+            Generate Workout
+          </button>
+          <button
+            className="Navigation-Button"
+            aria-label="machine button"
+            onClick={() => this.changePage("machine")}
+            style={{ backgroundColor: this.machineButtonColor }}
+          >
+            Nelson Machines
+          </button>
+          <button
+            className="Navigation-Button"
+            aria-label="progress button"
+            onClick={() => this.changePage("progress")}
+            style={{ backgroundColor: this.progressButtonColor }}
+          >
+            Check Progress
+          </button>
+        </div>
+        <div className="Content">
+          {this.state.currentPage === "home" && <HomePage />}
+          {this.state.currentPage === "workout" && <WorkoutPage />}
+          {this.state.currentPage === "machine" && <MachinePage />}
+          {this.state.currentPage === "progress" && <ProgressPage />}
+        </div>
       </div>
     );
   }
