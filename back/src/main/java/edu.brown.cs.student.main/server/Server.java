@@ -36,8 +36,8 @@ public class Server {
     /** Our main method that constructs and runs a new server */
     public static void main(String[] args) throws IOException {
         new NelsonMachineDatabase();
-//        new Server();
-//        System.out.println("Server started at http://localhost:" + port + "; exiting main...");
+        new Server();
+        System.out.println("Server started at http://localhost:" + port + "; exiting main...");
 
     }
 }
