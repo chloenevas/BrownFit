@@ -42,6 +42,7 @@ public class NelsonMachineDatabase {
 
 
 
-//    public HashMap<String, Machine> getDatabase(){
-//    }
+    public HashMap<String, Machine> getDatabase(){
+        return this.database;
+    }
 }
