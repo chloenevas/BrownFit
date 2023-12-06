@@ -34,7 +34,7 @@
 
 
 
-.modal {
+.login-modal {
   display: none;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Shadow effect */
 
@@ -109,4 +109,22 @@ color:black;
   display: block; /* Change to block for centering */
 margin-left: 75px;
 z-index: 100000;
+}
+
+.workout-modal {
+  display: none;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Shadow effect */
+
+  position: absolute;
+  top: 50%; /* Adjust vertical position */
+  left: 50%; /* Adjust horizontal position */
+  transform: translate(-50%, -50%); /* Center the modal */
+  padding: 40px; /* Increase padding for larger modal */
+  z-index: 1000;
+  width: 80%; /* Adjust the width of the modal */
+  max-width: 1200px; /* Set maximum width for responsiveness */
+  height: auto; /* Allow the modal to adjust its height */
+  overflow: auto;
+  background-color: white;
+  border-radius: 10px; /* Add some border radius for style */
 }

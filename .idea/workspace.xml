@@ -5,14 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="899cf0c2-5061-4d85-a39b-4f0232cfdbb1" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/generator/resultModal.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/data/machineData.json" beforeDir="false" afterPath="$PROJECT_DIR$/back/data/machineData.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/database/NelsonMachineDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/database/NelsonMachineDatabase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/target/classes/edu/brown/cs/student/main/algorithm/ShortAlgo.class" beforeDir="false" afterPath="$PROJECT_DIR$/back/target/classes/edu/brown/cs/student/main/algorithm/ShortAlgo.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/target/classes/edu/brown/cs/student/main/algorithm/ShortQuery.class" beforeDir="false" afterPath="$PROJECT_DIR$/back/target/classes/edu/brown/cs/student/main/algorithm/ShortQuery.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/target/classes/edu/brown/cs/student/main/database/ApiRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/back/target/classes/edu/brown/cs/student/main/database/ApiRequest.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/back/target/classes/edu/brown/cs/student/main/database/NelsonMachineDatabase.class" beforeDir="false" afterPath="$PROJECT_DIR$/back/target/classes/edu/brown/cs/student/main/database/NelsonMachineDatabase.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/target/test-classes/edu/brown/cs/testing/MainTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/back/target/test-classes/edu/brown/cs/testing/MainTest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/target/test-classes/edu/brown/cs/testing/TestingServer.class" beforeDir="false" afterPath="$PROJECT_DIR$/back/target/test-classes/edu/brown/cs/testing/TestingServer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/target/classes/edu/brown/cs/student/main/handlers/NelsonHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/back/target/classes/edu/brown/cs/student/main/handlers/NelsonHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/target/classes/edu/brown/cs/student/main/records/Exercise.class" beforeDir="false" afterPath="$PROJECT_DIR$/back/target/classes/edu/brown/cs/student/main/records/Exercise.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/target/classes/edu/brown/cs/student/main/server/Server.class" beforeDir="false" afterPath="$PROJECT_DIR$/back/target/classes/edu/brown/cs/student/main/server/Server.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/_metadata.json" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/.vite/deps/_metadata.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/src/components/generator/basicWorkoutPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/components/generator/basicWorkoutPage.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,30 +39,30 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "Downloaded.Files.Path.Enabled": "false",
-    "Repository.Attach.Annotations": "false",
-    "Repository.Attach.JavaDocs": "false",
-    "Repository.Attach.Sources": "false",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "front-end-skeleton",
-    "jdk.selected.JAVA_MODULE": "openjdk-19",
-    "last_opened_file_path": "/Users/chloenevas/Documents/CS32/term-project-jwschwar-amahns-cnevas-ibrauns",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;front-end-skeleton&quot;,
+    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;openjdk-19&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/chloenevas/Documents/CS32/term-project-jwschwar-amahns-cnevas-ibrauns&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/records" />
@@ -101,6 +104,7 @@
       <workItem from="1701224843777" duration="1275000" />
       <workItem from="1701545176843" duration="818000" />
       <workItem from="1701668444614" duration="514000" />
+      <workItem from="1701842389295" duration="613000" />
     </task>
     <servers />
   </component>

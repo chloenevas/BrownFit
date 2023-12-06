@@ -7,7 +7,7 @@ import {
 } from "firebase/auth";
 import "../../styles/login.css";
 import { ControlledInput } from "../ControlledInput";
-//import {BrownLogo} from "../
+import { BrownLogo } from './B.png'
 
 export default function AUTHMODAL() {
   const [modalVisibility, setModalVisibility] = useState<string>("none");
@@ -136,7 +136,7 @@ export default function AUTHMODAL() {
           {/* Image inside the container */}
           <img
             src={
-              "/Users/default/Desktop/cs32/term-project-jwschwar-amahns-cnevas-ibrauns/front/src/components/authentication/B.png"
+              "/Users/chloenevas/Documents/CS32/term-project-jwschwar-amahns-cnevas-ibrauns/front/src/components/authentication/B.png"
             }
             alt="BrownFit Logo"
             style={{
@@ -148,7 +148,7 @@ export default function AUTHMODAL() {
         <h1 className="App-header-title">BrownFit</h1>
       </p>
 
-      <div className="modal" style={{ display: modalVisibility }}>
+      <div className="login-modal" style={{ display: modalVisibility }}>
         <span className="close-button" onClick={() => handleCloseClick()}>
           &times;
         </span>

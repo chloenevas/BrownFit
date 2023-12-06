@@ -1,6 +1,7 @@
 import React, { SetStateAction, useState, Component } from "react";
 //import "/Users/default/Desktop/cs32/term-project-jwschwar-amahns-cnevas-ibrauns/front/src/styles/Workout.css";
 import "../../styles/Workout.css";
+import RESULTMODAL from "./resultModal";
 
 export default function WorkoutPage() {
   const [durationValue, setDurationValue] =
@@ -8,6 +9,8 @@ export default function WorkoutPage() {
   const [muscleValue, setMuscleValue] = React.useState("full body");
   const [muscleValue2, setMuscleValue2] = React.useState("N/A");
   const [goalValue, setGoalValue] = React.useState("strength");
+  const [modalVisibility, setModalVisibility] = React.useState("none");
+
 
   const handleChange = (event: {
     target: { value: React.SetStateAction<string> };
@@ -38,10 +41,21 @@ export default function WorkoutPage() {
     console.log(muscleValue);
     console.log(muscleValue2);
     console.log(goalValue);
+    setModalVisibility("flex");
   }
 
   return (
     <div>
+      <div>
+        <RESULTMODAL
+          durationValue={durationValue}
+          muscleValue={muscleValue}
+          muscleValue2={muscleValue2}
+          goalValue={goalValue}
+          modalVisibility={modalVisibility}
+          setModalVisibility={setModalVisibility}
+        />
+      </div>
       <p className="dayWorkoutHeader">
         <h1>Get a workout for today!</h1>
       </p>
