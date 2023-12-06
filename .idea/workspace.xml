@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="899cf0c2-5061-4d85-a39b-4f0232cfdbb1" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/front/src/styles/Workout.css" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/styles/Workout.css" afterDir="false" />
-    </list>
+    <list default="true" id="899cf0c2-5061-4d85-a39b-4f0232cfdbb1" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -73,6 +71,7 @@
       <workItem from="1701224737056" duration="85000" />
       <workItem from="1701224843777" duration="1275000" />
       <workItem from="1701545176843" duration="818000" />
+      <workItem from="1701825622793" duration="114000" />
     </task>
     <servers />
   </component>
