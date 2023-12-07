@@ -135,9 +135,7 @@ export default function AUTHMODAL() {
         >
           {/* Image inside the container */}
           <img
-            src={
-              "/Users/default/Desktop/cs32/term-project-jwschwar-amahns-cnevas-ibrauns/front/src/components/authentication/B.png"
-            }
+            src={"src/components/authentication/B.png"}
             alt="BrownFit Logo"
             style={{
               width: "50px", // Adjust the width of the image as needed
