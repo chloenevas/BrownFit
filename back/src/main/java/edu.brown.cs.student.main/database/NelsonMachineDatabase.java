@@ -37,7 +37,6 @@ public class NelsonMachineDatabase {
         for (Machine machine: machineList){
             this.database.put(machine.name(), machine);
         }
-        System.out.println(this.database.get("hip abductor").instructions());
     }
 
 
