@@ -17,6 +17,8 @@ export interface ControlledInputProps {
    * Aria label for accessibility purposes.
    */
   ariaLabel: string;
+  className?: string; // Allow className as an optional prop
+
 }
 
 /**
@@ -33,13 +35,16 @@ export interface ControlledInputProps {
 export function ControlledInput({
   value,
   setValue,
-  ariaLabel,
+  ariaLabel,className, // Destructure className from props
 }: ControlledInputProps) {
+  const inputClasses = className ? `ControlledInput ${className}` : 'ControlledInput';
+
   return (
     <input
       value={value}
       onChange={(ev) => setValue(ev.target.value)}
       aria-label={ariaLabel}
+      className={inputClasses} // Apply className to the input element
       size={50}
     ></input>
   );

@@ -166,20 +166,26 @@ export default function AUTHMODAL() {
             </button>
           </div>
           <div style={{ display: loginPageVisibility }}>
-            <fieldset className="input">
-              <legend>Email:</legend>
-              <ControlledInput
-                value={emailValue}
-                setValue={setEmailValue}
-                ariaLabel={"email input box"}
-              />
-              <legend>Password:</legend>
-              <ControlledInput
-                value={passwordValue}
-                setValue={setPasswordValue}
-                ariaLabel={"password input box"}
-              />
-            </fieldset>
+          <fieldset className="input">
+  <div className="input-label">
+    <legend>Email:</legend>
+    <ControlledInput
+      value={emailValue}
+      setValue={setEmailValue}
+      ariaLabel={"email input box"}
+      className="email-input" // Add a class name for the email input
+    />
+  </div>
+  <div className="input-label">
+    <legend>Password:</legend>
+    <ControlledInput
+      value={passwordValue}
+      setValue={setPasswordValue}
+      ariaLabel={"password input box"}
+      className="password-input" // Add a class name for the password input
+    />
+  </div>
+</fieldset>
             <button
               type="submit"
               className="submitButton"
