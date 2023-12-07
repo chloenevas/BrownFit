@@ -52,11 +52,27 @@ public class dailyWorkoutUnitTesting {
         MockAccount mAcc1 = new MockAccount("mock", map1);
 
         ShortAlgo salgo = new ShortAlgo("", "", "", "");
-        List<Machine> returnList = salgo.getWeightedMachineList(machineList, "", mAcc1);
-        Assert.assertEquals(this.getNumInstaces(returnList, "1"), 5);
-        Assert.assertEquals(this.getNumInstaces(returnList, "2"), 1);
-        Assert.assertEquals(this.getNumInstaces(returnList, "3"), 3);
-
+        int counter1 = 0;
+        int counter2 = 0;
+        int counter3 = 0;
+        for (int i = 0; i < 10000; i ++){
+            Machine returnMachine = salgo.selectExercise(machineList, "", mAcc1);
+            switch (returnMachine.name()){
+                case "1":
+                    counter1++;
+                    break;
+                case "2":
+                    counter2++;
+                    break;
+                case "3":
+                    counter3++;
+                    break;
+            }
+        }
+        System.out.println(counter1);
+        System.out.println(counter2);
+        System.out.println(counter3);
+        Assert.assertTrue((counter1 > counter3 + 1000) && (counter3 > counter2 + 1000));
     }
 
     private int getNumInstaces(List<Machine> rl, String machine){

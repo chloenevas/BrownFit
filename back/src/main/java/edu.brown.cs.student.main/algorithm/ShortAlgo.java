@@ -90,7 +90,6 @@ public class ShortAlgo {
 
         List<Machine> weightedMachines = this.getWeightedMachineList(machines, muscle2, mock);
         int rand = (int) (Math.random()*weightedMachines.size());
-        System.out.println(rand);
         Machine returnMachine = weightedMachines.get(rand);
         weightedMachines.remove(rand);
         return returnMachine;
