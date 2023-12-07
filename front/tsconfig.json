@@ -17,5 +17,5 @@
     "jsx": "react-jsx",
     "types": ["node", "playwright"]
   },
-  "include": ["src"]
+  "include": ["src", "src/imageBrown"]
 }

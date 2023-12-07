@@ -3,11 +3,22 @@
   align-items: center;
 }
 
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); 
+  z-index: 999; 
+}
+
+
 .App-header-login {
   margin-left: 10px;
   display: flex;
   justify-content: center;
-  align-items: center; /* Update this line */
+  align-items: center;
   padding: 15px 30px;
   font-size: larger;
   background-color: #453131;
@@ -15,98 +26,94 @@
 }
 
 .current-user {
-    margin-left: 10px;
-    display: flex;
-    margin-right: 88%;
-    margin-top: 1px;
-    align-items: center; /* Update this line */
-
+  margin-left: 10px;
+  display: flex;
+  margin-right: 88%;
+  margin-top: 1px;
+  align-items: center;
 }
+
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.9); /* Semi-transparent black overlay */
-  z-index: 100; /* Place it above everything else except the modal */
+  background-color: rgba(0, 0, 0, 0.9);
+  z-index: 100;
 }
-
-
 
 .modal {
   display: none;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Shadow effect */
-
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   position: absolute;
-  top: 50%; /* Adjust vertical position */
-  left: 50%; /* Adjust horizontal position */
-  transform: translate(-50%, -50%); /* Center the modal */
-  padding: 40px; /* Increase padding for larger modal */
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 40px;
   z-index: 1000;
-  width: 60%; /* Adjust the width of the modal */
-  max-width: 500px; /* Set maximum width for responsiveness */
-  height: auto; /* Allow the modal to adjust its height */
+  width: 60%;
+  max-width: 500px;
+  height: auto;
   overflow: auto;
   background-color: white;
-  border-radius: 10px; /* Add some border radius for style */
+  border-radius: 10px;
 }
 
-.modal-content{
-    background-color: white;
-    height: 90%;
-    width: 80%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  
+.modal-content {
+  background-color: white;
+  height: 90%;
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-.close-button{
-    color: #ccc;
-    font-size:30px;
-    margin-bottom: auto;
-    position: absolute;
-    right: 30px;
-    top: 10px;
+.close-button {
+  color: #ccc;
+  font-size: 30px;
+  margin-bottom: auto;
+  position: absolute;
+  right: 30px;
+  top: 10px;
 }
 
-.close-button:hover,.close-button:focus{
-    color:#000;
-    cursor: pointer;
+.close-button:hover,
+.close-button:focus {
+  color: #000;
+  cursor: pointer;
 }
 
 .text-box {
-    color:black;
-    align-items: center;
-    justify-content: center;
-    outline: none;
-    border: transparent;
-    margin: 20px;
+  color: black;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+  border: transparent;
+  margin: 20px;
 }
 
 .input {
-color:black;
-    align-items: center;
-    justify-content: center;
-    outline: none;
-    border: none;    
-    
+  color: black;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+  border: none;
 }
 
-
-.login-button, .signup-button {
+.login-button,
+.signup-button {
   color: #fff;
   border: 1px solid transparent;
-  font-size: 2em; /* Adjust the font size */
+  font-size: 2em;
   font-weight: 500;
   font-family: inherit;
   background-color: #4e3629;
   cursor: pointer;
   transition: border-color 0.25s;
-  margin-top: 20px; /* Increase top margin for spacing */
-  display: block; /* Change to block for centering */
-margin-left: 75px;
-z-index: 100000;
+  margin-top: 20px;
+  display: block;
+  margin-left: 75px;
+  z-index: 100000;
 }

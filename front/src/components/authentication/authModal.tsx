@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { auth } from "../../index";
+import BrownFitLogo from '../imageBrown/BrownFit.png';
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -7,7 +8,6 @@ import {
 } from "firebase/auth";
 import "../../styles/login.css";
 import { ControlledInput } from "../ControlledInput";
-import BrownFitLogo from './brownfit.jpg';
 
 export default function AUTHMODAL() {
   const [modalVisibility, setModalVisibility] = useState<string>("none");
@@ -112,6 +112,9 @@ export default function AUTHMODAL() {
 
   return (
     <div>
+        {modalVisibility === 'flex' && (
+      <div className="overlay"></div>
+    )}
       <p className="App-header">
         <button
           className="App-header-login"
@@ -144,6 +147,7 @@ export default function AUTHMODAL() {
         </div>
         <h1 className="App-header-title">BrownFit</h1>
       </p>
+
 
       <div className="modal" style={{ display: modalVisibility }}>
         <span className="close-button" onClick={() => handleCloseClick()}>
