@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { auth } from "../../index";
+import { auth, database, collectionRef, users } from "../../index";
 import BrownFitLogo from '../imageBrown/BrownFit.png';
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
+import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
+
 import "../../styles/login.css";
 import { ControlledInput } from "../ControlledInput";
 import { text } from "stream/consumers";
@@ -22,6 +24,7 @@ export default function AUTHMODAL() {
   const [signinSignoutButton, setSigninSignoutButton] =
     useState("Login/Sign up");
   const [currentUser, setCurrentUser] = useState<string | null>("");
+  const [userID, setUserID] = useState<string | null>("");
 
   function handleSigninSignoutClick(loginStatus: string) {
     if (loginStatus === "Logout") {
@@ -66,6 +69,7 @@ export default function AUTHMODAL() {
   function handleSubmit(submitType: string) {
     // sign up user
     if (submitType === "Sign up") {
+    
       createUserWithEmailAndPassword(auth, emailValue, passwordValue)
         .then((cred) => {
           setAuthState("Success!");
@@ -74,6 +78,13 @@ export default function AUTHMODAL() {
           if (user !== null) {
             const userEmail = user.email;
             setCurrentUser(userEmail);
+            addDoc(collectionRef, {
+              email: userEmail,
+              firstName: "",
+              lastName: "",
+
+            })
+            const databaseUser = query(collection(database, "users"), where("email", "==", userEmail));
           }
         })
         .catch((err) => {
@@ -86,6 +97,7 @@ export default function AUTHMODAL() {
             setAuthState("Please enter a valid email.");
           }
         });
+
     } else if (submitType === "Login") {
       signInWithEmailAndPassword(auth, emailValue, passwordValue)
         .then((cred) => {
