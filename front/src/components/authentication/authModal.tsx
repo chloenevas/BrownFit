@@ -6,7 +6,7 @@ import {
   createUserWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
+import { collection, addDoc, getDocs, doc, query, where , setDoc} from "firebase/firestore";
 
 import "../../styles/login.css";
 import { ControlledInput } from "../ControlledInput";
@@ -25,6 +25,11 @@ export default function AUTHMODAL() {
     useState("Login/Sign up");
   const [currentUser, setCurrentUser] = useState<string | null>("");
   const [userID, setUserID] = useState<string | null>("");
+    const [enterNameVisibility, setEnterNameVisibility] = useState("none");
+
+  const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+
 
   function handleSigninSignoutClick(loginStatus: string) {
     if (loginStatus === "Logout") {
@@ -53,6 +58,7 @@ export default function AUTHMODAL() {
   } 
 
   function handleLoginClick() {
+    setEnterNameVisibility("none");
     setOptionsPageVisibility("none");
     setLoginPageVisibility("block");
     setSubmitButtonText("Login");
@@ -60,32 +66,31 @@ export default function AUTHMODAL() {
   }
 
   function handleSignupClick() {
+    setEnterNameVisibility("block");
     setOptionsPageVisibility("none");
     setLoginPageVisibility("block");
     setSubmitButtonText("Sign up");
     setAuthState("Enter email and password to sign up");
+    
   }
 
   function handleSubmit(submitType: string) {
     // sign up user
     if (submitType === "Sign up") {
-    
       createUserWithEmailAndPassword(auth, emailValue, passwordValue)
         .then((cred) => {
           setAuthState("Success!");
           setSigninSignoutButton("Logout");
-          const user = auth.currentUser;
-          if (user !== null) {
-            const userEmail = user.email;
+          const userCred = cred.user;
+            const userEmail = userCred.email;
             setCurrentUser(userEmail);
-            addDoc(collectionRef, {
+            const userID = userCred.uid
+            setDoc(doc(database, "users", userID), {
+              // create a doc for that user within the database
               email: userEmail,
-              firstName: "",
-              lastName: "",
-
-            })
-            const databaseUser = query(collection(database, "users"), where("email", "==", userEmail));
-          }
+              firstName: firstName,
+              lastName: lastName,
+            });
         })
         .catch((err) => {
           console.log(err.code);
@@ -101,7 +106,7 @@ export default function AUTHMODAL() {
     } else if (submitType === "Login") {
       signInWithEmailAndPassword(auth, emailValue, passwordValue)
         .then((cred) => {
-          console.log(cred.user);
+          //console.log(cred.user);
           setAuthState("Success!");
           setSigninSignoutButton("Logout");
           const user = auth.currentUser;
@@ -178,6 +183,25 @@ export default function AUTHMODAL() {
           <div style={{ display: loginPageVisibility }}>
             <fieldset className="input">
               <div className="input-label">
+                <div style={{display: enterNameVisibility}}>
+                  <legend>First Name:</legend>
+                  <ControlledInput
+                    type="text"
+                    value={firstName}
+                    setValue={setFirstName}
+                    ariaLabel={"first name input box"}
+                    className="email-input" // Add a class name for the password input
+                  />
+                  <legend>Last Name:</legend>
+                  <ControlledInput
+                    type="text"
+                    value={lastName}
+                    setValue={setLastName}
+                    ariaLabel={"last name input box"}
+                    className="password-input" // Add a class name for the password input
+                  />
+                </div>
+
                 <legend>Email:</legend>
                 <ControlledInput
                   type="text"

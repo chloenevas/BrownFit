@@ -5,21 +5,34 @@ import HomePage from "./home/home";
 import MachinePage from "./machines/machinePage";
 import ProgressPage from "./progress/progressPage";
 import WorkoutPage from "./generator/basicWorkoutPage";
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import AUTHMODAL from "./authentication/authModal";
+import { auth, database, collectionRef, users } from "../index";
+import {
+  collection,
+  addDoc,
+  updateDoc,
+  doc,
+  onSnapshot,
+  getDoc,
+  query,
+  where,
+} from "firebase/firestore";
 
 class App extends Component<any, any> {
   homeButtonColor: string;
   workoutButtonColor: string;
   machineButtonColor: string;
   progressButtonColor: string;
+  progressVisibility: string;
   constructor(props: any) {
     super(props);
     this.homeButtonColor = "red";
     this.workoutButtonColor = "#453131";
     this.machineButtonColor = "#453131";
     this.progressButtonColor = "#453131";
-
+    this.progressVisibility = "none";
+    this.checkUser();
     this.state = {
       currentPage: "home",
       // // tracking key pressing for zooming
@@ -74,7 +87,21 @@ class App extends Component<any, any> {
     // setPageContent(progressPage());
     // call authentication here
     return undefined;
+
+    
   }
+
+  checkUser() {
+    console.log("hey")
+    if (auth.currentUser !== null) {
+      this.progressVisibility = "flex";
+    }
+    else {
+        this.progressVisibility = "none"
+    }
+  }
+
+
   render() {
     return (
       <div className="App">
@@ -109,7 +136,7 @@ class App extends Component<any, any> {
             className="Navigation-Button"
             aria-label="progress button"
             onClick={() => this.changePage("progress")}
-            style={{ backgroundColor: this.progressButtonColor }}
+            style={{ backgroundColor: this.progressButtonColor, display: this.progressVisibility}}
           >
             Check Progress
           </button>

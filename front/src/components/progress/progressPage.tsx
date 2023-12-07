@@ -4,31 +4,62 @@ import { ControlledInput } from "../ControlledInput";
 import "../../styles/progress.css";
 import { auth, database, collectionRef, users} from "../../index";
 import {
-  collection, addDoc, updateDoc, doc, onSnapshot,
+  collection, addDoc, updateDoc, doc, onSnapshot, getDoc,
 query, where} from "firebase/firestore";
 
 
 export default function ProgressPage() {
-  const [firstName, setFirstName] = useState(""); 
-  const [lastName, setLastName] = useState(""); 
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+    const [email, setEmail] = useState("");
+
   let userList: { id: string }[] = [];
 
-
-
-  
   function handleSaveClick() {
-   const docRef = doc(database, 'users', 'firstname')
-
+    const docRef = doc(database, "users", "firstname");
   }
 
-  const q = query(collectionRef, where("email", "==", "chloe_nevas@brown.edu"))
+  if (auth.currentUser !== null) {
+const currentUser = auth.currentUser;
+const userID = currentUser?.uid;
+
+if (userID === undefined) {
+  setFirstName("");
+  setLastName("");
+} else {
+  const currentUserDoc = doc(database, "users", userID);
+
+  const getUserData = async () => {
+    try {
+      const docSnapshot = await getDoc(currentUserDoc);
+      if (docSnapshot.exists()) {
+        // check to see if the doc exists
+        const userData = docSnapshot.data();
+        setFirstName(userData.firstName);
+        setLastName(userData.lastName);
+        setEmail(userData.email);
+      } else {
+        setFirstName("");
+        setLastName("");
+        setEmail("");
+      }
+    } catch (error) {
+      console.error("handle error");
+    }
+  };
+  getUserData();
+}
+  }
+  
+  
 
   return (
     <div>
       <p>Account Information</p>
-
-      <legend>First Name:</legend>
-
+      <p>Name: {firstName} {lastName} </p>
+      <p>Email: {email} </p>
+      {/* <legend>First Name: </legend>
+      
       <ControlledInput
         type="text"
         value={firstName}
@@ -45,7 +76,7 @@ export default function ProgressPage() {
         ariaLabel={"last name input box"}
         className="account-info-input"
       />
-      <button onClick={() => handleSaveClick()}>Save</button>
+      <button onClick={() => handleSaveClick()}>Save</button> */}
     </div>
   );
 }
