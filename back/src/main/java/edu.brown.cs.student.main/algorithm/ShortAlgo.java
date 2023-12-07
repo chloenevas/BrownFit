@@ -38,6 +38,7 @@ public class ShortAlgo {
      * @param goal
      * @throws IOException
      */
+
     private void generateWorkout(String duration, String muscle, String muscle2, String goal, MockAccount mock)
             throws IOException {
 
@@ -84,6 +85,7 @@ public class ShortAlgo {
      * @param machines
      * @return
      */
+
     public Machine selectExercise(List<Machine> machines, String muscle2, MockAccount mock){
 
         //gets random index in the list and returns that machine
@@ -97,6 +99,7 @@ public class ShortAlgo {
 
     public List<Machine> getWeightedMachineList(List<Machine> machines, String muscle2, MockAccount mock){
         int num = machines.size();
+
         //make a list of machine objects to track the weights of how probable it is we choose that machine
         //i.e., the more times that machine is added to the list, the more likely we are to pick it
         ArrayList<Machine> machineWeights = new ArrayList<>();
@@ -178,8 +181,6 @@ public class ShortAlgo {
     public Map<String, Object> getWorkout(){
         return this.returnMap;
     }
-
-
 
 }
 

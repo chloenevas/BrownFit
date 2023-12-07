@@ -4,6 +4,7 @@ import { Dispatch, SetStateAction } from "react";
  * ControlledInputProps defines the properties required by the ControlledInput component.
  */
 export interface ControlledInputProps {
+  type: string;
   /**
    * The current value of the input field.
    */
@@ -17,6 +18,8 @@ export interface ControlledInputProps {
    * Aria label for accessibility purposes.
    */
   ariaLabel: string;
+  className?: string; // Allow className as an optional prop
+
 }
 
 /**
@@ -31,15 +34,21 @@ export interface ControlledInputProps {
  * @returns A controlled input field.
  */
 export function ControlledInput({
+  type,
   value,
   setValue,
-  ariaLabel,
+  ariaLabel, className,
+// Destructure className from props
 }: ControlledInputProps) {
+  const inputClasses = className ? `ControlledInput ${className}` : 'ControlledInput';
+
   return (
     <input
+      type={type}
       value={value}
       onChange={(ev) => setValue(ev.target.value)}
       aria-label={ariaLabel}
+      className={inputClasses} // Apply className to the input element
       size={50}
     ></input>
   );
