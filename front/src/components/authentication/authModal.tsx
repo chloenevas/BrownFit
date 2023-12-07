@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { auth } from "../../index";
+import BrownFitLogo from '../imageBrown/BrownFit.png';
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -7,7 +8,7 @@ import {
 } from "firebase/auth";
 import "../../styles/login.css";
 import { ControlledInput } from "../ControlledInput";
-//import {BrownLogo} from "../
+import { text } from "stream/consumers";
 
 export default function AUTHMODAL() {
   const [modalVisibility, setModalVisibility] = useState<string>("none");
@@ -46,7 +47,7 @@ export default function AUTHMODAL() {
     setOptionsPageVisibility("flex");
     setLoginPageVisibility("none");
     return undefined;
-  }
+  } 
 
   function handleLoginClick() {
     setOptionsPageVisibility("none");
@@ -112,6 +113,7 @@ export default function AUTHMODAL() {
 
   return (
     <div>
+      {modalVisibility === "flex" && <div className="overlay"></div>}
       <p className="App-header">
         <button
           className="App-header-login"
@@ -133,9 +135,8 @@ export default function AUTHMODAL() {
             backgroundColor: "#fff", // White background
           }}
         >
-          {/* Image inside the container */}
           <img
-            src={"src/components/authentication/B.png"}
+            src={BrownFitLogo}
             alt="BrownFit Logo"
             style={{
               width: "50px", // Adjust the width of the image as needed
@@ -164,18 +165,26 @@ export default function AUTHMODAL() {
           </div>
           <div style={{ display: loginPageVisibility }}>
             <fieldset className="input">
-              <legend>Email:</legend>
-              <ControlledInput
-                value={emailValue}
-                setValue={setEmailValue}
-                ariaLabel={"email input box"}
-              />
-              <legend>Password:</legend>
-              <ControlledInput
-                value={passwordValue}
-                setValue={setPasswordValue}
-                ariaLabel={"password input box"}
-              />
+              <div className="input-label">
+                <legend>Email:</legend>
+                <ControlledInput
+                  type="text"
+                  value={emailValue}
+                  setValue={setEmailValue}
+                  ariaLabel={"email input box"}
+                  className="email-input" // Add a class name for the email input
+                />
+              </div>
+              <div className="input-label">
+                <legend>Password:</legend>
+                <ControlledInput
+                  type="password"
+                  value={passwordValue}
+                  setValue={setPasswordValue}
+                  ariaLabel={"password input box"}
+                  className="password-input" // Add a class name for the password input
+                />
+              </div>
             </fieldset>
             <button
               type="submit"
