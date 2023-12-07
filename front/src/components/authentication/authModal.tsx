@@ -7,7 +7,6 @@ import {
 } from "firebase/auth";
 import "../../styles/login.css";
 import { ControlledInput } from "../ControlledInput";
-import { BrownLogo } from './B.png'
 
 export default function AUTHMODAL() {
   const [modalVisibility, setModalVisibility] = useState<string>("none");
