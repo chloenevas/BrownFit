@@ -38,45 +38,45 @@ public class ShortAlgo {
      * @param goal
      * @throws IOException
      */
-//    private void generateWorkout(String duration, String muscle, String muscle2, String goal)
-//            throws IOException {
-//
-//        int value = this.durationMap.get(duration);
-//
-//        List<Machine> validMachines = new ArrayList<>();
-//        for(Machine machine: this.database.values()) {
-//
-//            // checks if the machine contains the muscle targeted and adds to valid list
-//            if (contains(machine.muscles(), muscle)){
-//                validMachines.add(machine);
-//            }
-//        }
-//        for(int i = value; i > 0; i--){
-//            if (validMachines.isEmpty()){
-//                break;
-//            }
-//            Machine machine = this.selectExercise(validMachines, muscle2);
-//            // need to add rep ranges and sets and then return
-//            value--;
-//            this.returnMap.put("Machine " + 1, machine);
-//        }
-//
-//        // API request here for an exercise and add to map
-//
-//        ApiRequest API = new ApiRequest();
-//        List<Exercise> APIlist= API.makeExerciseAPIRequest(muscle, goal);
-//
-//        // adds as many API exercises as needed (almost always 1 unless we run out of machines
-//        for(int i = 0; i <value; i++) {
-//            Exercise exercise = APIlist.get((int) (Math.random() * APIlist.size()));
-//
-//            // check that the exercise is not already in the list from the machines (bench press is in both)
-//
-//            this.returnMap.put("API EXERCISE", exercise);
-//        }
-//
-//
-//    }
+    private void generateWorkout(String duration, String muscle, String muscle2, String goal, MockAccount mock)
+            throws IOException {
+
+        int value = this.durationMap.get(duration);
+
+        List<Machine> validMachines = new ArrayList<>();
+        for(Machine machine: this.database.values()) {
+
+            // checks if the machine contains the muscle targeted and adds to valid list
+            if (contains(machine.muscles(), muscle)){
+                validMachines.add(machine);
+            }
+        }
+        for(int i = value; i > 0; i--){
+            if (validMachines.isEmpty()){
+                break;
+            }
+            Machine machine = this.selectExercise(validMachines, muscle2, mock);
+            // need to add rep ranges and sets and then return
+            value--;
+            this.returnMap.put("Machine " + 1, machine);
+        }
+
+        // API request here for an exercise and add to map
+
+        ApiRequest API = new ApiRequest();
+        List<Exercise> APIlist= API.makeExerciseAPIRequest(muscle, goal);
+
+        // adds as many API exercises as needed (almost always 1 unless we run out of machines
+        for(int i = 0; i <value; i++) {
+            Exercise exercise = APIlist.get((int) (Math.random() * APIlist.size()));
+
+            // check that the exercise is not already in the list from the machines (bench press is in both)
+
+            this.returnMap.put("API EXERCISE", exercise);
+        }
+
+
+    }
 
     /**
      * Given list of exercises which fit the criteria, randomly select an exercise and remove from the list
