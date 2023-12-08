@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { auth } from "../../index";
-import BrownFitLogo from '../imageBrown/BrownFit.png';
+import BrownFitLogo from "../imageBrown/BrownFit.png";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -8,10 +8,7 @@ import {
 } from "firebase/auth";
 import "../../styles/login.css";
 import { ControlledInput } from "../ControlledInput";
-<<<<<<< HEAD
-=======
 import { text } from "stream/consumers";
->>>>>>> main
 
 export default function AUTHMODAL() {
   const [modalVisibility, setModalVisibility] = useState<string>("none");
@@ -50,7 +47,7 @@ export default function AUTHMODAL() {
     setOptionsPageVisibility("flex");
     setLoginPageVisibility("none");
     return undefined;
-  } 
+  }
 
   function handleLoginClick() {
     setOptionsPageVisibility("none");
@@ -139,11 +136,7 @@ export default function AUTHMODAL() {
           }}
         >
           <img
-<<<<<<< HEAD
-            src={"src/components/B.png"}
-=======
             src={BrownFitLogo}
->>>>>>> main
             alt="BrownFit Logo"
             style={{
               width: "50px", // Adjust the width of the image as needed
