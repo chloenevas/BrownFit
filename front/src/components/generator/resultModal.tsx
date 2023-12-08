@@ -3,9 +3,20 @@ import { useState } from "react";
 import abCrunch from "../nelsonMachines/abCrunch.png";
 import treadmill from "../nelsonMachines/treadmill.png";
 import legPress from "../nelsonMachines/legPress.png";
-
 import "../../styles/login.css";
-//import {BrownLogo} from "../
+
+import { auth, database, collectionRef, users } from "../../index";
+import {
+  collection,
+  addDoc,
+  updateDoc,
+  doc,
+  onSnapshot,
+  getDoc,
+  query,
+  where,
+  setDoc,
+} from "firebase/firestore";
 
 export interface InputProps {
   durationValue: string;
@@ -77,6 +88,18 @@ export default function RESULTMODAL({
     return undefined;
   }
 
+  const exerciseHistory = Array.from(exerciseMap).map(([key, value]) => {
+    return {
+      exercise: key,
+      rating: 0,
+      image: value[0],
+      description: value[1]
+
+    }
+
+  });
+
+  
   function getImg(val: string) {
     let spaceIndex = val.indexOf(" ");
     let imgPath = val.substring(0, spaceIndex);
@@ -94,16 +117,42 @@ export default function RESULTMODAL({
   }
 
   const handleExerciseClick = (key: string) => {
+    updateExerciseHistory();
     setInfoVisibility("flex");
     if (clickedItem === key) {
       setClickedItem(null);
       setInfoVisibility("none");
-      console.log("ehewre");
     } else {
       setClickedItem(key);
     }
   };
 
+  async function updateExerciseHistory() {
+    console.log("its called"
+    )
+
+  if (auth.currentUser !== null) {
+   if (auth.currentUser !== null) {
+     const currentUser = auth.currentUser;
+     const userID = currentUser?.uid;
+
+     
+     const docData = {
+       
+       exerciseHistory: {
+         exerciseHistory
+       }
+     }
+     
+
+     if (userID !== undefined) {
+       await setDoc(doc(database, "users", userID), docData, {merge: true});
+     }
+
+   }
+  }
+ 
+  }
   {
     return (
       <div>
