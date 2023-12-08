@@ -18,7 +18,12 @@ import {
   query,
   where
 } from "firebase/firestore";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import {
+  getAuth,
+  onAuthStateChanged,
+  setPersistence,
+  browserSessionPersistence,
+} from "firebase/auth";
 
 class App extends Component<any, any> {
   homeButtonColor: string;
@@ -87,25 +92,19 @@ class App extends Component<any, any> {
     }
   }
 
-  handleLoginButtonClick() {
-    // setPageContent(progressPage());
-    // call authentication here
-    return undefined;
-  }
+  
 
   checkUser() {
-    const auth = getAuth();
 
     auth.onAuthStateChanged((user) => {
-      console.log("hey");
 
       if (user !== null) {
-        console.log("no");
         this.setState({ progressVisibility: "flex" });
       } else {
-        console.log("yurrrr");
         this.setState({ progressVisibility: "none" });
-        this.changePage("home")
+      }
+      if (this.state.currentPage === "progress" && this.state.progressVisibility === "none") {
+        this.changePage("home");
       }
     });
   }
