@@ -88,7 +88,7 @@ export default function RESULTMODAL({
     return undefined;
   }
 
-  const exerciseHistory = Array.from(exerciseMap).map(([key, value]) => {
+  const exerciseHistory = Array.from(exerciseList).map(([key, value]) => {
     return {
       exercise: key,
       rating: 0,
