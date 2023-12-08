@@ -5,21 +5,43 @@ import HomePage from "./home/home";
 import MachinePage from "./machines/machinePage";
 import ProgressPage from "./progress/progressPage";
 import WorkoutPage from "./generator/basicWorkoutPage";
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import AUTHMODAL from "./authentication/authModal";
+import { auth, database, collectionRef, users } from "../index";
+import {
+  collection,
+  addDoc,
+  updateDoc,
+  doc,
+  onSnapshot,
+  getDoc,
+  query,
+  where
+} from "firebase/firestore";
+import {
+  getAuth,
+  onAuthStateChanged,
+  setPersistence,
+  browserSessionPersistence,
+} from "firebase/auth";
 
 class App extends Component<any, any> {
   homeButtonColor: string;
   workoutButtonColor: string;
   machineButtonColor: string;
   progressButtonColor: string;
+  progressVisibility: string;
   constructor(props: any) {
     super(props);
     this.homeButtonColor = "red";
     this.workoutButtonColor = "#453131";
     this.machineButtonColor = "#453131";
     this.progressButtonColor = "#453131";
-
+    this.progressVisibility = "none";
+    this.checkUser();
+    setInterval(() => {
+      this.checkUser();
+    }, 100);
     this.state = {
       currentPage: "home",
       // // tracking key pressing for zooming
@@ -70,11 +92,23 @@ class App extends Component<any, any> {
     }
   }
 
-  handleLoginButtonClick() {
-    // setPageContent(progressPage());
-    // call authentication here
-    return undefined;
+  
+
+  checkUser() {
+
+    auth.onAuthStateChanged((user) => {
+
+      if (user !== null) {
+        this.setState({ progressVisibility: "flex" });
+      } else {
+        this.setState({ progressVisibility: "none" });
+      }
+      if (this.state.currentPage === "progress" && this.state.progressVisibility === "none") {
+        this.changePage("home");
+      }
+    });
   }
+
   render() {
     return (
       <div className="App">
@@ -109,7 +143,10 @@ class App extends Component<any, any> {
             className="Navigation-Button"
             aria-label="progress button"
             onClick={() => this.changePage("progress")}
-            style={{ backgroundColor: this.progressButtonColor }}
+            style={{
+              backgroundColor: this.progressButtonColor,
+              display: this.state.progressVisibility,
+            }}
           >
             Check Progress
           </button>
