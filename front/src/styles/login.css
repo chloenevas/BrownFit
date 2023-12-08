@@ -109,3 +109,37 @@
 .password-input {
   background-color:whitesmoke; 
 }
+
+.modal-header {
+  text-align: left;
+  text-transform: capitalize;
+  margin-bottom: 10px;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.2em;
+}
+
+.exercise {
+  display: flex;
+  justify-content: space-around;
+  border-bottom: 1px solid #ccc;
+  padding: 10px 0;
+}
+.exercise-menu {
+  display: flex;
+  justify-content: space-around;
+  border-bottom: 1px solid #ccc;
+  padding: 10px 0;
+}
+
+.exercise-menu-item {
+  cursor: pointer;
+  padding: 10px;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.exercise-menu-item:hover {
+  background-color: #eee;
+}

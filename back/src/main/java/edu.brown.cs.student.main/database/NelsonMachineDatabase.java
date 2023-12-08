@@ -3,7 +3,6 @@ package edu.brown.cs.student.main.database;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
-import edu.brown.cs.student.main.records.Exercise;
 import edu.brown.cs.student.main.records.Machine;
 
 import java.io.IOException;
@@ -37,11 +36,12 @@ public class NelsonMachineDatabase {
         for (Machine machine: machineList){
             this.database.put(machine.name(), machine);
         }
-        System.out.println(this.database.get("hip abductor").instructions());
     }
 
 
 
-//    public HashMap<String, Machine> getDatabase(){
-//    }
+    public HashMap<String, Machine> getDatabase(){
+        return this.database;
+    }
+
 }

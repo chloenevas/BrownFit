@@ -17,6 +17,7 @@ import {
   browserSessionPersistence,
 } from "firebase/auth";
 
+
 export default function AUTHMODAL() {
   const [modalVisibility, setModalVisibility] = useState<string>("none");
   const [loginButtonColor, setLoginButtonColor] = useState<string>("#fff0e0");
@@ -163,7 +164,7 @@ export default function AUTHMODAL() {
           }}
         >
           <img
-            src={BrownFitLogo}
+            src={"src/components/B.png"}
             alt="BrownFit Logo"
             style={{
               width: "50px", // Adjust the width of the image as needed

@@ -81,23 +81,26 @@ export default function RESULTMODAL({
             &times;
           </span>
           <div className="modal-content">
-            <div>
-              <p>Duration: {durationValue}</p>
-              <p>Muscle 1: {muscleValue}</p>
-              <p>Muscle 2: {muscleValue2}</p>
-              <p>Goal: {goalValue}</p>
-            </div>
+          <div className="modal-header">
+          
+          {muscleValue !== "N/A" && <h3>{muscleValue}</h3>}
+          {muscleValue2 !== "N/A" && <h3>& {muscleValue2}</h3>}
+          <h3>Duration: {durationValue}</h3>
+       
+          <h3>Goal: {goalValue}</h3>
+                </div>     
+
             <p>Click any exercise to view more info</p>
-            <div>
-              {Array.from(exerciseMap).map(([key, value]) => (
-                <div key={key}>
-                  <p
-                    className="hover-area"
-                    onClick={() => handleExerciseClick(key)}
-                  >
-                    {key}
-                  </p>
-                  {clickedItem === key && (
+             <div className="exercise-menu">
+             {Array.from(exerciseMap).map(([key, value]) => (
+      <div
+        key={key}
+        className="exercise-menu-item"
+        onClick={() => handleExerciseClick(key)}
+      >
+        {key}
+        <div>
+        {clickedItem === key && (
                     <div>
                       <img
                         src={value[0]}
@@ -110,9 +113,12 @@ export default function RESULTMODAL({
                       <p>{value[1]}</p>
                     </div>
                   )}
-                </div>
-              ))}
-            </div>
+                  </div>
+      </div>
+    ))}
+  </div>
+
+  
           </div>
         </div>
       </div>
