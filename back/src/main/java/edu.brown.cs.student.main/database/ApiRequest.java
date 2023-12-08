@@ -17,7 +17,22 @@ import java.util.List;
 public class ApiRequest {
 
     public List<Exercise> makeExerciseAPIRequest(String muscle, String goal) throws MalformedURLException, IOException {
-        URL url = new URL("https://api.api-ninjas.com/v1/exercises?muscle=" + muscle);
+        String apimuscle = muscle;
+        switch (muscle){
+            case "quads":
+                apimuscle = "quadriceps";
+                break;
+            case "shoulders":
+                apimuscle = "traps";
+                break;
+            case "upper back": case "delts":
+                apimuscle = "lats";
+                break;
+            case "N/A": case "full body":
+                apimuscle = "";
+                break;
+        }
+        URL url = new URL("https://api.api-ninjas.com/v1/exercises?muscle=" + apimuscle);
         HttpURLConnection clientConnection = connect(url); // connect to api
         Moshi moshi = new Moshi.Builder().build();
         Type type = Types.newParameterizedType(List.class, Exercise.class);

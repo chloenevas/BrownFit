@@ -1,19 +1,13 @@
 package edu.brown.cs.student.main.server;
 
 
-import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.Moshi;
-import com.squareup.moshi.Types;
 import edu.brown.cs.student.main.algorithm.ShortAlgo;
 import edu.brown.cs.student.main.database.NelsonMachineDatabase;
-import edu.brown.cs.student.main.handlers.NelsonHandler;
-import okio.Buffer;
+import edu.brown.cs.student.main.handlers.MachineHandler;
+import edu.brown.cs.student.main.handlers.WorkoutHandler;
 import spark.Spark;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
-import java.net.*;
-import java.util.List;
 
 /**
  * A class that models our server. It constructs a unique port, sets up the server's endpoints and
@@ -30,16 +24,17 @@ public class Server {
         // Set up our SparkJava server:
         Spark.port(this.port);
         // Listens and routes requests to a new Broadband object that references our global data src
-        Spark.get("/nelson", new NelsonHandler());
+        Spark.get("/generateWorkout", new WorkoutHandler());
+        Spark.get("/getMachineImage", new MachineHandler());
         Spark.awaitInitialization();
     }
 
     /** Our main method that constructs and runs a new server */
     public static void main(String[] args) throws IOException {
         //new NelsonMachineDatabase();
-        new ShortAlgo("30 minutes or less", "chest", "chest", "strength");
-//        new Server();
-//        System.out.println("Server started at http://localhost:" + port + "; exiting main...");
+        //new ShortAlgo("30 minutes or less", "chest", "chest", "strength", "hello");
+        new Server();
+        System.out.println("Server started at http://localhost:" + port + "; exiting main...");
 
     }
 }
