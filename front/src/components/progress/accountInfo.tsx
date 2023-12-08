@@ -7,25 +7,21 @@ import {
   collection, addDoc, updateDoc, doc, onSnapshot, getDoc,
   query, where, setDoc
 } from "firebase/firestore";
-import AccountInfo from "./accountInfo"
-import ExerciseHistory from "./exerciseHistory";
-import Consistency from "./consistency";
 
 
-export default function ProgressPage() {
+export default function AccountInfo() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [editVisibility, setEditVisibility] = useState("none");
   const [newFirstName, setNewFirstName] = useState("");
   const [newLastName, setNewLastName] = useState("");
-  const [currentPage, setCurrentPage] = useState("account info");
+  const [content, setContent] = useState("account info");
   const [infoButton, setInfoButton] = useState("red");
   const [exerciseHistoryButton, setExerciseHistoryButton] = useState("");
   const [consistencyButton, setConsistencyButton] = useState("");
 
   const exerciseMap = new Map<string, [string]>();
- 
 
   if (auth.currentUser !== null) {
     const currentUser = auth.currentUser;
@@ -58,20 +54,19 @@ export default function ProgressPage() {
       getUserData();
     }
   }
-  
+
   function handleEditButton() {
     setEditVisibility("flex");
-    console.log(editVisibility)
+    console.log(editVisibility);
   }
 
   function handleCloseClick() {
-    setEditVisibility("none")
-    console.log("hey")
+    setEditVisibility("none");
+    console.log("hey");
     return undefined;
   }
 
   async function handleSaveClick() {
-
     if (auth.currentUser !== null) {
       const currentUser = auth.currentUser;
       const userID = currentUser?.uid;
@@ -79,63 +74,55 @@ export default function ProgressPage() {
       const docData = {
         firstName: newFirstName,
         lastName: newLastName,
-        email: currentUser.email
-      }
+        email: currentUser.email,
+      };
 
       if (userID !== undefined) {
-        await setDoc(doc(database, "users", userID), docData)
+        await setDoc(doc(database, "users", userID), docData);
       }
     }
-    setEditVisibility("none")
+    setEditVisibility("none");
   }
 
-  function changePage(page: string) {
-    setCurrentPage(page);
-    if (page == "account info") {
-      setInfoButton("red");
-      setExerciseHistoryButton("");
-      setConsistencyButton("");
-    } else if (page == "exercise history") {
-      setInfoButton("");
-      setExerciseHistoryButton("red");
-      setConsistencyButton("");
-    } else {
-      setInfoButton("");
-      setExerciseHistoryButton("");
-      setConsistencyButton("red");
-    } 
-  }
-  
-    return (
-      <div className="progress-page">
-        <div className="button-sidebar">
-          <button
-            className="navigation-button"
-            style={{ backgroundColor: infoButton }}
-            onClick={() => changePage("account info")}
-          >
-            Account Info
-          </button>
-          <button
-            className="navigation-button"
-            style={{ backgroundColor: exerciseHistoryButton }}
-            onClick={() => changePage("exercise history")}
-          >
-            Exercise History
-          </button>
-          <button
-            className="navigation-button"
-            style={{ backgroundColor: consistencyButton }}
-            onClick={() => changePage("consistency")}
-          >
-            Consistency
-          </button>
-        </div>
-        <div className="content">
-          {currentPage === "account info" && <AccountInfo />}
-          {currentPage === "exercise history" && <ExerciseHistory />}
-          {currentPage === "consistency" && <Consistency />}
+  return (
+    <div className="progress-page">
+      <div className="content">
+        <p style={{ fontSize: "larger", fontWeight: "bold" }}>
+          Account Information
+        </p>
+        <p>
+          Name: {firstName} {lastName}
+        </p>
+        <p>Email: {email} </p>
+        <button onClick={() => handleEditButton()}>Edit</button>
+      </div>
+
+      <div className="edit-modal" style={{ display: editVisibility }}>
+        <span className="close-button" onClick={() => handleCloseClick()}>
+          &times;
+        </span>
+        <div>
+          <legend>First Name: </legend>
+          <ControlledInput
+            type="text"
+            value={newFirstName}
+            setValue={setNewFirstName}
+            ariaLabel={"first name input box"}
+            className="account-info-input"
+          />
+          <legend>Last Name:</legend>
+
+          <ControlledInput
+            type="text"
+            value={newLastName}
+            setValue={setNewLastName}
+            ariaLabel={"last name input box"}
+            className="account-info-input"
+          />
+
+          <button onClick={() => handleSaveClick()}>Save</button>
         </div>
       </div>
-    );
-  }
+    </div>
+  );
+}

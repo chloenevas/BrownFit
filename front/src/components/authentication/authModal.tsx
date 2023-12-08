@@ -98,6 +98,7 @@ export default function AUTHMODAL() {
                 email: userEmail,
                 firstName: firstName,
                 lastName: lastName,
+                exerciseHistory: {}
               });
             })
             .catch((err) => {
