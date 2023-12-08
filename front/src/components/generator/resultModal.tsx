@@ -33,6 +33,7 @@ export default function RESULTMODAL({
   let exerciseList: any[];
   const [infoVisibility, setInfoVisibility] = useState("none"); // State for the input value
   const [clickedItem, setClickedItem] = useState<string | null>(null);
+  let showImg = "none";
 
   //here, exeriseList correctly reads in the back end workout generated.
   //just need to figure out how to display it
@@ -78,7 +79,13 @@ export default function RESULTMODAL({
 
   function getImg(val: string) {
     let spaceIndex = val.indexOf(" ");
-    return ".." + val.substring(0, spaceIndex);
+    let imgPath = val.substring(0, spaceIndex);
+    if (imgPath.includes("/")) {
+      showImg = "block";
+    } else {
+      showImg = "none";
+    }
+    return "src/components" + val.substring(0, spaceIndex);
   }
 
   function getInstructions(val: string) {
@@ -129,6 +136,7 @@ export default function RESULTMODAL({
                         style={{
                           width: "400px", // Adjust the width of the image as needed
                           height: "400px", // Adjust the height of the image as needed
+                          display: showImg,
                         }}
                       />
                       <p>{getInstructions(value)}</p>
