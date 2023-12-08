@@ -5,7 +5,7 @@ import App from "./components/App";
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 
-import { getFirestore, collection, getDocs } from "firebase/firestore";
+import { getFirestore, collection, getDocs, addDoc, onSnapshot } from "firebase/firestore";
 
 // Tim removed some boilerplate to keep things simple.
 // We're using an older version of React here.
@@ -35,20 +35,17 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 
 // initialize firestore service
-const database = getFirestore();
+export const database = getFirestore();
 
 // get collection reference from database --> accesses users collection
-const collectionRef = collection(database, "users");
+export const collectionRef = collection(database, "users");
+
+export let users: { id: string }[] = [];
 
 // gets all the documents within users collection
-getDocs(collectionRef)
-  .then((snapshot) => {
-    let users: { id: string }[] = [];
-    snapshot.docs.forEach((doc) => {
-      users.push({ ...doc.data(), id: doc.id });
-    });
-    console.log(users);
-  })
-  .catch((err) => {
-    console.log(err.message);
+onSnapshot(collectionRef, (snapshot) => {
+  snapshot.docs.forEach((doc) => {
+    users.push({ ...doc.data(), id: doc.id });
   });
+  console.log(users);
+});
