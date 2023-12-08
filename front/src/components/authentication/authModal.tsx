@@ -8,7 +8,6 @@ import {
 } from "firebase/auth";
 import "../../styles/login.css";
 import { ControlledInput } from "../ControlledInput";
-import { text } from "stream/consumers";
 
 export default function AUTHMODAL() {
   const [modalVisibility, setModalVisibility] = useState<string>("none");
@@ -136,7 +135,7 @@ export default function AUTHMODAL() {
           }}
         >
           <img
-            src={BrownFitLogo}
+            src={"src/components/B.png"}
             alt="BrownFit Logo"
             style={{
               width: "50px", // Adjust the width of the image as needed
