@@ -37,7 +37,14 @@ export default function RESULTMODAL({
   //here, exeriseList correctly reads in the back end workout generated.
   //just need to figure out how to display it
   exerciseList = workoutMap;
-  console.log(exerciseList);
+  const map = new Map(
+    exerciseList.map((obj) => [
+      obj.name,
+      obj.img ? obj.img + " " + obj.instructions : " " + obj.instructions,
+    ])
+  );
+
+  console.log(map);
 
   // exerciseMap.set("Leg Press", [
   //   legPress,
@@ -69,6 +76,16 @@ export default function RESULTMODAL({
     return undefined;
   }
 
+  function getImg(val: string) {
+    let spaceIndex = val.indexOf(" ");
+    return ".." + val.substring(0, spaceIndex);
+  }
+
+  function getInstructions(val: string) {
+    let spaceIndex = val.indexOf(" ");
+    return val.substring(spaceIndex, val.length);
+  }
+
   const handleExerciseClick = (key: string) => {
     setInfoVisibility("flex");
     if (clickedItem === key) {
@@ -96,7 +113,7 @@ export default function RESULTMODAL({
             </div>
             <p>Click any exercise to view more info</p>
             <div>
-              {exerciseList.map(([key, value]) => (
+              {Array.from(map).map(([key, value]) => (
                 <div key={key}>
                   <p
                     className="hover-area"
@@ -106,15 +123,15 @@ export default function RESULTMODAL({
                   </p>
                   {clickedItem === key && (
                     <div>
-                      {/* <img
-                        src={value[0]}
+                      <img
+                        src={getImg(value)}
                         alt={`Image for ${key}`}
                         style={{
                           width: "400px", // Adjust the width of the image as needed
                           height: "400px", // Adjust the height of the image as needed
                         }}
-                      /> */}
-                      <p>{value}</p>
+                      />
+                      <p>{getInstructions(value)}</p>
                     </div>
                   )}
                 </div>

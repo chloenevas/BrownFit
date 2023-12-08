@@ -3,6 +3,7 @@ package edu.brown.cs.testing;
 import edu.brown.cs.student.main.algorithm.ShortAlgo;
 import edu.brown.cs.student.main.database.MockAccount;
 import edu.brown.cs.student.main.records.Machine;
+import edu.brown.cs.student.main.records.WorkoutObject;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -93,7 +94,6 @@ public class dailyWorkoutUnitTesting {
         ShortAlgo salgo = new ShortAlgo();
         List<Object> returnMap = salgo.generateWorkout("30-60 minutes", "shoulders", "biceps", "strength", mAcc1);
         System.out.println(returnMap);
-
     }
 
     private int getNumInstaces(List<Machine> rl, String machine){
