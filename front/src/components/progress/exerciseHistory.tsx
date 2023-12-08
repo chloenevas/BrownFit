@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, SetStateAction } from "react";
 import { ControlledInput } from "../ControlledInput";
 import "../../styles/progress.css";
 import { auth, database, collectionRef, users } from "../../index";
@@ -21,44 +21,47 @@ export default function ExerciseHistory() {
   const [editVisibility, setEditVisibility] = useState("none");
   const [newFirstName, setNewFirstName] = useState("");
   const [newLastName, setNewLastName] = useState("");
-  const [content, setContent] = useState("account info");
-  const [infoButton, setInfoButton] = useState("red");
-  const [exerciseHistoryButton, setExerciseHistoryButton] = useState("");
-  const [consistencyButton, setConsistencyButton] = useState("");
 
-  const exerciseMap = new Map<string, [string]>();
 
-  if (auth.currentUser !== null) {
-    const currentUser = auth.currentUser;
-    const userID = currentUser?.uid;
 
-    if (userID === undefined) {
-      setFirstName("");
-      setLastName("");
-    } else {
-      const currentUserDoc = doc(database, "users", userID);
-
-      const getUserData = async () => {
-        try {
-          const docSnapshot = await getDoc(currentUserDoc);
-          if (docSnapshot.exists()) {
-            // check to see if the doc exists
-            const userData = docSnapshot.data();
-            setFirstName(userData.firstName);
-            setLastName(userData.lastName);
-            setEmail(userData.email);
-          } else {
-            setFirstName("");
-            setLastName("");
-            setEmail("");
-          }
-        } catch (error) {
-          console.error("handle error");
-        }
-      };
-      getUserData();
-    }
+  interface ExerciseInfo {
+    rating: number;
+    exercise: string;
+    description: string;
+    image: string;
   }
+  const [exerciseHistory, setExerciseHistory] = useState<ExerciseInfo[]>([]);
+
+
+
+    if (auth.currentUser !== null) {
+      const currentUser = auth.currentUser;
+      const userID = currentUser?.uid;
+
+      if (userID === undefined) {
+        setFirstName("");
+        setLastName("");
+      } else {
+        const currentUserDoc = doc(database, "users", userID);
+
+        const getUserData = async () => {
+          try {
+            const docSnapshot = await getDoc(currentUserDoc);
+            if (docSnapshot.exists()) {
+              // check to see if the doc exists
+              const userData = docSnapshot.data();
+          const exerciseList: ExerciseInfo[] = userData.exerciseHistory.exerciseHistory;
+              setExerciseHistory(exerciseList);
+              
+            }
+          } catch (error) {
+            console.error("handle error");
+          }
+        };
+        getUserData();
+      }
+    }
+  
 
   function handleEditButton() {
     setEditVisibility("flex");
@@ -93,8 +96,13 @@ export default function ExerciseHistory() {
     <div className="progress-page">
       <div className="content">
         <p style={{ fontSize: "larger", fontWeight: "bold" }}>
-          Exercise History
+          Exercise History:
         </p>
+        {Array.from(exerciseHistory).map((item) => (
+          <ul>
+              {item.exercise}
+          </ul>
+        ))}
       </div>
     </div>
   );

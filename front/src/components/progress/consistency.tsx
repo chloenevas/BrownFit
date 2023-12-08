@@ -21,10 +21,7 @@ export default function Consistency() {
   const [editVisibility, setEditVisibility] = useState("none");
   const [newFirstName, setNewFirstName] = useState("");
   const [newLastName, setNewLastName] = useState("");
-  const [content, setContent] = useState("account info");
-  const [infoButton, setInfoButton] = useState("red");
-  const [exerciseHistoryButton, setExerciseHistoryButton] = useState("");
-  const [consistencyButton, setConsistencyButton] = useState("");
+
 
   const exerciseMap = new Map<string, [string]>();
 
