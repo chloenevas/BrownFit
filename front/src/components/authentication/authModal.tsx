@@ -1,13 +1,22 @@
 import { useState } from "react";
-import { auth } from "../../index";
+import { auth, database, collectionRef, users } from "../../index";
+import BrownFitLogo from '../imageBrown/BrownFit.png';
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
+import { collection, addDoc, getDocs, doc, query, where , setDoc} from "firebase/firestore";
+
 import "../../styles/login.css";
 import { ControlledInput } from "../ControlledInput";
-//import {BrownLogo} from "../
+import { text } from "stream/consumers";
+import {
+  onAuthStateChanged,
+  setPersistence,
+  browserSessionPersistence,
+} from "firebase/auth";
+
 
 export default function AUTHMODAL() {
   const [modalVisibility, setModalVisibility] = useState<string>("none");
@@ -21,6 +30,12 @@ export default function AUTHMODAL() {
   const [signinSignoutButton, setSigninSignoutButton] =
     useState("Login/Sign up");
   const [currentUser, setCurrentUser] = useState<string | null>("");
+  const [userID, setUserID] = useState<string | null>("");
+    const [enterNameVisibility, setEnterNameVisibility] = useState("none");
+
+  const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+
 
   function handleSigninSignoutClick(loginStatus: string) {
     if (loginStatus === "Logout") {
@@ -49,6 +64,7 @@ export default function AUTHMODAL() {
   }
 
   function handleLoginClick() {
+    setEnterNameVisibility("none");
     setOptionsPageVisibility("none");
     setLoginPageVisibility("block");
     setSubmitButtonText("Login");
@@ -56,62 +72,77 @@ export default function AUTHMODAL() {
   }
 
   function handleSignupClick() {
+    setEnterNameVisibility("block");
     setOptionsPageVisibility("none");
     setLoginPageVisibility("block");
     setSubmitButtonText("Sign up");
     setAuthState("Enter email and password to sign up");
+    
   }
 
   function handleSubmit(submitType: string) {
     // sign up user
     if (submitType === "Sign up") {
-      createUserWithEmailAndPassword(auth, emailValue, passwordValue)
-        .then((cred) => {
-          setAuthState("Success!");
-          setSigninSignoutButton("Logout");
-          const user = auth.currentUser;
-          if (user !== null) {
-            const userEmail = user.email;
-            setCurrentUser(userEmail);
-          }
+      setPersistence(auth, browserSessionPersistence)
+        .then(() => {
+          createUserWithEmailAndPassword(auth, emailValue, passwordValue)
+            .then((cred) => {
+              setAuthState("Success!");
+              setSigninSignoutButton("Logout");
+              const userCred = cred.user;
+              const userEmail = userCred.email;
+              setCurrentUser(userEmail);
+              const userID = userCred.uid
+              setDoc(doc(database, "users", userID), {
+                // create a doc for that user within the database
+                email: userEmail,
+                firstName: firstName,
+                lastName: lastName,
+                exerciseHistory: {}
+              });
+            })
+            .catch((err) => {
+              console.log(err.code);
+              if (err.code == "auth/weak-password") {
+                setAuthState("Password must be at least 6 characters.");
+              } else if (err.code == "auth/email-already-in-use") {
+                setAuthState("Email already in use. Please sign in.");
+              } else if (err.code == "auth/invalid-email") {
+                setAuthState("Please enter a valid email.");
+              }
+            });
         })
-        .catch((err) => {
-          console.log(err.code);
-          if (err.code == "auth/weak-password") {
-            setAuthState("Password must be at least 6 characters.");
-          } else if (err.code == "auth/email-already-in-use") {
-            setAuthState("Email already in use. Please sign in.");
-          } else if (err.code == "auth/invalid-email") {
-            setAuthState("Please enter a valid email.");
-          }
-        });
     } else if (submitType === "Login") {
-      signInWithEmailAndPassword(auth, emailValue, passwordValue)
-        .then((cred) => {
-          console.log(cred.user);
-          setAuthState("Success!");
-          setSigninSignoutButton("Logout");
-          const user = auth.currentUser;
-          if (user !== null) {
-            const userEmail = user.email;
-            setCurrentUser(userEmail);
-          }
-        })
-        .catch((err) => {
-          if (err.code == "auth/invalid-credential") {
-            setAuthState("Invalid email or password. Please try again.");
-          } else if (err.code == "auth/invalid-email") {
-            setAuthState("Please enter a valid email.");
-          } else if ((err.code = "auth/missing-password")) {
-            setAuthState("Please enter a password.");
-          }
-          // setAuthState(err.code)
-        });
-    }
+      setPersistence(auth, browserSessionPersistence)
+        .then(() => {
+          signInWithEmailAndPassword(auth, emailValue, passwordValue)
+            .then((cred) => {
+              //console.log(cred.user);
+              setAuthState("Success!");
+              setSigninSignoutButton("Logout");
+              const user = auth.currentUser;
+              if (user !== null) {
+                const userEmail = user.email;
+                setCurrentUser(userEmail);
+              }
+            })
+            .catch((err) => {
+              if (err.code == "auth/invalid-credential") {
+                setAuthState("Invalid email or password. Please try again.");
+              } else if (err.code == "auth/invalid-email") {
+                setAuthState("Please enter a valid email.");
+              } else if ((err.code = "auth/missing-password")) {
+                setAuthState("Please enter a password.");
+              }
+              // setAuthState(err.code)
+            });
+          })
+        }
   }
 
   return (
     <div>
+      {modalVisibility === "flex" && <div className="overlay"></div>}
       <p className="App-header">
         <button
           className="App-header-login"
@@ -133,11 +164,8 @@ export default function AUTHMODAL() {
             backgroundColor: "#fff", // White background
           }}
         >
-          {/* Image inside the container */}
           <img
-            src={
-              "/Users/default/Desktop/cs32/term-project-jwschwar-amahns-cnevas-ibrauns/front/src/components/authentication/B.png"
-            }
+            src={"src/components/B.png"}
             alt="BrownFit Logo"
             style={{
               width: "50px", // Adjust the width of the image as needed
@@ -166,18 +194,45 @@ export default function AUTHMODAL() {
           </div>
           <div style={{ display: loginPageVisibility }}>
             <fieldset className="input">
-              <legend>Email:</legend>
-              <ControlledInput
-                value={emailValue}
-                setValue={setEmailValue}
-                ariaLabel={"email input box"}
-              />
-              <legend>Password:</legend>
-              <ControlledInput
-                value={passwordValue}
-                setValue={setPasswordValue}
-                ariaLabel={"password input box"}
-              />
+              <div className="input-label">
+                <div style={{display: enterNameVisibility}}>
+                  <legend>First Name:</legend>
+                  <ControlledInput
+                    type="text"
+                    value={firstName}
+                    setValue={setFirstName}
+                    ariaLabel={"first name input box"}
+                    className="email-input" // Add a class name for the password input
+                  />
+                  <legend>Last Name:</legend>
+                  <ControlledInput
+                    type="text"
+                    value={lastName}
+                    setValue={setLastName}
+                    ariaLabel={"last name input box"}
+                    className="password-input" // Add a class name for the password input
+                  />
+                </div>
+
+                <legend>Email:</legend>
+                <ControlledInput
+                  type="text"
+                  value={emailValue}
+                  setValue={setEmailValue}
+                  ariaLabel={"email input box"}
+                  className="email-input" // Add a class name for the email input
+                />
+              </div>
+              <div className="input-label">
+                <legend>Password:</legend>
+                <ControlledInput
+                  type="password"
+                  value={passwordValue}
+                  setValue={setPasswordValue}
+                  ariaLabel={"password input box"}
+                  className="password-input" // Add a class name for the password input
+                />
+              </div>
             </fieldset>
             <button
               type="submit"

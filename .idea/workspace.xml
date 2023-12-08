@@ -4,14 +4,29 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
+<<<<<<< HEAD
+    <list default="true" id="899cf0c2-5061-4d85-a39b-4f0232cfdbb1" name="Changes" comment="" />
+=======
     <list default="true" id="899cf0c2-5061-4d85-a39b-4f0232cfdbb1" name="Changes" comment="">
+<<<<<<< HEAD
 <<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/_metadata.json" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/.vite/deps/_metadata.json" afterDir="false" />
 =======
       <change beforePath="$PROJECT_DIR$/front/src/styles/Workout.css" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/styles/Workout.css" afterDir="false" />
 >>>>>>> refs/remotes/origin/main
+=======
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/data/machineData.json" beforeDir="false" afterPath="$PROJECT_DIR$/back/data/machineData.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/database/NelsonMachineDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/database/NelsonMachineDatabase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/target/classes/edu/brown/cs/student/main/database/NelsonMachineDatabase.class" beforeDir="false" afterPath="$PROJECT_DIR$/back/target/classes/edu/brown/cs/student/main/database/NelsonMachineDatabase.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/target/test-classes/edu/brown/cs/testing/MainTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/back/target/test-classes/edu/brown/cs/testing/MainTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/target/test-classes/edu/brown/cs/testing/TestingServer.class" beforeDir="false" afterPath="$PROJECT_DIR$/back/target/test-classes/edu/brown/cs/testing/TestingServer.class" afterDir="false" />
+>>>>>>> refs/remotes/origin/main
     </list>
+>>>>>>> main
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -35,6 +50,9 @@
     <option name="showLibraryContents" value="true" />
   </component>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> refs/remotes/origin/main
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ASKED_ADD_EXTERNAL_FILES": "true",
@@ -45,9 +63,15 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
+<<<<<<< HEAD
     "git-widget-placeholder": "main",
     "jdk.selected.JAVA_MODULE": "openjdk-19",
     "last_opened_file_path": "/Users/efratavigdor/Desktop/CS32/Final/term-project-jwschwar-amahns-cnevas-ibrauns",
+=======
+    "git-widget-placeholder": "front-end-skeleton",
+    "jdk.selected.JAVA_MODULE": "openjdk-19",
+    "last_opened_file_path": "/Users/chloenevas/Documents/CS32/term-project-jwschwar-amahns-cnevas-ibrauns",
+>>>>>>> refs/remotes/origin/main
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -57,6 +81,7 @@
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
     "vue.rearranger.settings.migration": "true"
+<<<<<<< HEAD
 =======
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
@@ -81,8 +106,10 @@
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
 >>>>>>> refs/remotes/origin/main
+=======
+>>>>>>> refs/remotes/origin/main
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/records" />
@@ -90,6 +117,26 @@
       <recent name="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/handler" />
       <recent name="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/server" />
     </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="Server" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="edu.brown.cs.student.main.server.Server" />
+      <module name="s0" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="edu.brown.cs.student.main.server.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Server" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -106,6 +153,14 @@
       <workItem from="1701545163076" duration="596000" />
 =======
       <workItem from="1701545176843" duration="818000" />
+<<<<<<< HEAD
+>>>>>>> refs/remotes/origin/main
+=======
+<<<<<<< HEAD
+      <workItem from="1701825622793" duration="114000" />
+=======
+      <workItem from="1701668444614" duration="514000" />
+>>>>>>> main
 >>>>>>> refs/remotes/origin/main
     </task>
     <servers />
