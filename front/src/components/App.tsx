@@ -16,8 +16,9 @@ import {
   onSnapshot,
   getDoc,
   query,
-  where,
+  where
 } from "firebase/firestore";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 class App extends Component<any, any> {
   homeButtonColor: string;
@@ -33,6 +34,9 @@ class App extends Component<any, any> {
     this.progressButtonColor = "#453131";
     this.progressVisibility = "none";
     this.checkUser();
+    setInterval(() => {
+      this.checkUser();
+    }, 100);
     this.state = {
       currentPage: "home",
       // // tracking key pressing for zooming
@@ -87,20 +91,24 @@ class App extends Component<any, any> {
     // setPageContent(progressPage());
     // call authentication here
     return undefined;
-
-    
   }
 
   checkUser() {
-    console.log("hey")
-    if (auth.currentUser !== null) {
-      this.progressVisibility = "flex";
-    }
-    else {
-        this.progressVisibility = "none"
-    }
-  }
+    const auth = getAuth();
 
+    auth.onAuthStateChanged((user) => {
+      console.log("hey");
+
+      if (user !== null) {
+        console.log("no");
+        this.setState({ progressVisibility: "flex" });
+      } else {
+        console.log("yurrrr");
+        this.setState({ progressVisibility: "none" });
+        this.changePage("home")
+      }
+    });
+  }
 
   render() {
     return (
@@ -136,7 +144,10 @@ class App extends Component<any, any> {
             className="Navigation-Button"
             aria-label="progress button"
             onClick={() => this.changePage("progress")}
-            style={{ backgroundColor: this.progressButtonColor, display: this.progressVisibility}}
+            style={{
+              backgroundColor: this.progressButtonColor,
+              display: this.state.progressVisibility,
+            }}
           >
             Check Progress
           </button>
