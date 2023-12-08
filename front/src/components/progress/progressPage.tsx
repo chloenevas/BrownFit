@@ -17,8 +17,7 @@ export default function ProgressPage() {
   const [newFirstName, setNewFirstName] = useState("");
   const [newLastName, setNewLastName] = useState("");
 
-  let userList: { id: string }[] = [];
-
+  const exerciseMap = new Map<string, [string]>();
  
 
   if (auth.currentUser !== null) {
