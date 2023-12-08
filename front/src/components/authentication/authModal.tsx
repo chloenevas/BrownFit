@@ -61,7 +61,7 @@ export default function AUTHMODAL() {
     setOptionsPageVisibility("flex");
     setLoginPageVisibility("none");
     return undefined;
-  } 
+  }
 
   function handleLoginClick() {
     setEnterNameVisibility("none");

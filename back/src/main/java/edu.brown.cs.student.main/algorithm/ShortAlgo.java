@@ -14,7 +14,7 @@ import java.util.Objects;
 import kotlin.collections.ArrayDeque;
 
 public class ShortAlgo {
-    private HashMap<String, Object> returnMap;
+    private ArrayList<Object> returnList;
     private HashMap<String, Integer> durationMap;
 
     // probably unnecessary
@@ -22,12 +22,11 @@ public class ShortAlgo {
     private HashMap<String, Machine> database;
 
 
-    public ShortAlgo(String duration, String muscle, String muscle2, String goal) throws IOException {
+    public ShortAlgo() throws IOException {
         NelsonMachineDatabase database = new NelsonMachineDatabase();
         this.database = database.getDatabase();
-        this.returnMap = new HashMap<>();
+        this.returnList = new ArrayList<>();
         this.initializeDuration();
-        //this.generateWorkout(duration, muscle, muscle2, goal);
     }
 
     /**
@@ -39,8 +38,9 @@ public class ShortAlgo {
      * @throws IOException
      */
 
-    private void generateWorkout(String duration, String muscle, String muscle2, String goal, MockAccount mock)
+    public List<Object> generateWorkout(String duration, String muscle, String muscle2, String goal, MockAccount mock)
             throws IOException {
+
 
         int value = this.durationMap.get(duration);
 
@@ -48,7 +48,7 @@ public class ShortAlgo {
         for(Machine machine: this.database.values()) {
 
             // checks if the machine contains the muscle targeted and adds to valid list
-            if (contains(machine.muscles(), muscle)){
+            if (contains(machine.muscle(), muscle)){
                 validMachines.add(machine);
             }
         }
@@ -58,14 +58,17 @@ public class ShortAlgo {
             }
             Machine machine = this.selectExercise(validMachines, muscle2, mock);
             // need to add rep ranges and sets and then return
-            value--;
-            this.returnMap.put("Machine " + 1, machine);
+            validMachines.remove(machine);
+            this.returnList.add(machine);
         }
 
         // API request here for an exercise and add to map
 
         ApiRequest API = new ApiRequest();
         List<Exercise> APIlist= API.makeExerciseAPIRequest(muscle, goal);
+        if (APIlist.isEmpty()){
+            return new ArrayList<>();
+        }
 
         // adds as many API exercises as needed (almost always 1 unless we run out of machines
         for(int i = 0; i <value; i++) {
@@ -73,10 +76,10 @@ public class ShortAlgo {
 
             // check that the exercise is not already in the list from the machines (bench press is in both)
 
-            this.returnMap.put("API EXERCISE", exercise);
+            this.returnList.add(exercise);
         }
 
-
+        return this.returnList;
     }
 
     /**
@@ -106,7 +109,7 @@ public class ShortAlgo {
 
         for (int i = 0; i < num; i++){
             //if machine contains secondary muscle, add it 5 times to return list
-            if (contains(machines.get(i).muscles(), muscle2)){
+            if (contains(machines.get(i).muscle(), muscle2)){
                 for (int j = 0; j <5; j++){
                     machineWeights.add(machines.get(i));
                 }
@@ -162,9 +165,9 @@ public class ShortAlgo {
         this.durationMap = new HashMap<>();
         // How do we want to allocate exercises depending on duration?
         this.durationMap.put("30 minutes or less", 2);
-        this.durationMap.put("30-60", 4);
-        this.durationMap.put("60-90", 6);
-        this.durationMap.put("90-120", 7);
+        this.durationMap.put("30-60 minutes", 4);
+        this.durationMap.put("60-90 minutes", 6);
+        this.durationMap.put("90-120 minutes", 7);
         this.durationMap.put("120 minutes or more", 8);
     }
 
@@ -178,8 +181,8 @@ public class ShortAlgo {
 //  }
 
 
-    public Map<String, Object> getWorkout(){
-        return this.returnMap;
+    public ArrayList<Object> getWorkout(){
+        return this.returnList;
     }
 
 }

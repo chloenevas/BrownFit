@@ -3,6 +3,12 @@ import React, { SetStateAction, useState, Component } from "react";
 import "../../styles/Workout.css";
 import RESULTMODAL from "./resultModal";
 
+export interface exercise {
+  name: string;
+  muscle: any;
+  instructions: any;
+}
+
 export default function WorkoutPage() {
   const [durationValue, setDurationValue] =
     React.useState("30 minutes or less");
@@ -10,11 +16,13 @@ export default function WorkoutPage() {
   const [muscleValue2, setMuscleValue2] = React.useState("N/A");
   const [goalValue, setGoalValue] = React.useState("strength");
   const [modalVisibility, setModalVisibility] = React.useState("none");
+  const [workoutMap, setWorkoutMap] = React.useState(new Array<any>());
 
   const handleChange = (event: {
     target: { value: React.SetStateAction<string> };
   }) => {
     setDurationValue(event.target.value);
+    console.log(durationValue);
   };
 
   const handleMuscleGroupChange = (event: {
@@ -35,12 +43,29 @@ export default function WorkoutPage() {
     setGoalValue(event.target.value);
   };
 
-  function clickHandler() {
+  async function clickHandler() {
     console.log(durationValue);
     console.log(muscleValue);
     console.log(muscleValue2);
     console.log(goalValue);
     setModalVisibility("flex");
+    var apiFetchMap: Array<any> = await fetch(
+      "http://localhost:3332/generateWorkout?duration=" +
+        durationValue +
+        "&muscle1=" +
+        muscleValue +
+        "&muscle2=" +
+        muscleValue2 +
+        "&goal=" +
+        goalValue +
+        "&username=jackson"
+    )
+      .then((response) => response.json())
+      .then((json) => {
+        console.log(json);
+        return json;
+      });
+    setWorkoutMap(apiFetchMap);
   }
 
   return (
@@ -53,6 +78,7 @@ export default function WorkoutPage() {
           goalValue={goalValue}
           modalVisibility={modalVisibility}
           setModalVisibility={setModalVisibility}
+          workoutMap={workoutMap}
         />
       </div>
       <p className="dayWorkoutHeader">
