@@ -61,7 +61,7 @@ export default function AUTHMODAL() {
     setOptionsPageVisibility("flex");
     setLoginPageVisibility("none");
     return undefined;
-  } 
+  }
 
   function handleLoginClick() {
     setEnterNameVisibility("none");
@@ -98,6 +98,7 @@ export default function AUTHMODAL() {
                 email: userEmail,
                 firstName: firstName,
                 lastName: lastName,
+                exerciseHistory: {}
               });
             })
             .catch((err) => {

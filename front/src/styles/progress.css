@@ -2,9 +2,11 @@
     width: 15%;
 }
 
-.progress-info {
-    display: flex;
-    align-items: flex-start;
+.progress-page {
+  display: flex;
+  /* justify-content: center; 
+  align-items: center; 
+  height: 100vh;  */
 }
 
 .edit-modal {
@@ -33,4 +35,32 @@
   top: 5px;
   cursor: pointer;
   right: 10px;
+}
+
+.navigation-Button {
+  
+  margin-top: 50px;
+  margin-left: 10px;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 40px;
+  font-size: 10px;
+  background-color: #453131;
+  color: rgb(237, 237, 237);
+}
+
+.button-sidebar {
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+ padding: 20px;
+ justify-content: center;
+ align-items: center;
+ margin-left: 23.5%
 }
