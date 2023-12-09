@@ -20,11 +20,12 @@ public class ShortAlgo {
 
     // Updates/TODO
     // 1. Updated amount of exercises per workout to match the hashmap
-    // I did this by limiting amount of apis that can be added and by adding muscles accoring to muscle2 as well
+    // update: I did this by limiting amount of apis that can be added and by adding muscles accoring to muscle2 as well
     // 2. Use testGenerateWorkout to fuzz test and you can add more thorough test assertions
         // to test more deeply all I have right now is assert size
     // 4. wrote a note about the switch boolean idea: not really necessary if we don't care
         // about a user getting less exercises than they requested but just an idea.
+    //update: I fixed the N/A and full body options so that they implicitly match with any muscle
 
 
     public ShortAlgo() throws IOException {
@@ -180,14 +181,15 @@ public class ShortAlgo {
     }
 
     /**
-     * Simple containment in an array
+     * Simple containment in an array plus fact that it will always return true if muscle is noted as full body or N/A
+     * this is so any exercise could be matched with one of these values
      * @param array
      * @param value
      * @return
      */
     private static boolean contains(String[] array, String value) {
         for (String element : array) {
-            if (element.equals(value)) {
+            if (element.equals(value) || value.equals("full body") || value.equals("N/A")) {
                 return true;
             }
         }
