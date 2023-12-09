@@ -46,6 +46,9 @@ export default function RESULTMODAL({
   let exerciseList: any[];
   const [infoVisibility, setInfoVisibility] = useState("none"); // State for the input value
   const [clickedItem, setClickedItem] = useState<string | null>(null);
+  const [saveButtonVis, setSaveButtonVis] = useState("none")
+  const [saveSuccessMess, setSaveSuccessMess] = useState("");
+
   let showImg = "none";
   
   //here, exeriseList correctly reads in the back end workout generated.
@@ -67,15 +70,21 @@ export default function RESULTMODAL({
     };
   });
 
-
+setInterval(() => {
+  checkUser();
+}, 100);
 
   function handleCloseClick() {
     setModalVisibility("none");
-    updateExerciseHistory();
 
     return undefined;
   }
 
+  function onSaveClick() {
+    updateExerciseHistory();
+    setSaveSuccessMess("Exercises successfully saved to user history!")
+  }
+  
   function getImg(val: string) {
     let spaceIndex = val.indexOf(" ");
     let imgPath = val.substring(0, spaceIndex);
@@ -102,9 +111,19 @@ export default function RESULTMODAL({
     }
   };
 
+  async function checkUser() {
+    auth.onAuthStateChanged((user) => {
+      if (user !== null) {
+        setSaveButtonVis("flex");
+
+      } else {
+        setSaveButtonVis("none")
+      }
+});
+  }
+
   async function updateExerciseHistory() {
     if (auth.currentUser !== null) {
-      if (auth.currentUser !== null) {
         const currentUser = auth.currentUser;
         const userID = currentUser?.uid;
         const currentUserDoc = doc(database, "users", userID);
@@ -114,8 +133,14 @@ export default function RESULTMODAL({
           // check to see if the doc exists
           const userData = docSnapshot.data();
           const userExerciseHist = userData.exerciseHistory;
-
-          const mergedExerciseData = userExerciseHist.concat(newExerciseHistory)
+          let mergedExerciseData;
+            // CHECK IF EXERCISE ALREADY EXISTS IN HISTORY
+          if (Object.keys(userExerciseHist).length == 0) {
+            mergedExerciseData = newExerciseHistory;
+          }
+          else {
+            mergedExerciseData = userExerciseHist.concat(newExerciseHistory);
+          }
         
           const docData = {
             exerciseHistory: mergedExerciseData
@@ -126,10 +151,11 @@ export default function RESULTMODAL({
               merge: true,
             });
          }
-       }
       }
     }
+
   }
+
 
   {
     return (
@@ -171,6 +197,17 @@ export default function RESULTMODAL({
                   )}
                 </div>
               ))}
+            </div>
+            <div>
+              <button
+                style={{ display: saveButtonVis }}
+                onClick={() => onSaveClick()}
+              >
+                Save exercises
+              </button>
+              <p>
+                {saveSuccessMess}
+              </p>
             </div>
           </div>
         </div>
