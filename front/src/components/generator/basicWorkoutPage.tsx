@@ -1,6 +1,13 @@
 import React, { SetStateAction, useState, Component } from "react";
-//import "/Users/default/Desktop/cs32/term-project-jwschwar-amahns-cnevas-ibrauns/front/src/styles/Workout.css"; 
+//import "/Users/default/Desktop/cs32/term-project-jwschwar-amahns-cnevas-ibrauns/front/src/styles/Workout.css";
 import "../../styles/Workout.css";
+import RESULTMODAL from "./resultModal";
+
+export interface exercise {
+  name: string;
+  muscle: any;
+  instructions: any;
+}
 
 export default function WorkoutPage() {
   const [durationValue, setDurationValue] =
@@ -8,11 +15,14 @@ export default function WorkoutPage() {
   const [muscleValue, setMuscleValue] = React.useState("full body");
   const [muscleValue2, setMuscleValue2] = React.useState("N/A");
   const [goalValue, setGoalValue] = React.useState("strength");
+  const [modalVisibility, setModalVisibility] = React.useState("none");
+  const [workoutMap, setWorkoutMap] = React.useState(new Array<any>());
 
   const handleChange = (event: {
     target: { value: React.SetStateAction<string> };
   }) => {
     setDurationValue(event.target.value);
+    console.log(durationValue);
   };
 
   const handleMuscleGroupChange = (event: {
@@ -33,21 +43,50 @@ export default function WorkoutPage() {
     setGoalValue(event.target.value);
   };
 
-  function clickHandler() {
+  async function clickHandler() {
     console.log(durationValue);
     console.log(muscleValue);
     console.log(muscleValue2);
     console.log(goalValue);
+    setModalVisibility("flex");
+    var apiFetchMap: Array<any> = await fetch(
+      "http://localhost:3332/generateWorkout?duration=" +
+        durationValue +
+        "&muscle1=" +
+        muscleValue +
+        "&muscle2=" +
+        muscleValue2 +
+        "&goal=" +
+        goalValue +
+        "&username=jackson"
+    )
+      .then((response) => response.json())
+      .then((json) => {
+        console.log(json);
+        return json;
+      });
+    setWorkoutMap(apiFetchMap);
   }
 
   return (
     <div>
+      <div>
+        <RESULTMODAL
+          durationValue={durationValue}
+          muscleValue={muscleValue}
+          muscleValue2={muscleValue2}
+          goalValue={goalValue}
+          modalVisibility={modalVisibility}
+          setModalVisibility={setModalVisibility}
+          workoutMap={workoutMap}
+        />
+      </div>
       <p className="dayWorkoutHeader">
         <h1>Get a workout for today!</h1>
       </p>
       <p className="informationHeader">
         <h1>
-          Enter the following information to generate a personalized Nelson
+          Enter the following information to generate a presonalized Nelson
           Fitness Center workout!
         </h1>
       </p>
@@ -68,7 +107,7 @@ export default function WorkoutPage() {
         </label>
       </p>
       <p className="dropdownLabel">
-        <label className="dropdownLabel">
+        <label>
           What muscle groups would you like to work on?
           <select value={muscleValue} onChange={handleMuscleGroupChange}>
             <option value="full body">full body</option>
