@@ -16,7 +16,7 @@ import {
   onSnapshot,
   getDoc,
   query,
-  where
+  where,
 } from "firebase/firestore";
 import {
   getAuth,
@@ -92,20 +92,21 @@ class App extends Component<any, any> {
     }
   }
 
-  
-
   checkUser() {
-
     auth.onAuthStateChanged((user) => {
-
       if (user !== null) {
+        console.log("null");
         this.setState({ progressVisibility: "flex" });
         console.log("not null")
       } else {
+        console.log("not null");
         this.setState({ progressVisibility: "none" });
         console.log("null")
       }
-      if (this.state.currentPage === "progress" && this.state.progressVisibility === "none") {
+      if (
+        this.state.currentPage === "progress" &&
+        this.state.progressVisibility === "none"
+      ) {
         this.changePage("home");
       }
     });

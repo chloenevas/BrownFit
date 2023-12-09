@@ -66,8 +66,6 @@ export default function RESULTMODAL({
     };
   });
 
-  console.log(map);
-
   function handleCloseClick() {
     setModalVisibility("none");
     return undefined;
