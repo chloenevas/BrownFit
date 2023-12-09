@@ -15,6 +15,7 @@ import {
   query,
   where,
   setDoc,
+  FieldValue
 } from "firebase/firestore";
 import "../../styles/login.css";
 //import {BrownLogo} from "../
@@ -46,7 +47,7 @@ export default function RESULTMODAL({
   const [infoVisibility, setInfoVisibility] = useState("none"); // State for the input value
   const [clickedItem, setClickedItem] = useState<string | null>(null);
   let showImg = "none";
-
+  
   //here, exeriseList correctly reads in the back end workout generated.
   //just need to figure out how to display it
   exerciseList = workoutMap;
@@ -57,17 +58,21 @@ export default function RESULTMODAL({
     ])
   );
 
-  const exerciseHistory = Array.from(map).map(([key, value]) => {
+  const newExerciseHistory = Array.from(map).map(([key, value]) => {
     return {
       exercise: key,
       rating: 0,
       image: value[0],
-      description: value[1],
+      description: value[1], // TODO: this is only returning the first letter of the description - need to fix
     };
   });
 
+
+
   function handleCloseClick() {
     setModalVisibility("none");
+    updateExerciseHistory();
+
     return undefined;
   }
 
@@ -92,31 +97,36 @@ export default function RESULTMODAL({
     if (clickedItem === key) {
       setClickedItem(null);
       setInfoVisibility("none");
-      console.log("ehewre");
     } else {
       setClickedItem(key);
     }
   };
 
   async function updateExerciseHistory() {
-    console.log("its called");
-
     if (auth.currentUser !== null) {
       if (auth.currentUser !== null) {
         const currentUser = auth.currentUser;
         const userID = currentUser?.uid;
+        const currentUserDoc = doc(database, "users", userID);
 
-        const docData = {
-          exerciseHistory: {
-            exerciseHistory,
-          },
-        };
+         const docSnapshot = await getDoc(currentUserDoc);
+        if (docSnapshot.exists()) {
+          // check to see if the doc exists
+          const userData = docSnapshot.data();
+          const userExerciseHist = userData.exerciseHistory;
 
-        if (userID !== undefined) {
-          await setDoc(doc(database, "users", userID), docData, {
-            merge: true,
-          });
-        }
+          const mergedExerciseData = userExerciseHist.concat(newExerciseHistory)
+        
+          const docData = {
+            exerciseHistory: mergedExerciseData
+          };
+
+          if (userID !== undefined) {
+            await setDoc(doc(database, "users", userID), docData, {
+              merge: true,
+            });
+         }
+       }
       }
     }
   }

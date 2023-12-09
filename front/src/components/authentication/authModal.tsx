@@ -117,7 +117,6 @@ export default function AUTHMODAL() {
         .then(() => {
           signInWithEmailAndPassword(auth, emailValue, passwordValue)
             .then((cred) => {
-              //console.log(cred.user);
               setAuthState("Success!");
               setSigninSignoutButton("Logout");
               const user = auth.currentUser;
