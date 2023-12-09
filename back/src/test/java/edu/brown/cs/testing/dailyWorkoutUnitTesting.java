@@ -4,8 +4,10 @@ import edu.brown.cs.student.main.algorithm.ShortAlgo;
 import edu.brown.cs.student.main.database.MockAccount;
 import edu.brown.cs.student.main.records.Machine;
 import edu.brown.cs.student.main.records.WorkoutObject;
+import java.util.Collections;
+import org.junit.Before;
+import org.junit.Test;
 import org.testng.Assert;
-import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,6 +15,28 @@ import java.util.HashMap;
 import java.util.List;
 
 public class dailyWorkoutUnitTesting {
+private List<String> duration;
+private List<String> muscles;
+private List<String> goals;
+
+// why does this not run before???
+    @Before
+    public void setUp(){
+        System.out.println("here");
+        this.duration = new ArrayList<>();
+        String[] dummyDur = new String[]{"30 minutes or less", "30-60 minutes", "60-90 minutes",
+            "90-120 minutes", "120 minutes or more"};
+        Collections.addAll(this.duration, dummyDur);
+        this.muscles=new ArrayList<>();
+        String[] dummyMusc = new String[]{"full body", "calves", "quads", "hamstrings",
+            "triceps", "biceps", "chest", "shoulders", "upper back", "lower back",
+            "delts", "glutes", "abdominals"};
+        Collections.addAll(this.muscles, dummyMusc);
+        this.goals=new ArrayList<>();
+        String[] dummyGoals = new String[]{"strengthen muscles", "increase muscle endurance",
+            "build muscles", "burn calories", "just get a good sweat in!"};
+        Collections.addAll(this.goals, dummyGoals);
+    }
 
     @Test
     public void testShortAlgoRatingUpdates() throws IOException {
@@ -94,6 +118,38 @@ public class dailyWorkoutUnitTesting {
         ShortAlgo salgo = new ShortAlgo();
         List<Object> returnMap = salgo.generateWorkout("30-60 minutes", "shoulders", "biceps", "strength", mAcc1);
         System.out.println(returnMap);
+    }
+
+    @Test
+    public void testGenerateWorkout() throws IOException {
+        ArrayList<Machine> machineList = new ArrayList<>();
+        Machine machine1 = new Machine("1", "png", "blah", new String[0]);
+        Machine machine2 = new Machine("2", "png", "blah", new String[0]);
+        Machine machine3 = new Machine("3", "png", "blah", new String[0]);
+        machineList.add(machine1);
+        machineList.add(machine2);
+        machineList.add(machine3);
+
+        HashMap<Machine, Integer> map1 = new HashMap<>();
+        MockAccount mAcc1 = new MockAccount("mock", map1);
+
+        ShortAlgo algo = new ShortAlgo();
+        for (int i = 0; i < 20; i ++) {
+            String duration = this.duration.get((int) (Math.random()*this.duration.size()));
+            String muscle1 = this.muscles.get((int) (Math.random()*this.muscles.size()));
+            String muscle2 = this.muscles.get((int) (Math.random()*this.muscles.size()));
+            String goal = this.goals.get((int) (Math.random()*this.goals.size()));
+            System.out.println(duration +  ' ' + muscle1 + ' ' + muscle2 + ' ' +  goal);
+            List<Object> testList = algo.generateWorkout(duration, muscle1, muscle2, goal, mAcc1);
+            Assert.assertTrue(testList.size() == algo.getDurationMap().get(duration)+1);
+        }
+
+        }
+
+
+    @Test
+    public void testEdgeCases(){
+
     }
 
     private int getNumInstaces(List<Machine> rl, String machine){

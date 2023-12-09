@@ -40,7 +40,6 @@ public class ApiRequest {
         JsonAdapter<List<Exercise>> adapter =
                 moshi.adapter(type); // creates moshi object that will read json
         List<Exercise> exerciseList = adapter.fromJson(new Buffer().readFrom(clientConnection.getInputStream()));
-        System.out.println(exerciseList.get(0).name());
         clientConnection.disconnect();
         return exerciseList;
     }

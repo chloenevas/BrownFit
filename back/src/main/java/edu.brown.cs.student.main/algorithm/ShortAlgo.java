@@ -16,10 +16,15 @@ import kotlin.collections.ArrayDeque;
 public class ShortAlgo {
     private ArrayList<Object> returnList;
     private HashMap<String, Integer> durationMap;
-
-    // probably unnecessary
-    private HashMap<String, String> goalMap;
     private HashMap<String, Machine> database;
+
+    // Updates/TODO
+    // 1. Updated amount of exercises per workout to match the hashmap
+    // 2. Use testGenerateWorkout to fuzz test and you can add more thorough test assertions
+        // to test more deeply all I have right now is assert size
+    // 3. never fixed lower back to lower_back
+    // 4. wrote a note about the switch boolean idea: not really necessary if we don't care
+        // about a user getting less exercises than they requested but just an idea.
 
 
     public ShortAlgo() throws IOException {
@@ -41,7 +46,7 @@ public class ShortAlgo {
     public List<Object> generateWorkout(String duration, String muscle, String muscle2, String goal, MockAccount mock)
             throws IOException {
 
-
+        this.returnList.clear();
         int value = this.durationMap.get(duration);
 
         List<Machine> validMachines = new ArrayList<>();
@@ -52,13 +57,16 @@ public class ShortAlgo {
                 validMachines.add(machine);
             }
         }
+        int param = 0;
         for(int i = value; i > 0; i--){
+            param = i;
             if (validMachines.isEmpty()){
                 break;
             }
             Machine machine = this.selectExercise(validMachines, muscle2, mock);
             // need to add rep ranges and sets and then return
             validMachines.remove(machine);
+            System.out.println("added nelson" + i);
             this.returnList.add(machine);
         }
 
@@ -69,16 +77,20 @@ public class ShortAlgo {
         if (APIlist.isEmpty()){
             return new ArrayList<>();
         }
-
         // adds as many API exercises as needed (almost always 1 unless we run out of machines
-        for(int i = 0; i <value; i++) {
+
+        // I want to use this to switch between primary and secondary muscle API calls
+        // so that we can populate with more exercises in the event that the nelson does not
+        // have enough exercises and our primary exercise is a small body part
+        boolean switchBool = true;
+        for(int i = 0; i < param; i++) {
             Exercise exercise = APIlist.get((int) (Math.random() * APIlist.size()));
 
             // check that the exercise is not already in the list from the machines (bench press is in both)
-
+            System.out.println("added API" + i);
             this.returnList.add(exercise);
         }
-
+        System.out.println(this.returnList.size());
         return this.returnList;
     }
 
@@ -171,6 +183,10 @@ public class ShortAlgo {
         this.durationMap.put("120 minutes or more", 8);
     }
 
+    public Map<String, Integer> getDurationMap(){
+        return this.durationMap;
+    }
+
 //  private void initializeGoal(){
 //    // How do we want to allocate exercises depending on duration?
 //    this.goalMap.put("strengthen muscles", "strength");
@@ -179,11 +195,5 @@ public class ShortAlgo {
 //    this.goalMap.put("90-120", 8);
 //    this.goalMap.put("120 minutes or more", 9);
 //  }
-
-
-    public ArrayList<Object> getWorkout(){
-        return this.returnList;
-    }
-
 }
 
