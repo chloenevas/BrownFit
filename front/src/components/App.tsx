@@ -95,13 +95,9 @@ class App extends Component<any, any> {
   checkUser() {
     auth.onAuthStateChanged((user) => {
       if (user !== null) {
-        console.log("null");
         this.setState({ progressVisibility: "flex" });
-        console.log("not null")
       } else {
-        console.log("not null");
         this.setState({ progressVisibility: "none" });
-        console.log("null")
       }
       if (
         this.state.currentPage === "progress" &&

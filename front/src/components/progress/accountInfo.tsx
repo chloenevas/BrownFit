@@ -51,12 +51,10 @@ export default function AccountInfo() {
 
   function handleEditButton() {
     setEditVisibility("flex");
-    console.log(editVisibility);
   }
 
   function handleCloseClick() {
     setEditVisibility("none");
-    console.log("hey");
     return undefined;
   }
 
