@@ -13,6 +13,7 @@ import {
   where,
   setDoc,
 } from "firebase/firestore";
+import { type } from "node:os";
 
 export default function ExerciseHistory() {
   const [firstName, setFirstName] = useState("");
@@ -21,7 +22,7 @@ export default function ExerciseHistory() {
   const [editVisibility, setEditVisibility] = useState("none");
   const [newFirstName, setNewFirstName] = useState("");
   const [newLastName, setNewLastName] = useState("");
-
+const [exerciseHistNames, setExerciseHistNames] = useState<string[]>([]);
 
 
   interface ExerciseInfo {
@@ -42,7 +43,7 @@ export default function ExerciseHistory() {
         setFirstName("");
         setLastName("");
       } else {
-        const currentUserDoc = doc(database, "users", userID);
+        const currentUserDoc = doc(database, "users", userID); // get document of current logged in user
 
         const getUserData = async () => {
           try {
@@ -50,11 +51,19 @@ export default function ExerciseHistory() {
             if (docSnapshot.exists()) {
               // check to see if the doc exists
               const userData = docSnapshot.data();
-          const exerciseList: ExerciseInfo[] = userData.exerciseHistory.exerciseHistory;
-              setExerciseHistory(exerciseList);
+              const exerciseList: ExerciseInfo[] = userData.exerciseHistory // get user's current exercise history
+              setExerciseHistory(exerciseList); 
+            let names: string[] = [] // create empty array for storing exercise names
+              
+               {
+                Array.from(exerciseHistory).map((item) =>
+                  names.push(item.exercise) // add every name 
+                 );
+              }
+              setExerciseHistNames(names); // set exercise history to be those names
               
             }
-          } catch (error) {
+} catch (error) {
             console.error("handle error");
           }
         };
@@ -63,14 +72,13 @@ export default function ExerciseHistory() {
     }
   
 
+
   function handleEditButton() {
     setEditVisibility("flex");
-    console.log(editVisibility);
   }
 
   function handleCloseClick() {
     setEditVisibility("none");
-    console.log("hey");
     return undefined;
   }
 
@@ -91,18 +99,18 @@ export default function ExerciseHistory() {
     }
     setEditVisibility("none");
   }
-
+  
   return (
     <div className="progress-page">
       <div className="content">
         <p style={{ fontSize: "larger", fontWeight: "bold" }}>
           Exercise History:
         </p>
-        {Array.from(exerciseHistory).map((item) => (
           <ul>
-              {item.exercise}
+            {exerciseHistNames.map((item) => (
+              <p>{item}</p>
+            ))}
           </ul>
-        ))}
       </div>
     </div>
   );
