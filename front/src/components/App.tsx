@@ -100,8 +100,10 @@ class App extends Component<any, any> {
 
       if (user !== null) {
         this.setState({ progressVisibility: "flex" });
+        console.log("not null")
       } else {
         this.setState({ progressVisibility: "none" });
+        console.log("null")
       }
       if (this.state.currentPage === "progress" && this.state.progressVisibility === "none") {
         this.changePage("home");
