@@ -16,10 +16,15 @@ import kotlin.collections.ArrayDeque;
 public class ShortAlgo {
     private ArrayList<Object> returnList;
     private HashMap<String, Integer> durationMap;
-
-    // probably unnecessary
-    private HashMap<String, String> goalMap;
     private HashMap<String, Machine> database;
+
+    // Updates/TODO
+    // 1. Updated amount of exercises per workout to match the hashmap
+    // I did this by limiting amount of apis that can be added and by adding muscles accoring to muscle2 as well
+    // 2. Use testGenerateWorkout to fuzz test and you can add more thorough test assertions
+        // to test more deeply all I have right now is assert size
+    // 4. wrote a note about the switch boolean idea: not really necessary if we don't care
+        // about a user getting less exercises than they requested but just an idea.
 
 
     public ShortAlgo() throws IOException {
@@ -41,8 +46,8 @@ public class ShortAlgo {
     public List<Object> generateWorkout(String duration, String muscle, String muscle2, String goal, MockAccount mock)
             throws IOException {
 
-
-        int value = this.durationMap.get(duration);
+        this.returnList.clear();
+        int workoutSize = this.durationMap.get(duration);
 
         List<Machine> validMachines = new ArrayList<>();
         for(Machine machine: this.database.values()) {
@@ -52,14 +57,24 @@ public class ShortAlgo {
                 validMachines.add(machine);
             }
         }
-        for(int i = value; i > 0; i--){
-            if (validMachines.isEmpty()){
-                break;
+
+        //adds as many valid machines to workout as possible (max = workoutSize - 1)
+        addMachinesToWorkout(workoutSize, validMachines, muscle2, mock);
+
+        int emptySpaces = workoutSize - this.returnList.size();
+        //if there are not that many machines we add by primary muscle, fill in blanks with secondary muscle
+        //will only add empty spaces - 2 machines by this way
+        if (emptySpaces >= 4){
+            List<Machine> newValidMachines = new ArrayList<>();
+            for(Machine machine: this.database.values()) {
+
+                // checks if the machine contains the secondary muscle and is not in workout already and
+                // adds to valid list
+                if (contains(machine.muscle(), muscle2) && !this.returnList.contains(machine)){
+                    newValidMachines.add(machine);
+                }
             }
-            Machine machine = this.selectExercise(validMachines, muscle2, mock);
-            // need to add rep ranges and sets and then return
-            validMachines.remove(machine);
-            this.returnList.add(machine);
+            addMachinesToWorkout(emptySpaces - 2, newValidMachines, muscle, mock);
         }
 
         // API request here for an exercise and add to map
@@ -69,17 +84,35 @@ public class ShortAlgo {
         if (APIlist.isEmpty()){
             return new ArrayList<>();
         }
-
         // adds as many API exercises as needed (almost always 1 unless we run out of machines
-        for(int i = 0; i <value; i++) {
+
+        // I want to use this to switch between primary and secondary muscle API calls
+        // so that we can populate with more exercises in the event that the nelson does not
+        // have enough exercises and our primary exercise is a small body part
+        boolean switchBool = true;
+        int emptySlotsAPI = workoutSize - this.returnList.size();
+        for(int i = 0; i < emptySlotsAPI; i++) {
             Exercise exercise = APIlist.get((int) (Math.random() * APIlist.size()));
 
             // check that the exercise is not already in the list from the machines (bench press is in both)
-
             this.returnList.add(exercise);
+            System.out.println("added API" + i);
         }
-
+        System.out.println(this.returnList.size());
         return this.returnList;
+    }
+
+    public void addMachinesToWorkout(int workoutSize, List<Machine> validMachines, String muscle2, MockAccount mock){
+        for(int i = workoutSize; i > 1; i--){
+            if (validMachines.isEmpty()){
+                break;
+            }
+            Machine machine = this.selectExercise(validMachines, muscle2, mock);
+            // need to add rep ranges and sets and then return
+            validMachines.remove(machine);
+            System.out.println("added nelson" + i);
+            this.returnList.add(machine);
+        }
     }
 
     /**
@@ -164,11 +197,15 @@ public class ShortAlgo {
     private void initializeDuration(){
         this.durationMap = new HashMap<>();
         // How do we want to allocate exercises depending on duration?
-        this.durationMap.put("30 minutes or less", 2);
-        this.durationMap.put("30-60 minutes", 4);
-        this.durationMap.put("60-90 minutes", 6);
-        this.durationMap.put("90-120 minutes", 7);
-        this.durationMap.put("120 minutes or more", 8);
+        this.durationMap.put("30 minutes or less", 3);
+        this.durationMap.put("30-60 minutes", 5);
+        this.durationMap.put("60-90 minutes", 7);
+        this.durationMap.put("90-120 minutes", 8);
+        this.durationMap.put("120 minutes or more", 9);
+    }
+
+    public Map<String, Integer> getDurationMap(){
+        return this.durationMap;
     }
 
 //  private void initializeGoal(){
@@ -179,11 +216,5 @@ public class ShortAlgo {
 //    this.goalMap.put("90-120", 8);
 //    this.goalMap.put("120 minutes or more", 9);
 //  }
-
-
-    public ArrayList<Object> getWorkout(){
-        return this.returnList;
-    }
-
 }
 

@@ -46,6 +46,9 @@ export default function RESULTMODAL({
   let exerciseList: any[];
   const [infoVisibility, setInfoVisibility] = useState("none"); // State for the input value
   const [clickedItem, setClickedItem] = useState<string | null>(null);
+  const [saveButtonVis, setSaveButtonVis] = useState("none");
+  const [saveSuccessMess, setSaveSuccessMess] = useState("");
+
   let showImg = "none";
 
   //here, exeriseList correctly reads in the back end workout generated.
@@ -67,12 +70,20 @@ export default function RESULTMODAL({
     };
   });
 
+  setInterval(() => {
+    checkUser();
+  }, 100);
+
   function handleCloseClick() {
     console.log("close click");
     setModalVisibility("none");
-    updateExerciseHistory();
 
     return undefined;
+  }
+
+  function onSaveClick() {
+    updateExerciseHistory();
+    setSaveSuccessMess("Exercises successfully saved to user history!");
   }
 
   function getImg(val: string) {
@@ -101,35 +112,44 @@ export default function RESULTMODAL({
     }
   };
 
+  async function checkUser() {
+    auth.onAuthStateChanged((user) => {
+      if (user !== null) {
+        setSaveButtonVis("flex");
+      } else {
+        setSaveButtonVis("none");
+      }
+    });
+  }
+
   async function updateExerciseHistory() {
     if (auth.currentUser !== null) {
-      if (auth.currentUser !== null) {
-        const currentUser = auth.currentUser;
-        const userID = currentUser?.uid;
-        const currentUserDoc = doc(database, "users", userID);
+      const currentUser = auth.currentUser;
+      const userID = currentUser?.uid;
+      const currentUserDoc = doc(database, "users", userID);
 
-        const docSnapshot = await getDoc(currentUserDoc);
-        if (docSnapshot.exists()) {
-          // check to see if the doc exists
-          const userData = docSnapshot.data();
-          let userExerciseHist = userData.exerciseHistory;
-          var mergedExerciseData;
+      const docSnapshot = await getDoc(currentUserDoc);
+      if (docSnapshot.exists()) {
+        // check to see if the doc exists
+        const userData = docSnapshot.data();
+        const userExerciseHist = userData.exerciseHistory;
+        let mergedExerciseData;
+        // CHECK IF EXERCISE ALREADY EXISTS IN HISTORY
+        if (Object.keys(userExerciseHist).length == 0) {
+          mergedExerciseData = newExerciseHistory;
+        } else {
+          mergedExerciseData = userExerciseHist.concat(newExerciseHistory);
+        }
 
-          if (Object.keys(userExerciseHist).length == 0) {
-            mergedExerciseData = newExerciseHistory;
-          } else {
-            mergedExerciseData = userExerciseHist.concat(newExerciseHistory);
-          }
-          const docData = {
-            exerciseHistory: mergedExerciseData,
-          };
+        const docData = {
+          exerciseHistory: mergedExerciseData,
+        };
 
-          if (userID !== undefined) {
-            console.log("awawaaa");
-            await setDoc(doc(database, "users", userID), docData, {
-              merge: true,
-            });
-          }
+        if (userID !== undefined) {
+          console.log("awawaaa");
+          await setDoc(doc(database, "users", userID), docData, {
+            merge: true,
+          });
         }
       }
     }
@@ -175,6 +195,15 @@ export default function RESULTMODAL({
                   )}
                 </div>
               ))}
+            </div>
+            <div>
+              <button
+                style={{ display: saveButtonVis }}
+                onClick={() => onSaveClick()}
+              >
+                Save exercises
+              </button>
+              <p>{saveSuccessMess}</p>
             </div>
           </div>
         </div>
