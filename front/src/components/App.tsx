@@ -34,7 +34,6 @@ class App extends Component<any, any> {
  machineButtonColor: string;
   progressButtonColor: string;
  progressVisibility: string;
- accountVisibility: string;
  accountButtonColor: string;
 
 
@@ -46,7 +45,6 @@ class App extends Component<any, any> {
    this.progressButtonColor = "#453131";
    this.progressVisibility = "none";
    this.accountButtonColor = "#453131";
-   this.accountVisibility = "none";
 
 
 
@@ -111,13 +109,13 @@ class App extends Component<any, any> {
      this.workoutButtonColor = "#453131";
      this.machineButtonColor = "#453131";
      this.progressButtonColor = "#453131";
-     this.accountVisibility = "flex";
     } else {
      this.homeButtonColor = "#453131";
      this.workoutButtonColor = "#453131";
      this.machineButtonColor = "#453131";
      this.progressButtonColor = "red";
-     this.accountVisibility="none";
+    this.accountButtonColor = "#453131";
+
 
 
    }
@@ -127,13 +125,9 @@ class App extends Component<any, any> {
  checkUser() {
    auth.onAuthStateChanged((user) => {
      if (user !== null) {
-       console.log("null");
        this.setState({ progressVisibility: "flex" });
-       console.log("not null")
      } else {
-       console.log("not null");
        this.setState({ progressVisibility: "none" });
-       console.log("null")
      }
      if (
        this.state.currentPage === "progress" &&
@@ -191,7 +185,7 @@ class App extends Component<any, any> {
    aria-label="account info button"
    onClick={() => this.changePage("account")}
    style={{ backgroundColor: this.accountButtonColor,
-    display: this.state.accountVisibility, }}
+    display: this.state.progressVisibility, }}
  >
    Account Info
  </button>

@@ -26,6 +26,7 @@ public class Server {
         // Listens and routes requests to a new Broadband object that references our global data src
         Spark.get("/generateWorkout", new WorkoutHandler());
         Spark.get("/getMachineImage", new MachineHandler());
+        System.out.println("uhh");
         Spark.awaitInitialization();
     }
 

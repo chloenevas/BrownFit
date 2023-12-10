@@ -4,134 +4,62 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="899cf0c2-5061-4d85-a39b-4f0232cfdbb1" name="Changes" comment="">
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/_metadata.json" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/.vite/deps/_metadata.json" afterDir="false" />
-=======
-      <change beforePath="$PROJECT_DIR$/front/src/styles/Workout.css" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/styles/Workout.css" afterDir="false" />
->>>>>>> refs/remotes/origin/main
-=======
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="bb8ffbf8-c6e2-4914-bbfe-88489c5465bb" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/data/machineData.json" beforeDir="false" afterPath="$PROJECT_DIR$/back/data/machineData.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/database/NelsonMachineDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/database/NelsonMachineDatabase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/target/classes/edu/brown/cs/student/main/database/NelsonMachineDatabase.class" beforeDir="false" afterPath="$PROJECT_DIR$/back/target/classes/edu/brown/cs/student/main/database/NelsonMachineDatabase.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/target/test-classes/edu/brown/cs/testing/MainTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/back/target/test-classes/edu/brown/cs/testing/MainTest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/target/test-classes/edu/brown/cs/testing/TestingServer.class" beforeDir="false" afterPath="$PROJECT_DIR$/back/target/test-classes/edu/brown/cs/testing/TestingServer.class" afterDir="false" />
->>>>>>> refs/remotes/origin/main
-=======
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
->>>>>>> refs/remotes/origin/main
+      <change beforePath="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/algorithm/ShortAlgo.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/algorithm/ShortAlgo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/server/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/server/Server.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/src/components/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/components/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/src/styles/login.css" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/styles/login.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Record" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MarkdownSettingsMigration">
+    
     <option name="stateVersion" value="1" />
+    
   </component>
-  <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 5
-}</component>
-  <component name="ProjectId" id="2YpYzcDKTvtKldnfchPG11HaQkZ" />
-  <component name="ProjectLevelVcsManager">
-    <ConfirmationsSetting value="2" id="Add" />
-  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "",
+  "associatedIndex": 0
+}]]></component>
+  <component name="ProjectId" id="2Z3eSnKkhTbL0HKs2yTSckWithI" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> refs/remotes/origin/main
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "Downloaded.Files.Path.Enabled": "false",
-    "Repository.Attach.Annotations": "false",
-    "Repository.Attach.JavaDocs": "false",
-    "Repository.Attach.Sources": "false",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-<<<<<<< HEAD
-    "git-widget-placeholder": "main",
-    "jdk.selected.JAVA_MODULE": "openjdk-19",
-    "last_opened_file_path": "/Users/efratavigdor/Desktop/CS32/Final/term-project-jwschwar-amahns-cnevas-ibrauns",
-=======
-    "git-widget-placeholder": "front-end-skeleton",
-    "jdk.selected.JAVA_MODULE": "openjdk-19",
-    "last_opened_file_path": "/Users/chloenevas/Documents/CS32/term-project-jwschwar-amahns-cnevas-ibrauns",
->>>>>>> refs/remotes/origin/main
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
     "vue.rearranger.settings.migration": "true"
-<<<<<<< HEAD
-=======
-=======
->>>>>>> refs/remotes/origin/main
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;front-end-skeleton&quot;,
-    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;openjdk-19&quot;,
-<<<<<<< HEAD
-    &quot;last_opened_file_path&quot;: &quot;/Users/efratavigdor/Desktop/CS32/Final/term-project-jwschwar-amahns-cnevas-ibrauns&quot;,
-=======
-    &quot;last_opened_file_path&quot;: &quot;/Users/chloenevas/Documents/CS32/term-project-jwschwar-amahns-cnevas-ibrauns&quot;,
->>>>>>> refs/remotes/origin/main
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
-<<<<<<< HEAD
->>>>>>> refs/remotes/origin/main
-=======
->>>>>>> refs/remotes/origin/main
-=======
->>>>>>> refs/remotes/origin/main
   }
-}</component>
-  <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/records" />
-      <recent name="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/database" />
-      <recent name="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/handler" />
-      <recent name="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/server" />
-    </key>
-  </component>
-  <component name="RunManager">
+}]]></component>
+  <component name="RunManager" selected="Application.Server">
     <configuration name="Server" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="ALTERNATIVE_JRE_PATH" value="openjdk-19" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="edu.brown.cs.student.main.server.Server" />
-      <module name="s0" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="edu.brown.cs.student.main.server.*" />
@@ -142,40 +70,106 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="dailyWorkoutUnitTesting.testShortAlgo" type="TestNG" temporary="true" nameIsGenerated="true">
+      <module name="back" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="edu.brown.cs.testing.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="edu.brown.cs.testing" />
+      <option name="MAIN_CLASS_NAME" value="edu.brown.cs.testing.dailyWorkoutUnitTesting" />
+      <option name="METHOD_NAME" value="testShortAlgo" />
+      <option name="TEST_OBJECT" value="METHOD" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="dailyWorkoutUnitTesting.testShortAlgoMachineReturn" type="TestNG" temporary="true" nameIsGenerated="true">
+      <module name="back" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="edu.brown.cs.testing.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="edu.brown.cs.testing" />
+      <option name="MAIN_CLASS_NAME" value="edu.brown.cs.testing.dailyWorkoutUnitTesting" />
+      <option name="METHOD_NAME" value="testShortAlgoMachineReturn" />
+      <option name="TEST_OBJECT" value="METHOD" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="dailyWorkoutUnitTesting.testShortAlgoRatingUpdates" type="TestNG" temporary="true" nameIsGenerated="true">
+      <module name="back" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="edu.brown.cs.testing.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="edu.brown.cs.testing" />
+      <option name="MAIN_CLASS_NAME" value="edu.brown.cs.testing.dailyWorkoutUnitTesting" />
+      <option name="METHOD_NAME" value="testShortAlgoRatingUpdates" />
+      <option name="TEST_OBJECT" value="METHOD" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="dailyWorkoutUnitTesting.testShortAlgoWorkoutGeneration" type="TestNG" temporary="true" nameIsGenerated="true">
+      <module name="back" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="edu.brown.cs.testing.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="edu.brown.cs.testing" />
+      <option name="MAIN_CLASS_NAME" value="edu.brown.cs.testing.dailyWorkoutUnitTesting" />
+      <option name="METHOD_NAME" value="testShortAlgoWorkoutGeneration" />
+      <option name="TEST_OBJECT" value="METHOD" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Application.Server" />
+        <item itemvalue="TestNG.dailyWorkoutUnitTesting.testShortAlgoRatingUpdates" />
+        <item itemvalue="TestNG.dailyWorkoutUnitTesting.testShortAlgoWorkoutGeneration" />
+        <item itemvalue="TestNG.dailyWorkoutUnitTesting.testShortAlgoMachineReturn" />
+        <item itemvalue="TestNG.dailyWorkoutUnitTesting.testShortAlgo" />
       </list>
     </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="899cf0c2-5061-4d85-a39b-4f0232cfdbb1" name="Changes" comment="" />
-      <created>1701224251393</created>
+      <changelist id="45c5cb49-b50c-46a0-92e4-d553b45cce7f" name="Changes" comment="" />
+      <created>1701655192979</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1701224251393</updated>
-      <workItem from="1701224252503" duration="419000" />
-      <workItem from="1701224737056" duration="85000" />
-      <workItem from="1701224843777" duration="1275000" />
-<<<<<<< HEAD
-      <workItem from="1701545163076" duration="596000" />
-=======
-      <workItem from="1701545176843" duration="818000" />
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> refs/remotes/origin/main
-=======
-<<<<<<< HEAD
-      <workItem from="1701825622793" duration="114000" />
-=======
-      <workItem from="1701668444614" duration="514000" />
->>>>>>> main
->>>>>>> refs/remotes/origin/main
-=======
-      <workItem from="1701668444614" duration="514000" />
->>>>>>> refs/remotes/origin/main
+      <updated>1701655192979</updated>
+      <workItem from="1701655195864" duration="7211000" />
+      <workItem from="1701825739431" duration="1035000" />
+      <workItem from="1701826824152" duration="2246000" />
+      <workItem from="1701844164774" duration="2892000" />
+      <workItem from="1701917276776" duration="5822000" />
+      <workItem from="1701967594958" duration="1283000" />
+      <workItem from="1701968898434" duration="22317000" />
+      <workItem from="1702077488732" duration="1276000" />
+      <workItem from="1702134053176" duration="3623000" />
+      <workItem from="1702138708908" duration="862000" />
     </task>
     <servers />
   </component>
@@ -192,8 +186,5 @@
         </entry>
       </map>
     </option>
-  </component>
-  <component name="VcsManagerConfiguration">
-    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
   </component>
 </project>
