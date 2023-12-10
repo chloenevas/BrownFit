@@ -12,6 +12,7 @@
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-map-gl": "^7.1.6",
+    "react-particles-js": "^3.6.0",
     "typescript": "^4.6.4"
   },
   "devDependencies": {

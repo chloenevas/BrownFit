@@ -163,12 +163,24 @@ export default function RESULTMODAL({
             &times;
           </span>
           <div className="modal-content">
-            <div>
-              <p>Duration: {durationValue}</p>
-              <p>Muscle 1: {muscleValue}</p>
-              <p>Muscle 2: {muscleValue2}</p>
-              <p>Goal: {goalValue}</p>
-            </div>
+          <div className="header-workout">
+  <p>
+    <span style={{ fontWeight: 'bold'}}>
+      {muscleValue.charAt(0).toUpperCase() + muscleValue.slice(1).toLowerCase()}
+    </span>{' '}
+    {muscleValue2 && (
+      <>
+        <span style={{ fontWeight: 'bold' }}>and</span>{' '}
+        <span style={{ fontWeight: 'bold' }}>
+          {muscleValue2.charAt(0).toUpperCase() + muscleValue2.slice(1).toLowerCase()}
+        </span>
+      </>
+    )}
+  </p>
+  <p>Duration: {durationValue}</p>
+  <p>Goal: {goalValue}</p>
+</div>
+
             <p>Click any exercise to view more info</p>
             <div>
               {Array.from(map).map(([key, value]) => (

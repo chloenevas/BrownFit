@@ -1,13 +1,8 @@
-
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ControlledInput } from "../ControlledInput";
 import "../../styles/progress.css";
-import { auth, database, collectionRef, users} from "../../index";
-import {
-  collection, addDoc, updateDoc, doc, onSnapshot, getDoc,
-  query, where, setDoc
-} from "firebase/firestore";
-
+import { auth, database } from "../../index";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 
 export default function AccountInfo() {
   const [firstName, setFirstName] = useState("");
@@ -16,37 +11,59 @@ export default function AccountInfo() {
   const [editVisibility, setEditVisibility] = useState("none");
   const [newFirstName, setNewFirstName] = useState("");
   const [newLastName, setNewLastName] = useState("");
-  
-  if (auth.currentUser !== null) {
-    const currentUser = auth.currentUser;
-    const userID = currentUser?.uid;
 
-    if (userID === undefined) {
-      setFirstName("");
-      setLastName("");
-    } else {
-      const currentUserDoc = doc(database, "users", userID);
-
-      const getUserData = async () => {
-        try {
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const currentUser = auth.currentUser;
+        if (currentUser) {
+          const userID = currentUser.uid;
+          const currentUserDoc = doc(database, "users", userID);
           const docSnapshot = await getDoc(currentUserDoc);
+
           if (docSnapshot.exists()) {
-            // check to see if the doc exists
             const userData = docSnapshot.data();
-            setFirstName(userData.firstName);
-            setLastName(userData.lastName);
-            setEmail(userData.email);
+            setFirstName(userData.firstName || "");
+            setLastName(userData.lastName || "");
+            setEmail(userData.email || "");
           } else {
             setFirstName("");
             setLastName("");
             setEmail("");
           }
-        } catch (error) {
-          console.error("handle error");
         }
-      };
-      getUserData();
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  async function handleSaveClick() {
+    try {
+      const currentUser = auth.currentUser;
+      if (currentUser) {
+        const userID = currentUser.uid;
+        const docData = {
+          firstName: newFirstName,
+          lastName: newLastName,
+          email: currentUser.email,
+        };
+
+        if (userID) {
+          await setDoc(doc(database, "users", userID), docData);
+          // Update state with new values
+          setFirstName(newFirstName);
+          setLastName(newLastName);
+          // No need to update email as it's not changed
+        }
+      }
+    } catch (error) {
+      console.error("Error updating user data:", error);
     }
+
+    setEditVisibility("none");
   }
 
   function handleEditButton() {
@@ -54,25 +71,6 @@ export default function AccountInfo() {
   }
 
   function handleCloseClick() {
-    setEditVisibility("none");
-    return undefined;
-  }
-
-  async function handleSaveClick() {
-    if (auth.currentUser !== null) {
-      const currentUser = auth.currentUser;
-      const userID = currentUser?.uid;
-
-      const docData = {
-        firstName: newFirstName,
-        lastName: newLastName,
-        email: currentUser.email,
-      };
-
-      if (userID !== undefined) {
-        await setDoc(doc(database, "users", userID), docData);
-      }
-    }
     setEditVisibility("none");
   }
 
@@ -86,11 +84,11 @@ export default function AccountInfo() {
           Name: {firstName} {lastName}
         </p>
         <p>Email: {email} </p>
-        <button onClick={() => handleEditButton()}>Edit</button>
+        <button onClick={handleEditButton}>Edit</button>
       </div>
 
       <div className="edit-modal" style={{ display: editVisibility }}>
-        <span className="close-button" onClick={() => handleCloseClick()}>
+        <span className="close-button" onClick={handleCloseClick}>
           &times;
         </span>
         <div>
@@ -112,7 +110,7 @@ export default function AccountInfo() {
             className="account-info-input"
           />
 
-          <button onClick={() => handleSaveClick()}>Save</button>
+          <button onClick={handleSaveClick}>Save</button>
         </div>
       </div>
     </div>
