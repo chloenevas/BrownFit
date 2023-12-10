@@ -9,23 +9,8 @@ import AccountInfo from "./progress/accountInfo";
 
 import React, { Component, useState } from "react";
 import AUTHMODAL from "./authentication/authModal";
-import { auth, database, collectionRef, users } from "../index";
-import {
- collection,
- addDoc,
- updateDoc,
- doc,
- onSnapshot,
- getDoc,
- query,
- where,
-} from "firebase/firestore";
-import {
- getAuth,
- onAuthStateChanged,
- setPersistence,
- browserSessionPersistence,
-} from "firebase/auth";
+import { auth } from "../index";
+
 
 
 class App extends Component<any, any> {
@@ -196,8 +181,6 @@ class App extends Component<any, any> {
          {this.state.currentPage === "machine" && <MachinePage />}
          {this.state.currentPage === "progress" && <ProgressPage />}
          {this.state.currentPage === "account" && <AccountInfo />}
-
-
 
        </div>
      </div>

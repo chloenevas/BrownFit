@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ControlledInput } from "../ControlledInput";
 import "../../styles/progress.css";
 import { auth, database, collectionRef, users } from "../../index";
@@ -23,7 +23,6 @@ export default function Consistency() {
   const [newLastName, setNewLastName] = useState("");
 
 
-  const exerciseMap = new Map<string, [string]>();
 
   if (auth.currentUser !== null) {
     const currentUser = auth.currentUser;
@@ -53,8 +52,9 @@ export default function Consistency() {
           console.error("handle error");
         }
       };
-      getUserData();
-    }
+ useEffect(() => {
+   getUserData();
+ }, []);    }
   }
 
   function handleEditButton() {

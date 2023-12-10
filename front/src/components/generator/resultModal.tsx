@@ -69,11 +69,12 @@ export default function RESULTMODAL({
   );
 
   const newExerciseHistory: ExerciseInfo[] = Array.from(map).map(([key, value]) => {
+
     return {
       exercise: key,
       rating: 0,
-      image: value[0],
-      description: value[1], // TODO: this is only returning the first letter of the description - need to fix
+      image: getImg(value),
+      description: getInstructions(value), // TODO: this is only returning the first letter of the description - need to fix - may have fixed? i can check when my quota is back :'(
     };
   });
 
@@ -83,14 +84,19 @@ export default function RESULTMODAL({
 
   function handleCloseClick() {
     setModalVisibility("none");
+    setSaveSuccessMess("");
 
     return undefined;
   }
 
   function onSaveClick() {
-    updateExerciseHistory();
-    setSaveSuccessMess("Exercises successfully saved to user history!");
-  }
+    if (saveSuccessMess === "") {
+      console.log("saving exercises")
+      updateExerciseHistory();
+      setSaveSuccessMess("Exercises successfully saved to user history!");
+    }
+    }
+   
 
   function getImg(val: string) {
     let spaceIndex = val.indexOf(" ");
@@ -143,7 +149,6 @@ export default function RESULTMODAL({
         let newNames: string[] = [];
 
         let mergedExerciseData;
-        // CHECK IF EXERCISE ALREADY EXISTS IN HISTORY
 
         {
           Array.from(userExerciseHist).map(
@@ -158,7 +163,10 @@ export default function RESULTMODAL({
 
         // if there are duplicate exercises, remove them from new exercise list before they get added to history
         newExerciseHistory.forEach((newExercise: ExerciseInfo, newIndex) => {
+          
           userExerciseHist.forEach((oldExercise: ExerciseInfo, oldIndex) => {
+                         
+
             if (newExercise.exercise === oldExercise.exercise) {
               newExerciseHistory.splice(newIndex, 1);
             }

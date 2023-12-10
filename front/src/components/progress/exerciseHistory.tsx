@@ -1,4 +1,4 @@
-import { useState, SetStateAction } from "react";
+import { useState, SetStateAction, useEffect } from "react";
 import { ControlledInput } from "../ControlledInput";
 import "../../styles/progress.css";
 import { auth, database, collectionRef, users } from "../../index";
@@ -13,17 +13,19 @@ import {
   where,
   setDoc,
 } from "firebase/firestore";
-import { type } from "node:os";
+import { getUA } from "@firebase/util";
 
 export default function ExerciseHistory() {
+ 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
   const [editVisibility, setEditVisibility] = useState("none");
   const [newFirstName, setNewFirstName] = useState("");
   const [newLastName, setNewLastName] = useState("");
 const [exerciseHistNames, setExerciseHistNames] = useState<string[]>([]);
-
+  let currentUser
+  let userID: string
+  
 
   interface ExerciseInfo {
     rating: number;
@@ -33,11 +35,9 @@ const [exerciseHistNames, setExerciseHistNames] = useState<string[]>([]);
   }
   const [exerciseHistory, setExerciseHistory] = useState<ExerciseInfo[]>([]);
 
-
-
     if (auth.currentUser !== null) {
-      const currentUser = auth.currentUser;
-      const userID = currentUser?.uid;
+      currentUser = auth.currentUser;
+      userID = currentUser?.uid;
 
       if (userID === undefined) {
         setFirstName("");
@@ -63,54 +63,86 @@ const [exerciseHistNames, setExerciseHistNames] = useState<string[]>([]);
               setExerciseHistNames(names); // set exercise history to be those names
               
             }
-} catch (error) {
-            console.error("handle error");
+          } catch (error) {
+            console.error(error)
           }
         };
-        getUserData();
+         useEffect(() => {
+           getUserData();
+         }, []);
       }
     }
   
-
 
   function handleEditButton() {
     setEditVisibility("flex");
   }
 
-  function handleCloseClick() {
-    setEditVisibility("none");
-    return undefined;
-  }
+  function handleDeleteExercise(index: number) {
+    // console.log(exerciseHistNames)
+    // const newHist = exerciseHistNames.splice(index, 1);
+    // console.log(newHist)
+    // setExerciseHistNames(newHist)
 
-  async function handleSaveClick() {
-    if (auth.currentUser !== null) {
-      const currentUser = auth.currentUser;
-      const userID = currentUser?.uid;
+        const currentUserDoc = doc(database, "users", userID); // get document of current logged in user
 
-      const docData = {
-        firstName: newFirstName,
-        lastName: newLastName,
-        email: currentUser.email,
-      };
+        const deleteExercise = async () => {
+          try {
+            const docSnapshot = await getDoc(currentUserDoc);
+            if (docSnapshot.exists()) {
+              // check to see if the doc exists
+              const userData = docSnapshot.data();
+              const exerciseList: ExerciseInfo[] = userData.exerciseHistory // get user's current exercise history
+          //    setExerciseHistory(exerciseList); 
+            let names: string[] = [] // create empty array for storing exercise names
+                let newHistory: ExerciseInfo[] = []
+              exerciseList.forEach((item, itemIndex) => {
+                if (exerciseHistNames[index] === item.exercise) {
+                   newHistory = exerciseList.splice(itemIndex, 1)
+                 }
+              })
+              
 
-      if (userID !== undefined) {
-        await setDoc(doc(database, "users", userID), docData);
-      }
+        const docData = {
+          exerciseHistory: newHistory,
+        };
+
+        if (userID !== undefined) {
+          await setDoc(doc(database, "users", userID), docData, {
+            merge: true,
+          });
+        }              
+            }
+        } catch (error) {
+            console.error(error);
+          }
+        };
+    deleteExercise();
     }
-    setEditVisibility("none");
-  }
-  
+
+
   return (
     <div className="progress-page">
       <div className="content">
         <p style={{ fontSize: "larger", fontWeight: "bold" }}>
           Exercise History:
         </p>
-          <ul>
-            {exerciseHistNames.map((item) => (
-              <p>{item}</p>
-            ))}
-          </ul>
+        <ul>
+          {exerciseHistNames.map((item, index) => (
+            <div className="exercise-pair" key={index}>
+              <p className="exercise">{item}</p>
+              <span
+                className="delete-button"
+                onClick={() => handleDeleteExercise(index)}
+              >
+                &times;
+              </span>
+            </div>
+          ))}
+        </ul>
+        <button>
+          Add exercise
+        </button>
       </div>
     </div>
   );
