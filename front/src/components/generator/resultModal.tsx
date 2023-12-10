@@ -49,6 +49,13 @@ export default function RESULTMODAL({
   const [saveButtonVis, setSaveButtonVis] = useState("none");
   const [saveSuccessMess, setSaveSuccessMess] = useState("");
 
+    interface ExerciseInfo {
+    rating: number;
+    exercise: string;
+    description: string;
+    image: string;
+    }
+  
   let showImg = "none";
 
   //here, exeriseList correctly reads in the back end workout generated.
@@ -61,7 +68,7 @@ export default function RESULTMODAL({
     ])
   );
 
-  const newExerciseHistory = Array.from(map).map(([key, value]) => {
+  const newExerciseHistory: ExerciseInfo[] = Array.from(map).map(([key, value]) => {
     return {
       exercise: key,
       rating: 0,
@@ -75,7 +82,6 @@ export default function RESULTMODAL({
   }, 100);
 
   function handleCloseClick() {
-    console.log("close click");
     setModalVisibility("none");
 
     return undefined;
@@ -132,10 +138,35 @@ export default function RESULTMODAL({
       if (docSnapshot.exists()) {
         // check to see if the doc exists
         const userData = docSnapshot.data();
-        const userExerciseHist = userData.exerciseHistory;
+        const userExerciseHist: ExerciseInfo[] = userData.exerciseHistory;
+        let historyNames: string[] = []
+        let newNames: string[] = [];
+
         let mergedExerciseData;
         // CHECK IF EXERCISE ALREADY EXISTS IN HISTORY
-        if (Object.keys(userExerciseHist).length == 0) {
+
+        {
+          Array.from(userExerciseHist).map(
+            (item) =>  historyNames.push(item.exercise) // add every name
+          );
+        }
+        {
+          Array.from(newExerciseHistory).map(
+            (item) => newNames.push(item.exercise) // add every name
+          );
+        }
+
+        // if there are duplicate exercises, remove them from new exercise list before they get added to history
+        newExerciseHistory.forEach((newExercise: ExerciseInfo, newIndex) => {
+          userExerciseHist.forEach((oldExercise: ExerciseInfo, oldIndex) => {
+            if (newExercise.exercise === oldExercise.exercise) {
+              newExerciseHistory.splice(newIndex, 1);
+            }
+          })
+        })
+
+        if (Object.keys(userExerciseHist).length == 0) { // check that the history isn't empty
+
           mergedExerciseData = newExerciseHistory;
         } else {
           mergedExerciseData = userExerciseHist.concat(newExerciseHistory);
@@ -146,7 +177,6 @@ export default function RESULTMODAL({
         };
 
         if (userID !== undefined) {
-          console.log("awawaaa");
           await setDoc(doc(database, "users", userID), docData, {
             merge: true,
           });
