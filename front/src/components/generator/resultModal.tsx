@@ -49,13 +49,15 @@ export default function RESULTMODAL({
   const [saveButtonVis, setSaveButtonVis] = useState("none");
   const [saveSuccessMess, setSaveSuccessMess] = useState("");
 
-    interface ExerciseInfo {
+  interface ExerciseInfo {
     rating: number;
     exercise: string;
     description: string;
     image: string;
-    }
-  
+    weight: string;
+    reps: string;
+  }
+
   let showImg = "none";
 
   //here, exeriseList correctly reads in the back end workout generated.
@@ -64,19 +66,22 @@ export default function RESULTMODAL({
   const map = new Map(
     exerciseList.map((obj) => [
       obj.name,
-      obj.img ? obj.img + " " + obj.instructions : " " + obj.instructions,
+      obj.img
+        ? obj.img + " " + obj.instructions + "W:" + obj.weight + "R:" + obj.reps
+        : " " + obj.instructions,
     ])
   );
 
-  const newExerciseHistory: ExerciseInfo[] = Array.from(map).map(([key, value]) => {
-
-    return {
-      exercise: key,
-      rating: 0,
-      image: getImg(value),
-      description: getInstructions(value), // TODO: this is only returning the first letter of the description - need to fix - may have fixed? i can check when my quota is back :'(
-    };
-  });
+  const newExerciseHistory: ExerciseInfo[] = Array.from(map).map(
+    ([key, value]) => {
+      return {
+        exercise: key,
+        rating: 0,
+        image: getImg(value),
+        description: getInstructions(value),
+      };
+    }
+  );
 
   setInterval(() => {
     checkUser();
@@ -91,12 +96,11 @@ export default function RESULTMODAL({
 
   function onSaveClick() {
     if (saveSuccessMess === "") {
-      console.log("saving exercises")
+      console.log("saving exercises");
       updateExerciseHistory();
       setSaveSuccessMess("Exercises successfully saved to user history!");
     }
-    }
-   
+  }
 
   function getImg(val: string) {
     let spaceIndex = val.indexOf(" ");
@@ -111,7 +115,31 @@ export default function RESULTMODAL({
 
   function getInstructions(val: string) {
     let spaceIndex = val.indexOf(" ");
-    return val.substring(spaceIndex, val.length);
+    if (val.includes("W:")) {
+      return "Instructions: " + val.substring(spaceIndex, val.indexOf("W:"));
+    } else {
+      return val.substring(spaceIndex, val.length);
+    }
+  }
+
+  function getWeight(val: string) {
+    if (val.includes("W:")) {
+      if (val.includes("R:")) {
+        return val.substring(val.indexOf("W:") + 2, val.indexOf("R:"));
+      }
+    } else {
+      return "";
+    }
+  }
+
+  function getReps(val: string) {
+    if (val.includes("W:")) {
+      if (val.includes("R:")) {
+        return val.substring(val.indexOf("R:") + 2, val.length);
+      }
+    } else {
+      return "";
+    }
   }
 
   const handleExerciseClick = (key: string) => {
@@ -145,17 +173,17 @@ export default function RESULTMODAL({
         // check to see if the doc exists
         const userData = docSnapshot.data();
         const userExerciseHist: ExerciseInfo[] = userData.exerciseHistory;
-        console.log(typeof (userExerciseHist))
-                console.log(typeof newExerciseHistory);
+        console.log(typeof userExerciseHist);
+        console.log(typeof newExerciseHistory);
 
-        let historyNames: string[] = []
+        let historyNames: string[] = [];
         let newNames: string[] = [];
 
         let mergedExerciseData;
 
         {
           Array.from(userExerciseHist).map(
-            (item) =>  historyNames.push(item.exercise) // add every name
+            (item) => historyNames.push(item.exercise) // add every name
           );
         }
         {
@@ -165,16 +193,21 @@ export default function RESULTMODAL({
         }
 
         // if there are duplicate exercises, remove them from new exercise list before they get added to history
-        
+
         newExerciseHistory.forEach((newExercise: ExerciseInfo, newIndex) => {
-          for (let oldIndex = 0; oldIndex < userExerciseHist.length; oldIndex++) {
-              if (newExercise.exercise === userExerciseHist[oldIndex].exercise) {
+          for (
+            let oldIndex = 0;
+            oldIndex < userExerciseHist.length;
+            oldIndex++
+          ) {
+            if (newExercise.exercise === userExerciseHist[oldIndex].exercise) {
               newExerciseHistory.splice(newIndex, 1);
             }
           }
-          })
+        });
 
-        if (Object.keys(userExerciseHist).length == 0) { // check that the history isn't empty
+        if (Object.keys(userExerciseHist).length == 0) {
+          // check that the history isn't empty
 
           mergedExerciseData = newExerciseHistory;
         } else {
@@ -202,23 +235,25 @@ export default function RESULTMODAL({
             &times;
           </span>
           <div className="modal-content">
-          <div className="header-workout">
-  <p>
-    <span style={{ fontWeight: 'bold'}}>
-      {muscleValue.charAt(0).toUpperCase() + muscleValue.slice(1).toLowerCase()}
-    </span>{' '}
-    {muscleValue2 && (
-      <>
-        <span style={{ fontWeight: 'bold' }}>and</span>{' '}
-        <span style={{ fontWeight: 'bold' }}>
-          {muscleValue2.charAt(0).toUpperCase() + muscleValue2.slice(1).toLowerCase()}
-        </span>
-      </>
-    )}
-  </p>
-  <p>Duration: {durationValue}</p>
-  <p>Goal: {goalValue}</p>
-</div>
+            <div className="header-workout">
+              <p>
+                <span style={{ fontWeight: "bold" }}>
+                  {muscleValue.charAt(0).toUpperCase() +
+                    muscleValue.slice(1).toLowerCase()}
+                </span>{" "}
+                {muscleValue2 && (
+                  <>
+                    <span style={{ fontWeight: "bold" }}>and</span>{" "}
+                    <span style={{ fontWeight: "bold" }}>
+                      {muscleValue2.charAt(0).toUpperCase() +
+                        muscleValue2.slice(1).toLowerCase()}
+                    </span>
+                  </>
+                )}
+              </p>
+              <p>Duration: {durationValue}</p>
+              <p>Goal: {goalValue}</p>
+            </div>
 
             <p>Click any exercise to view more info</p>
             <div>
@@ -242,6 +277,12 @@ export default function RESULTMODAL({
                         }}
                       />
                       <p>{getInstructions(value)}</p>
+                      <p style={{ display: showImg }}>
+                        {"Weight: " + getWeight(value)}
+                      </p>
+                      <p style={{ display: showImg }}>
+                        {"Reps: " + getReps(value)}
+                      </p>
                     </div>
                   )}
                 </div>
