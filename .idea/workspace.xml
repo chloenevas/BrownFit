@@ -6,9 +6,29 @@
   <component name="ChangeListManager">
     <list default="true" id="bb8ffbf8-c6e2-4914-bbfe-88489c5465bb" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/algorithm/ShortAlgo.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/algorithm/ShortAlgo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/server/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/edu.brown.cs.student.main/server/Server.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/src/components/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/components/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/target/classes/edu.brown.cs.student.main/algorithm/LongAlgo.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/target/classes/edu.brown.cs.student.main/algorithm/LongQuery.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/target/classes/edu.brown.cs.student.main/algorithm/ShortAlgo.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/target/classes/edu.brown.cs.student.main/algorithm/ShortQuery.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/target/classes/edu.brown.cs.student.main/database/ApiRequest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/target/classes/edu.brown.cs.student.main/database/MockAccount.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/target/classes/edu.brown.cs.student.main/database/NelsonMachineDatabase.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/target/classes/edu.brown.cs.student.main/database/Progress.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/target/classes/edu.brown.cs.student.main/handlers/InvalidInputException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/target/classes/edu.brown.cs.student.main/handlers/MachineHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/target/classes/edu.brown.cs.student.main/handlers/Search.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/target/classes/edu.brown.cs.student.main/handlers/View.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/target/classes/edu.brown.cs.student.main/handlers/WorkoutHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/target/classes/edu.brown.cs.student.main/records/Consistency.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/target/classes/edu.brown.cs.student.main/records/Exercise.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/target/classes/edu.brown.cs.student.main/records/History.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/target/classes/edu.brown.cs.student.main/records/Machine.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/target/classes/edu.brown.cs.student.main/records/Progress.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/target/classes/edu.brown.cs.student.main/records/WorkoutElement.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/target/classes/edu.brown.cs.student.main/records/WorkoutObject.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/target/classes/edu.brown.cs.student.main/server/Server.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/target/test-classes/edu/brown/cs/testing/dailyWorkoutUnitTesting.class" beforeDir="false" afterPath="$PROJECT_DIR$/back/target/test-classes/edu/brown/cs/testing/dailyWorkoutUnitTesting.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/_metadata.json" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/.vite/deps/_metadata.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front/src/styles/login.css" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/styles/login.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -29,14 +49,12 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MarkdownSettingsMigration">
-    
     <option name="stateVersion" value="1" />
-    
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 0
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 0
+}</component>
   <component name="ProjectId" id="2Z3eSnKkhTbL0HKs2yTSckWithI" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -47,6 +65,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "/Users/anikamahns/Documents/GitHub/term-project-jwschwar-amahns-cnevas-ibrauns",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -57,7 +76,7 @@
 }]]></component>
   <component name="RunManager" selected="Application.Server">
     <configuration name="Server" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="ALTERNATIVE_JRE_PATH" value="openjdk-19" />
+      <option name="ALTERNATIVE_JRE_PATH" value="$USER_HOME$/Library/Java/JavaVirtualMachines/corretto-17.0.9/Contents/Home" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="edu.brown.cs.student.main.server.Server" />
       <extension name="coverage">
@@ -155,7 +174,7 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="45c5cb49-b50c-46a0-92e4-d553b45cce7f" name="Changes" comment="" />
+      <changelist id="bb8ffbf8-c6e2-4914-bbfe-88489c5465bb" name="Changes" comment="" />
       <created>1701655192979</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -170,6 +189,7 @@
       <workItem from="1702077488732" duration="1276000" />
       <workItem from="1702134053176" duration="3623000" />
       <workItem from="1702138708908" duration="862000" />
+      <workItem from="1702252658050" duration="293000" />
     </task>
     <servers />
   </component>

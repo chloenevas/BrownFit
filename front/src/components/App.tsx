@@ -6,6 +6,8 @@ import MachinePage from "./machines/machinePage";
 import ProgressPage from "./progress/progressPage";
 import WorkoutPage from "./generator/basicWorkoutPage";
 import AccountInfo from "./progress/accountInfo";
+import AdditionalInfo from "./additional/additionalPage";
+
 
 import React, { Component, useState } from "react";
 import AUTHMODAL from "./authentication/authModal";
@@ -20,6 +22,7 @@ class App extends Component<any, any> {
   progressButtonColor: string;
  progressVisibility: string;
  accountButtonColor: string;
+ additionalButtonColor: string;
 
 
  constructor(props: any) {
@@ -30,6 +33,9 @@ class App extends Component<any, any> {
    this.progressButtonColor = "#453131";
    this.progressVisibility = "none";
    this.accountButtonColor = "#453131";
+   this.additionalButtonColor = "#453131";
+   
+
 
 
 
@@ -72,6 +78,7 @@ class App extends Component<any, any> {
      this.machineButtonColor = "#453131";
      this.progressButtonColor = "#453131";
      this.accountButtonColor = "#453131";
+     this.additionalButtonColor = "#453131";
 
    } else if (page == "workout") {
      this.homeButtonColor = "#453131";
@@ -79,6 +86,7 @@ class App extends Component<any, any> {
      this.machineButtonColor = "#453131";
      this.progressButtonColor = "#453131";
      this.accountButtonColor = "#453131";
+     this.additionalButtonColor = "#453131";
 
    } else if (page == "machine") {
      this.homeButtonColor = "#453131";
@@ -86,6 +94,7 @@ class App extends Component<any, any> {
      this.machineButtonColor = "red";
      this.progressButtonColor = "#453131";
      this.accountButtonColor = "#453131";
+     this.additionalButtonColor = "#453131";
 
    }
    else if (page === "account") {
@@ -94,12 +103,26 @@ class App extends Component<any, any> {
      this.workoutButtonColor = "#453131";
      this.machineButtonColor = "#453131";
      this.progressButtonColor = "#453131";
-    } else {
+     this.additionalButtonColor = "#453131";
+     
+
+    } 
+    else if (page === "additional") {
+      this.accountButtonColor = "#453131";
+      this.homeButtonColor = "#453131";
+       this.workoutButtonColor = "#453131";
+       this.machineButtonColor = "#453131";
+       this.progressButtonColor = "#453131";
+       this.additionalButtonColor = "red";
+
+      }else {
      this.homeButtonColor = "#453131";
      this.workoutButtonColor = "#453131";
      this.machineButtonColor = "#453131";
      this.progressButtonColor = "red";
     this.accountButtonColor = "#453131";
+    this.additionalButtonColor = "#453131";
+
 
 
 
@@ -174,6 +197,15 @@ class App extends Component<any, any> {
  >
    Account Info
  </button>
+ <button
+   className="Navigation-Button"
+   aria-label="additional"
+   onClick={() => this.changePage("additional")}
+   style={{ backgroundColor: this.additionalButtonColor,
+    display: this.state.additionalVisibility, }}
+ >
+Additional Info
+ </button>
        </div>
        <div className="Content">
          {this.state.currentPage === "home" && <HomePage />}
@@ -181,6 +213,8 @@ class App extends Component<any, any> {
          {this.state.currentPage === "machine" && <MachinePage />}
          {this.state.currentPage === "progress" && <ProgressPage />}
          {this.state.currentPage === "account" && <AccountInfo />}
+         {this.state.currentPage === "additional" && < AdditionalInfo/>}
+
 
        </div>
      </div>
