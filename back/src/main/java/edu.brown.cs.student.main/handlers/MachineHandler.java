@@ -31,7 +31,7 @@ public class MachineHandler implements Route {
             }
 
 
-            String img = new NelsonMachineDatabase().getDatabase().get(machineName).img();
+            String img = new NelsonMachineDatabase().getDatabase().get(machineName).getImg();
             return img;
         }
         catch (InvalidInputException e){

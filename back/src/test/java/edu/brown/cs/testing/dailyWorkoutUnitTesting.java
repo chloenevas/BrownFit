@@ -82,7 +82,7 @@ private List<String> goals;
         int counter3 = 0;
         for (int i = 0; i < 10000; i ++){
             Machine returnMachine = salgo.selectExercise(machineList, "", mAcc1);
-            switch (returnMachine.name()){
+            switch (returnMachine.getName()){
                 case "1":
                     counter1++;
                     break;
@@ -155,7 +155,7 @@ private List<String> goals;
     private int getNumInstaces(List<Machine> rl, String machine){
         int counter = 0;
         for (Machine m: rl){
-            if (m.name().equals(machine)){
+            if (m.getName().equals(machine)){
                 counter++;
             }
         }
