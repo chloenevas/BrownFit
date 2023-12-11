@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SearchHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">s0</a> &gt; <a href="index.source.html" class="el_package">edu.brown.cs.student.main.handlers</a> &gt; <span class="el_source">SearchHandler.java</span></div><h1>SearchHandler.java</h1><pre class="source lang-java linenums">package edu.brown.cs.student.main.handlers;
+
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.Moshi;
+import com.squareup.moshi.Types;
+import edu.brown.cs.student.main.searcher.MySearcher;
+import edu.brown.cs.student.main.server.Dataset;
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import spark.Request;
+import spark.Response;
+import spark.Route;
+
+/**
+ * The SearchHandler class is responsible for handling GET requests for searching the loaded CSV
+ * data. It takes in Dataset as a parameter along with query paramaters for the search. It uses the
+ * provided query parameters to perform a search operation (using the MySearcher class) on the
+ * dataset, constructs a JSON response containing the results, and handles errors by returning the
+ * appropriate messages in JSON. Implements the `Route` Spark interface in order to create a mapping
+ * between the HTTP request path.
+ */
+public class SearchHandler implements Route {
+
+  private final Dataset data;
+
+  /**
+   * Constructs a new SearchHandler instance with the specified Dataset.
+   *
+   * @param current the Dataset to be used for searching.
+   */
+<span class="fc" id="L33">  public SearchHandler(Dataset current) {</span>
+<span class="fc" id="L34">    this.data = current;</span>
+<span class="fc" id="L35">  }</span>
+  // narrow = &quot;ind: 0&quot; &quot;nam: someName&quot;
+
+  /**
+   * Method that handles an HTTP request to perform a search within the dataset. Extracts search
+   * parameters (search, narrow, header) from the HTTP request. Creates a MySearcher to perform
+   * search operation and constructs a success response with the search results or an error
+   * response.
+   *
+   * @param request the HTTP request containing search parameters.
+   * @param response the HTTP response to be populated with search results or error messages.
+   * @return an HTTP response containing search results or error messages in JSON format.
+   * @throws Exception if an error occurs during the search or response construction.
+   */
+  @Override
+  public Object handle(Request request, Response response) throws Exception {
+    // setup moshi
+<span class="fc" id="L52">    Moshi moshi = new Moshi.Builder().build();</span>
+<span class="fc" id="L53">    Type mapStringObject = Types.newParameterizedType(Map.class, String.class, Object.class);</span>
+<span class="fc" id="L54">    JsonAdapter&lt;Map&lt;String, Object&gt;&gt; adapter = moshi.adapter(mapStringObject);</span>
+<span class="fc" id="L55">    Map&lt;String, Object&gt; responseMap = new HashMap&lt;&gt;();</span>
+    try {
+      // check if we loaded anything
+<span class="fc" id="L58">      List&lt;List&lt;String&gt;&gt; currentData = this.data.getDataset();</span>
+<span class="fc bfc" id="L59" title="All 2 branches covered.">      if (currentData.isEmpty()) {</span>
+<span class="fc" id="L60">        responseMap.put(&quot;type&quot;, &quot;error&quot;);</span>
+<span class="fc" id="L61">        responseMap.put(&quot;error_type&quot;, &quot;No files are loaded&quot;);</span>
+<span class="fc" id="L62">        return adapter.toJson(responseMap);</span>
+      }
+
+<span class="fc" id="L65">      String search = request.queryParams(&quot;search&quot;);</span>
+      // check search parameter - required
+<span class="fc bfc" id="L67" title="All 2 branches covered.">      if (search == null) {</span>
+<span class="fc" id="L68">        responseMap.put(&quot;type&quot;, &quot;error&quot;);</span>
+<span class="fc" id="L69">        responseMap.put(&quot;error_type&quot;, &quot;missing_parameter&quot;);</span>
+<span class="fc" id="L70">        responseMap.put(&quot;error_arg&quot;, &quot;search&quot;);</span>
+<span class="fc" id="L71">        return adapter.toJson(responseMap);</span>
+      }
+<span class="fc" id="L73">      String headerS = request.queryParams(&quot;header&quot;);</span>
+      // check header parameter - required
+<span class="fc bfc" id="L75" title="All 2 branches covered.">      if (headerS == null) {</span>
+<span class="fc" id="L76">        responseMap.put(&quot;type&quot;, &quot;error&quot;);</span>
+<span class="fc" id="L77">        responseMap.put(&quot;error_type&quot;, &quot;missing_parameter&quot;);</span>
+<span class="fc" id="L78">        responseMap.put(&quot;error_arg&quot;, &quot;header&quot;);</span>
+<span class="fc" id="L79">        return adapter.toJson(responseMap);</span>
+      }
+<span class="fc" id="L81">      String narrow = request.queryParams(&quot;narrow&quot;);</span>
+      // check narrow parameter = not required
+<span class="fc bfc" id="L83" title="All 2 branches covered.">      if (narrow == null) {</span>
+<span class="fc" id="L84">        narrow = &quot;NULL&quot;;</span>
+      }
+<span class="fc" id="L86">      boolean header = headerS.equalsIgnoreCase(&quot;true&quot;);</span>
+      // initialize the searcher and look for the words
+<span class="fc" id="L88">      MySearcher searcher = new MySearcher(currentData, header, narrow);</span>
+<span class="fc" id="L89">      searcher.findRows(search);</span>
+<span class="fc" id="L90">      List&lt;List&lt;String&gt;&gt; found = searcher.getFound();</span>
+      // check the found - throw an exception in searcher?
+<span class="fc bfc" id="L92" title="All 2 branches covered.">      if (found.isEmpty()) {</span>
+<span class="fc" id="L93">        responseMap.put(&quot;type&quot;, &quot;error&quot;);</span>
+<span class="fc" id="L94">        responseMap.put(&quot;error_type&quot;, &quot;no match found&quot;);</span>
+<span class="fc" id="L95">        responseMap.put(&quot;search_word&quot;, search);</span>
+<span class="fc bfc" id="L96" title="All 2 branches covered.">        if (!narrow.equals(&quot;NULL&quot;)) {</span>
+<span class="fc" id="L97">          responseMap.put(&quot;specifier&quot;, narrow);</span>
+        }
+<span class="fc" id="L99">        return adapter.toJson(responseMap);</span>
+      }
+
+<span class="fc" id="L102">      responseMap.put(&quot;result&quot;, &quot;success&quot;);</span>
+<span class="fc" id="L103">      responseMap.put(&quot;view_data&quot;, found);</span>
+<span class="fc" id="L104">      return adapter.toJson(responseMap);</span>
+<span class="nc" id="L105">    } catch (Exception e) {</span>
+<span class="nc" id="L106">      System.out.println(e);</span>
+<span class="nc" id="L107">      responseMap.put(&quot;type&quot;, &quot;error&quot;);</span>
+<span class="nc" id="L108">      responseMap.put(&quot;error_type&quot;, e);</span>
+<span class="nc" id="L109">      return adapter.toJson(responseMap);</span>
+    }
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
