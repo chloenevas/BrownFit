@@ -4,6 +4,9 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 
+/**
+ * Coming soon! Users can search through all the machines in the Nelson :)
+ */
 public class Search implements Route {
 
   @Override

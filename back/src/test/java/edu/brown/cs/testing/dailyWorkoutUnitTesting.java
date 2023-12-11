@@ -1,6 +1,6 @@
 package edu.brown.cs.testing;
 
-import edu.brown.cs.student.main.algorithm.ShortAlgo;
+import edu.brown.cs.student.main.algorithm.Algorithm;
 import edu.brown.cs.student.main.database.MockAccount;
 import edu.brown.cs.student.main.records.Machine;
 import java.util.Collections;
@@ -52,7 +52,7 @@ private List<String> goals;
         map1.put(machine2, 1);
         MockAccount mAcc1 = new MockAccount("mock", map1);
 
-        ShortAlgo salgo = new ShortAlgo();
+        Algorithm salgo = new Algorithm();
         List<Machine> returnList = salgo.getWeightedMachineList(machineList, "", mAcc1);
         Assert.assertEquals(this.getNumInstaces(returnList, "1"), 5);
         Assert.assertEquals(this.getNumInstaces(returnList, "2"), 1);
@@ -75,7 +75,7 @@ private List<String> goals;
         map1.put(machine2, 1);
         MockAccount mAcc1 = new MockAccount("mock", map1);
 
-        ShortAlgo salgo = new ShortAlgo();
+        Algorithm salgo = new Algorithm();
         int counter1 = 0;
         int counter2 = 0;
         int counter3 = 0;
@@ -114,7 +114,7 @@ private List<String> goals;
         map1.put(machine2, 1);
         MockAccount mAcc1 = new MockAccount("mock", map1);
 
-        ShortAlgo salgo = new ShortAlgo();
+        Algorithm salgo = new Algorithm();
         List<Object> returnMap = salgo.generateWorkout("120 minutes or more", "shoulders", "biceps", "strength", mAcc1);
         System.out.println(returnMap);
     }
@@ -132,7 +132,7 @@ private List<String> goals;
         HashMap<Machine, Integer> map1 = new HashMap<>();
         MockAccount mAcc1 = new MockAccount("mock", map1);
 
-        ShortAlgo algo = new ShortAlgo();
+        Algorithm algo = new Algorithm();
         for (int i = 0; i < 20; i ++) {
             String duration = this.duration.get((int) (Math.random()*this.duration.size()));
             String muscle1 = this.muscles.get((int) (Math.random()*this.muscles.size()));

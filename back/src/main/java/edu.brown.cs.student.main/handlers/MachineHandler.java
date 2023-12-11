@@ -1,21 +1,11 @@
 package edu.brown.cs.student.main.handlers;
 
-import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.Moshi;
-import com.squareup.moshi.Types;
-import edu.brown.cs.student.main.algorithm.ShortAlgo;
-import edu.brown.cs.student.main.database.MockAccount;
 import edu.brown.cs.student.main.database.NelsonMachineDatabase;
-import edu.brown.cs.student.main.records.Machine;
 import spark.Request;
 import spark.Response;
 import spark.Route;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public class MachineHandler implements Route {
 
@@ -23,16 +13,15 @@ public class MachineHandler implements Route {
     @Override
     public Object handle(Request request, Response response) throws IOException {
         response.header("Access-Control-Allow-Origin", "*");
-        try{
-            String machineName = request.queryParams("machine");
 
+            String machineName = request.queryParams("name");
+        try{
             if (machineName == null){
-                throw new InvalidInputException("Invalid inputs. Missing duration, muscle, or goal field");
+                throw new InvalidInputException("Invalid Machine Name");
             }
 
 
-            String img = new NelsonMachineDatabase().getDatabase().get(machineName).img();
-            return img;
+            return new NelsonMachineDatabase().getDatabase().get(machineName);
         }
         catch (InvalidInputException e){
             return e.getMessage();

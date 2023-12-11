@@ -1,9 +1,5 @@
 package edu.brown.cs.student.main.records;
 
-public record Machine(String name, String img, String instructions, String[] muscle) implements WorkoutElement{
+public record Machine(String name, String img, String instructions, String[] muscle) {
 
-    @Override
-    public String getImg(){
-        return img;
-    }
 }

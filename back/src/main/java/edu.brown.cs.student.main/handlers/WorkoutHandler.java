@@ -3,7 +3,7 @@ package edu.brown.cs.student.main.handlers;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
-import edu.brown.cs.student.main.algorithm.ShortAlgo;
+import edu.brown.cs.student.main.algorithm.Algorithm;
 import edu.brown.cs.student.main.database.MockAccount;
 import edu.brown.cs.student.main.records.Machine;
 import spark.Request;
@@ -15,7 +15,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class WorkoutHandler implements Route {
 
@@ -37,6 +36,7 @@ public class WorkoutHandler implements Route {
                 throw new InvalidInputException("Invalid inputs. Missing duration, muscle, or goal field");
             }
 
+            // mock account, will delete
             ArrayList<Machine> machineList = new ArrayList<>();
             Machine machine1 = new Machine("1", "png", "blah", new String[0]);
             Machine machine2 = new Machine("2", "png", "blah", new String[0]);
@@ -48,7 +48,7 @@ public class WorkoutHandler implements Route {
             map1.put(machine1, 5);
             map1.put(machine2, 1);
 
-            ShortAlgo salgo = new ShortAlgo();
+            Algorithm salgo = new Algorithm();
             List<Object> returnMap = salgo.generateWorkout(duration, muscle1, muscle2, goal, new MockAccount(username, map1));
             return adapter.toJson(returnMap);
         }

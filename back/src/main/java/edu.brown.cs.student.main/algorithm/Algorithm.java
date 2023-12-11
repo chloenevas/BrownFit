@@ -10,44 +10,47 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import kotlin.collections.ArrayDeque;
 
-public class ShortAlgo {
-    private ArrayList<Object> returnList;
+/**
+ * Algorithm for the project which generates a workout for a given set of parameters passed into the generate workout
+ * method.
+ */
+public class Algorithm {
     private HashMap<String, Integer> durationMap;
     private HashMap<String, Machine> database;
 
-    // Updates/TODO
-    // 1. Updated amount of exercises per workout to match the hashmap
-    // update: I did this by limiting amount of apis that can be added and by adding muscles accoring to muscle2 as well
-    // 2. Use testGenerateWorkout to fuzz test and you can add more thorough test assertions
-        // to test more deeply all I have right now is assert size
-    // 4. wrote a note about the switch boolean idea: not really necessary if we don't care
-        // about a user getting less exercises than they requested but just an idea.
-    //update: I fixed the N/A and full body options so that they implicitly match with any muscle
-
-
-    public ShortAlgo() throws IOException {
+    /**
+     * Constructor initializes the nelson database and sets up database and also initializes the duration hashmap,
+     * which maps front end queries to number of exercises in the workout.
+     * @throws IOException - Throws IO exception from machine database, which should never be called because we created
+     * the database and know that no error is produced but handled in case.
+     */
+    public Algorithm() throws IOException {
         NelsonMachineDatabase database = new NelsonMachineDatabase();
         this.database = database.getDatabase();
-        this.returnList = new ArrayList<>();
         this.initializeDuration();
     }
 
     /**
-     * Generates workout with tons of helper methods
-     * @param duration
-     * @param muscle
-     * @param muscle2
-     * @param goal
-     * @throws IOException
+     *  Generates a workout with the given query parameters from the front end passed to the handler. Parameters explained
+     *  below. Returns a list of objects, which are either nelson machine exercises (Machine) or API free weight
+     *  exercises (Exercise). Called in workout handler and is main algorithmic complexity function. For more info on these
+     *  parameters, read the read me, workout handler class, and the front end query parameters. Many defensive program
+     *  measures were taken that are unnecessary due to the rigidity of the calls to the server from the front end.
+     * @param duration - duration for the workout to last
+     * @param muscle - primary muscle targeted by workout
+     * @param muscle2 - secondary muscle targeted by workout
+     * @param goal - goal of the workout
+     * @param mock - account of user
+     * @return - returns a list of machines and exercises, which is a full workout
+     * @throws IOException - throws exception if API can not be properly connected to. API Ninjas returns empty sets
+     * for malformed URLs, so should not ever be thrown
      */
 
     public List<Object> generateWorkout(String duration, String muscle, String muscle2, String goal, MockAccount mock)
             throws IOException {
 
-        this.returnList.clear();
+        List<Object> returnList = new ArrayList<>();
         int workoutSize = this.durationMap.get(duration);
 
         List<Machine> validMachines = new ArrayList<>();
@@ -60,9 +63,9 @@ public class ShortAlgo {
         }
 
         //adds as many valid machines to workout as possible (max = workoutSize - 1)
-        addMachinesToWorkout(workoutSize, validMachines, muscle2, mock);
+        addMachinesToWorkout(returnList, workoutSize, validMachines, muscle2, mock);
 
-        int emptySpaces = workoutSize - this.returnList.size();
+        int emptySpaces = workoutSize - returnList.size();
         //if there are not that many machines we add by primary muscle, fill in blanks with secondary muscle
         //will only add empty spaces - 2 machines by this way
         if (emptySpaces >= 4){
@@ -71,11 +74,11 @@ public class ShortAlgo {
 
                 // checks if the machine contains the secondary muscle and is not in workout already and
                 // adds to valid list
-                if (contains(machine.muscle(), muscle2) && !this.returnList.contains(machine)){
+                if (contains(machine.muscle(), muscle2) && !returnList.contains(machine)){
                     newValidMachines.add(machine);
                 }
             }
-            addMachinesToWorkout(emptySpaces - 2, newValidMachines, muscle, mock);
+            addMachinesToWorkout(returnList, emptySpaces - 2, newValidMachines, muscle, mock);
         }
 
         // API request here for an exercise and add to map
@@ -91,20 +94,26 @@ public class ShortAlgo {
         // so that we can populate with more exercises in the event that the nelson does not
         // have enough exercises and our primary exercise is a small body part
         boolean switchBool = true;
-        int emptySlotsAPI = workoutSize - this.returnList.size();
+        int emptySlotsAPI = workoutSize - returnList.size();
         for(int i = 0; i < emptySlotsAPI; i++) {
             Exercise exercise = APIlist.get((int) (Math.random() * APIlist.size()));
 
             // check that the exercise is not already in the list from the machines (bench press is in both)
-            this.returnList.add(exercise);
-            System.out.println("added API" + i);
+            returnList.add(exercise);
         }
-        System.out.println(this.returnList.size());
 
-        return this.returnList;
+        return returnList;
     }
 
-    public void addMachinesToWorkout(int workoutSize, List<Machine> validMachines, String muscle2, MockAccount mock){
+    /**
+     *
+     * @param workoutSize
+     * @param validMachines
+     * @param muscle2
+     * @param mock
+     */
+    public void addMachinesToWorkout(List<Object> returnList, int workoutSize, List<Machine> validMachines,
+        String muscle2, MockAccount mock){
         for(int i = workoutSize; i > 1; i--){
             if (validMachines.isEmpty()){
                 break;
@@ -112,8 +121,7 @@ public class ShortAlgo {
             Machine machine = this.selectExercise(validMachines, muscle2, mock);
             // need to add rep ranges and sets and then return
             validMachines.remove(machine);
-            System.out.println("added nelson" + i);
-            this.returnList.add(machine);
+            returnList.add(machine);
         }
     }
 
@@ -177,7 +185,7 @@ public class ShortAlgo {
                 }
             }
         }
-        //goal: return list of machines where prevalance of machine is correlated to how highly it is weighted
+        //goal: return list of machines where prevalence of machine is correlated to how highly it is weighted
         return machineWeights;
     }
 
@@ -199,7 +207,6 @@ public class ShortAlgo {
 
     private void initializeDuration(){
         this.durationMap = new HashMap<>();
-        // How do we want to allocate exercises depending on duration?
         this.durationMap.put("30 minutes or less", 3);
         this.durationMap.put("30-60 minutes", 5);
         this.durationMap.put("60-90 minutes", 7);
@@ -208,16 +215,8 @@ public class ShortAlgo {
     }
 
     public Map<String, Integer> getDurationMap(){
-        return this.durationMap;
+        return (Map<String, Integer>) this.durationMap.clone();
     }
 
-//  private void initializeGoal(){
-//    // How do we want to allocate exercises depending on duration?
-//    this.goalMap.put("strengthen muscles", "strength");
-//    this.goalMap.put("burn calories", "cardio");
-//    this.goalMap.put("build muscles", 7);
-//    this.goalMap.put("90-120", 8);
-//    this.goalMap.put("120 minutes or more", 9);
-//  }
 }
 
