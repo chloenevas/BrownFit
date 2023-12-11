@@ -18,6 +18,8 @@ public class ShortAlgo {
     private HashMap<String, Integer> durationMap;
     private HashMap<String, Machine> database;
 
+    private HashMap<String, String> goalMap;
+
     // Updates/TODO
     // 1. Updated amount of exercises per workout to match the hashmap
     // update: I did this by limiting amount of apis that can be added and by adding muscles accoring to muscle2 as well
@@ -33,6 +35,7 @@ public class ShortAlgo {
         this.database = database.getDatabase();
         this.returnList = new ArrayList<>();
         this.initializeDuration();
+        this.initializeGoal();
     }
 
     /**
@@ -81,7 +84,14 @@ public class ShortAlgo {
         // API request here for an exercise and add to map
 
         ApiRequest API = new ApiRequest();
-        List<Exercise> APIlist= API.makeExerciseAPIRequest(muscle, goal);
+        String apiGoal;
+        if (goal.equals("just get a good sweat in!") || goal.equals("burn calories")){
+            apiGoal = "cardio";
+        }
+        else{
+            apiGoal = "strength";
+        }
+        List<Exercise> APIlist= API.makeExerciseAPIRequest(muscle, apiGoal);
         if (APIlist.isEmpty()){
             return new ArrayList<>();
         }
@@ -211,13 +221,13 @@ public class ShortAlgo {
         return this.durationMap;
     }
 
-//  private void initializeGoal(){
-//    // How do we want to allocate exercises depending on duration?
+  private void initializeGoal(){
+//    How do we want to allocate exercises depending on duration?
 //    this.goalMap.put("strengthen muscles", "strength");
 //    this.goalMap.put("burn calories", "cardio");
-//    this.goalMap.put("build muscles", 7);
-//    this.goalMap.put("90-120", 8);
-//    this.goalMap.put("120 minutes or more", 9);
-//  }
+//    this.goalMap.put("build muscles", "7");
+//    this.goalMap.put("increase muscle endurance", "8");
+//    this.goalMap.put("just get a good sweat in!", "9");
+  }
 }
 

@@ -35,7 +35,17 @@ public class ApiRequest {
                 apimuscle = "";
                 break;
         }
-        URL url = new URL("https://api.api-ninjas.com/v1/exercises?muscle=" + apimuscle);
+        URL url;
+        if (goal.equals("cardio")){
+            url = new URL("https://api.api-ninjas.com/v1/exercises?difficulty=beginner&type=cardio");
+        }
+        else {
+            url = new URL("https://api.api-ninjas.com/v1/exercises?muscle=" + apimuscle + "&goal=strength");
+        }
+        return makeAPIConnection(url);
+    }
+
+    public List<Exercise> makeAPIConnection(URL url) throws IOException {
         HttpURLConnection clientConnection = connect(url); // connect to api
         Moshi moshi = new Moshi.Builder().build();
         Type type = Types.newParameterizedType(List.class, Exercise.class);
