@@ -145,6 +145,9 @@ export default function RESULTMODAL({
         // check to see if the doc exists
         const userData = docSnapshot.data();
         const userExerciseHist: ExerciseInfo[] = userData.exerciseHistory;
+        console.log(typeof (userExerciseHist))
+                console.log(typeof newExerciseHistory);
+
         let historyNames: string[] = []
         let newNames: string[] = [];
 
@@ -162,16 +165,14 @@ export default function RESULTMODAL({
         }
 
         // if there are duplicate exercises, remove them from new exercise list before they get added to history
+        
         newExerciseHistory.forEach((newExercise: ExerciseInfo, newIndex) => {
-          
-          userExerciseHist.forEach((oldExercise: ExerciseInfo, oldIndex) => {
-                         
-
-            if (newExercise.exercise === oldExercise.exercise) {
+          for (let oldIndex = 0; oldIndex < userExerciseHist.length; oldIndex++) {
+              if (newExercise.exercise === userExerciseHist[oldIndex].exercise) {
               newExerciseHistory.splice(newIndex, 1);
             }
+          }
           })
-        })
 
         if (Object.keys(userExerciseHist).length == 0) { // check that the history isn't empty
 
