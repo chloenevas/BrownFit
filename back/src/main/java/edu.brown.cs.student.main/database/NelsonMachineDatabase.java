@@ -34,7 +34,7 @@ public class NelsonMachineDatabase {
         List<Machine> machineList= adapter.fromJson(new String(Files.readAllBytes(Paths.get("data/machineData.json"))));
         this.database = new HashMap<>();
         for (Machine machine: machineList){
-            this.database.put(machine.name(), machine);
+            this.database.put(machine.getName(), machine);
         }
     }
 

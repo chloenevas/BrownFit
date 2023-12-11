@@ -57,13 +57,13 @@ public class ShortAlgo {
         for(Machine machine: this.database.values()) {
 
             // checks if the machine contains the muscle targeted and adds to valid list
-            if (contains(machine.muscle(), muscle)){
+            if (contains(machine.getMuscle(), muscle)){
                 validMachines.add(machine);
             }
         }
 
         //adds as many valid machines to workout as possible (max = workoutSize - 1)
-        addMachinesToWorkout(workoutSize, validMachines, muscle2, mock);
+        addMachinesToWorkout(workoutSize, validMachines, muscle2, mock, goal);
 
         int emptySpaces = workoutSize - this.returnList.size();
         //if there are not that many machines we add by primary muscle, fill in blanks with secondary muscle
@@ -74,11 +74,11 @@ public class ShortAlgo {
 
                 // checks if the machine contains the secondary muscle and is not in workout already and
                 // adds to valid list
-                if (contains(machine.muscle(), muscle2) && !this.returnList.contains(machine)){
+                if (contains(machine.getMuscle(), muscle2) && !this.returnList.contains(machine)){
                     newValidMachines.add(machine);
                 }
             }
-            addMachinesToWorkout(emptySpaces - 2, newValidMachines, muscle, mock);
+            addMachinesToWorkout(emptySpaces - 2, newValidMachines, muscle, mock, goal);
         }
 
         // API request here for an exercise and add to map
@@ -114,15 +114,31 @@ public class ShortAlgo {
         return this.returnList;
     }
 
-    public void addMachinesToWorkout(int workoutSize, List<Machine> validMachines, String muscle2, MockAccount mock){
+    public void addMachinesToWorkout(int workoutSize, List<Machine> validMachines, String muscle2, MockAccount mock, String goal){
         for(int i = workoutSize; i > 1; i--){
             if (validMachines.isEmpty()){
                 break;
             }
             Machine machine = this.selectExercise(validMachines, muscle2, mock);
-            // need to add rep ranges and sets and then return
+            switch (goal){
+                case "strength":
+                    machine.setWeight("higher");
+                    machine.setReps("fewer: 4-8");
+                    System.out.println(goal);
+                    break;
+                case "build muscles":
+                    machine.setWeight("lower");
+                    machine.setReps("more: 12-20");
+                    System.out.println(goal);
+                    break;
+                default:
+                    machine.setWeight("medium");
+                    machine.setReps("medium: 8-12");
+                    System.out.println(goal);
+                    break;
+            }
             validMachines.remove(machine);
-            System.out.println("added nelson" + i);
+            System.out.println(machine.getWeight());
             this.returnList.add(machine);
         }
     }
@@ -154,7 +170,7 @@ public class ShortAlgo {
 
         for (int i = 0; i < num; i++){
             //if machine contains secondary muscle, add it 5 times to return list
-            if (contains(machines.get(i).muscle(), muscle2)){
+            if (contains(machines.get(i).getMuscle(), muscle2)){
                 for (int j = 0; j <5; j++){
                     machineWeights.add(machines.get(i));
                 }

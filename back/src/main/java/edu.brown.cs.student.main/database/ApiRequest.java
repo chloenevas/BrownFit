@@ -56,20 +56,6 @@ public class ApiRequest {
         clientConnection.disconnect();
         return exerciseList;
     }
-    // for cardio because the database can search cardio by type
-    public List<Exercise> makeExerciseAPIRequest(String goal) throws MalformedURLException, IOException {
-        URL url = new URL("https://api.api-ninjas.com/v1/exercises?difficulty=beginner&type=" + goal);
-        HttpURLConnection clientConnection = connect(url); // connect to api
-        Moshi moshi = new Moshi.Builder().build();
-        Type type = Types.newParameterizedType(List.class, Exercise.class);
-
-        JsonAdapter<List<Exercise>> adapter =
-                moshi.adapter(type); // creates moshi object that will read json
-        List<Exercise> exerciseList = adapter.fromJson(new Buffer().readFrom(clientConnection.getInputStream()));
-        System.out.println(exerciseList.get(0).instructions());
-        clientConnection.disconnect();
-        return exerciseList;
-    }
 
     /**
      * A private helper method that checks to ensure a successful connection to the API,throwing an
