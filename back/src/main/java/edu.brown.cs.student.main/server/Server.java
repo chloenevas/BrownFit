@@ -2,7 +2,6 @@ package edu.brown.cs.student.main.server;
 
 
 import edu.brown.cs.student.main.algorithm.ShortAlgo;
-import edu.brown.cs.student.main.database.NelsonMachineDatabase;
 import edu.brown.cs.student.main.handlers.MachineHandler;
 import edu.brown.cs.student.main.handlers.WorkoutHandler;
 import spark.Spark;
