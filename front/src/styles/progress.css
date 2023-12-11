@@ -73,19 +73,29 @@
 
 .exercise {
     flex: 1;
-    margin-left: 20px;
+    padding: 10px;
+    border: none;
 
 } 
 
+.exercise:hover {
+  cursor: pointer;
+
+}
 .delete-button {
+    border: none;
+
 }
 
 .delete-button:hover {
   cursor: pointer;
+  background-color: lightcoral;
 }
 
 .rating-dropdown {
-  margin-left: 20px
+  margin-left: 20px;
+    border: none;
+
 }
 
 .selector {
@@ -99,16 +109,48 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Shadow effect */
 
   position: absolute;
-  top: 50%; /* Adjust vertical position */
+  top: 15%; /* Adjust vertical position */
   left: 50%; /* Adjust horizontal position */
   transform: translate(-50%, -50%); /* Center the modal */
   padding: 40px; /* Increase padding for larger modal */
   z-index: 1000;
-  width: 80%; /* Adjust the width of the modal */
+  width: 30%; /* Adjust the width of the modal */
   max-width: 1200px; /* Set maximum width for responsiveness */
   height: auto; /* Allow the modal to adjust its height */
   overflow: auto;
   background-color: white;
   border-radius: 10px; /* Add some border radius for style */
   overflow-y: auto;
+}
+
+.exercise-info-modal {
+   display: none;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Shadow effect */
+
+  position: absolute;
+  top: 15%; /* Adjust vertical position */
+  left: 50%; /* Adjust horizontal position */
+  transform: translate(-50%, -50%); /* Center the modal */
+  padding: 40px; /* Increase padding for larger modal */
+  z-index: 1000;
+  width: 60%; /* Adjust the width of the modal */
+  max-width: 1200px; /* Set maximum width for responsiveness */
+  height: auto; /* Allow the modal to adjust its height */
+  overflow: auto;
+  background-color: white;
+  border-radius: 10px; /* Add some border radius for style */
+  overflow-y: auto;
+  display: flex;
+}
+
+.result-table {
+  width: 100%;
+}
+
+.exercise-info {
+  padding: 20px;
+}
+
+.exercise-info:hover {
+  background-color: blue;
 }
