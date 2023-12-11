@@ -64,3 +64,21 @@
  align-items: center;
  margin-left: 23.5%
 }
+
+.exercise-pair {
+  display: flex;
+  align-items: center;
+}
+
+.exercise {
+    flex: 1;
+
+} 
+
+.delete-button {
+}
+
+.delete-button:hover {
+  cursor: pointer;
+
+}

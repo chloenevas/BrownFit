@@ -11,23 +11,8 @@ import AdditionalInfo from "./additional/additionalPage";
 
 import React, { Component, useState } from "react";
 import AUTHMODAL from "./authentication/authModal";
-import { auth, database, collectionRef, users } from "../index";
-import {
- collection,
- addDoc,
- updateDoc,
- doc,
- onSnapshot,
- getDoc,
- query,
- where,
-} from "firebase/firestore";
-import {
- getAuth,
- onAuthStateChanged,
- setPersistence,
- browserSessionPersistence,
-} from "firebase/auth";
+import { auth } from "../index";
+
 
 
 class App extends Component<any, any> {
@@ -229,8 +214,6 @@ Additional Info
          {this.state.currentPage === "progress" && <ProgressPage />}
          {this.state.currentPage === "account" && <AccountInfo />}
          {this.state.currentPage === "additional" && < AdditionalInfo/>}
-
-
 
 
        </div>
