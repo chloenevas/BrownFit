@@ -81,19 +81,14 @@ public class Algorithm {
             addMachinesToWorkout(returnList, emptySpaces - 2, newValidMachines, muscle, mock);
         }
 
-        // API request here for an exercise and add to map
+        // Calls API for the target muscle and goal
 
         ApiRequest API = new ApiRequest();
         List<Exercise> APIlist= API.makeExerciseAPIRequest(muscle, goal);
         if (APIlist.isEmpty()){
             return new ArrayList<>();
         }
-        // adds as many API exercises as needed (almost always 1 unless we run out of machines
-
-        // I want to use this to switch between primary and secondary muscle API calls
-        // so that we can populate with more exercises in the event that the nelson does not
-        // have enough exercises and our primary exercise is a small body part
-        boolean switchBool = true;
+        // adds remaining slots for workout from the API
         int emptySlotsAPI = workoutSize - returnList.size();
         for(int i = 0; i < emptySlotsAPI; i++) {
             Exercise exercise = APIlist.get((int) (Math.random() * APIlist.size()));
@@ -106,19 +101,21 @@ public class Algorithm {
     }
 
     /**
-     *
-     * @param workoutSize
-     * @param validMachines
-     * @param muscle2
-     * @param mock
+     * Helper function called in generate workout to add a machine to the return list. Takes a list of
+     * exercises which match the given query and the size of the workout and add machines to the list accordingly.
+     * @param returnList - list to add machines to, returned as the final workout in generate workout
+     * @param workoutSize - number of exercises that need to still be added to the workout
+     * @param validMachines - list of valid machines for the current query
+     * @param muscle2 - secondary muscle of the workout
+     * @param account - account for user information
      */
-    public void addMachinesToWorkout(List<Object> returnList, int workoutSize, List<Machine> validMachines,
-        String muscle2, MockAccount mock){
+    private void addMachinesToWorkout(List<Object> returnList, int workoutSize, List<Machine> validMachines,
+        String muscle2, MockAccount account){
         for(int i = workoutSize; i > 1; i--){
             if (validMachines.isEmpty()){
                 break;
             }
-            Machine machine = this.selectExercise(validMachines, muscle2, mock);
+            Machine machine = this.selectExercise(validMachines, muscle2, account);
             // need to add rep ranges and sets and then return
             validMachines.remove(machine);
             returnList.add(machine);
@@ -126,75 +123,84 @@ public class Algorithm {
     }
 
     /**
-     * Given list of exercises which fit the criteria, randomly select an exercise and remove from the list
-     * to avoid double picking. Need to add algorithmic complexity here.
-     * @param machines
-     * @return
+     * Given list of exercises which fit the criteria, get the weighted list of the machines and randomly pick an
+     * exercise from the list. Weighted list takes into account the preference rankings of a user. Method is
+     * public to test selection of exercises is weighted properly.
+     * @param validMachines - list of valid machine
+     * @param muscle2 - secondary muscle from query
+     * @param account - account for user information
+     * @return - returns the machine that was selected
      */
-
-    public Machine selectExercise(List<Machine> machines, String muscle2, MockAccount mock){
-
-        //gets random index in the list and returns that machine
-
-        List<Machine> weightedMachines = this.getWeightedMachineList(machines, muscle2, mock);
+    public Machine selectExercise(List<Machine> validMachines, String muscle2, MockAccount account){
+        // creates weighted list from valid list
+        List<Machine> weightedMachines = this.getWeightedMachineList(validMachines, muscle2, account);
+        // randomly picks from weighted list
         int rand = (int) (Math.random()*weightedMachines.size());
         Machine returnMachine = weightedMachines.get(rand);
         weightedMachines.remove(rand);
         return returnMachine;
     }
 
-    public List<Machine> getWeightedMachineList(List<Machine> machines, String muscle2, MockAccount mock){
+    /**
+     * Converts a list of valid machines into a weighted list of machines by user preference. Public method for testing.
+     * @param machines - list of valid machines
+     * @param muscle2 - secondary muscle
+     * @param account - account for user information
+     * @return - returns a list of weighted machines to be selected for the workout
+     */
+    public List<Machine> getWeightedMachineList(List<Machine> machines, String muscle2, MockAccount account){
         int num = machines.size();
 
         //make a list of machine objects to track the weights of how probable it is we choose that machine
         //i.e., the more times that machine is added to the list, the more likely we are to pick it
         ArrayList<Machine> machineWeights = new ArrayList<>();
 
-        for (int i = 0; i < num; i++){
-            //if machine contains secondary muscle, add it 5 times to return list
-            if (contains(machines.get(i).muscle(), muscle2)){
-                for (int j = 0; j <5; j++){
-                    machineWeights.add(machines.get(i));
-                }
-            }
-            //if machine does not contain secondary muscle, only add it 3 times to return list
-            else{
-                for (int j = 0; j <3; j++){
-                    machineWeights.add(machines.get(i));
-                }
-            }
-
-            //if account has ranking for current machine
-            if (mock.machineRatings().containsKey(machines.get(i))){
-                //gets user's rating of that machine and subtracts it by 3
-                //subtract by 3 so that high ranking of 5 will get positive update value and
-                // low ranking of 1 will get negative update value
-                int weightUpdate = mock.machineRatings().get(machines.get(i)) - 3;
-                //if this difference is greater than 0, add that machine to the return list that many times
-                if (weightUpdate >= 0){
-                    for (int j = 0; j < weightUpdate; j++){
-                        machineWeights.add(machines.get(i));
-                    }
-                }
-                //if this difference is less than 0, remove that machine from the return list that many times
-                //will never error since max subtractions is 2 and min occurrences in list is 3
-                else{
-                    for (int j = -weightUpdate; j > 0; j--){
-                        machineWeights.remove(machines.get(i));
-                    }
-                }
-            }
+      for (Machine machine : machines) {
+        //if machine contains secondary muscle, add it 5 times to return list
+        if (contains(machine.muscle(), muscle2)) {
+          for (int j = 0; j < 5; j++) {
+            machineWeights.add(machine);
+          }
         }
+        //if machine does not contain secondary muscle, only add it 3 times to return list
+        else {
+          for (int j = 0; j < 3; j++) {
+            machineWeights.add(machine);
+          }
+        }
+
+        //if account has ranking for current machine
+        if (account.machineRatings().containsKey(machine)) {
+          //gets user's rating of that machine and subtracts it by 3
+          //subtract by 3 so that high ranking of 5 will get positive update value and
+          // low ranking of 1 will get negative update value
+          int weightUpdate = account.machineRatings().get(machine) - 3;
+          //if this difference is greater than 0, add that machine to the return list that many times
+          if (weightUpdate >= 0) {
+            for (int j = 0; j < weightUpdate; j++) {
+              machineWeights.add(machine);
+            }
+          }
+          //if this difference is less than 0, remove that machine from the return list that many times
+          //will never error since max subtractions is 2 and min occurrences in list is 3
+          else {
+            for (int j = -weightUpdate; j > 0; j--) {
+              machineWeights.remove(machine);
+            }
+          }
+        }
+      }
         //goal: return list of machines where prevalence of machine is correlated to how highly it is weighted
         return machineWeights;
     }
 
     /**
      * Simple containment in an array plus fact that it will always return true if muscle is noted as full body or N/A
-     * this is so any exercise could be matched with one of these values
-     * @param array
-     * @param value
-     * @return
+     * this is so any exercise could be matched with one of these values. Used to see if muscle is contained
+     * in the array of muscles targeted by an exercise
+     * @param array - array to check containment
+     * @param value - value to check if contained
+     * @return - true if in array or full body or N/A, false otherwise
      */
     private static boolean contains(String[] array, String value) {
         for (String element : array) {
@@ -205,6 +211,9 @@ public class Algorithm {
         return false;
     }
 
+    /**
+     * Initializes the duration map. Map is used to get number of exercises from front end queries
+     */
     private void initializeDuration(){
         this.durationMap = new HashMap<>();
         this.durationMap.put("30 minutes or less", 3);
@@ -214,6 +223,10 @@ public class Algorithm {
         this.durationMap.put("120 minutes or more", 9);
     }
 
+    /**
+     * Get duration map for testing
+     * @return - clone of duration map
+     */
     public Map<String, Integer> getDurationMap(){
         return (Map<String, Integer>) this.durationMap.clone();
     }

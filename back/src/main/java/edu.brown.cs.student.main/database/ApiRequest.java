@@ -13,29 +13,31 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
 
-
+/**
+ * Class connecting to the API that makes request based on muscle and goal.
+ */
 public class ApiRequest {
 
+    /**
+     * Calls the API with a given muscle and goal. Throws exceptions if malformed URL or IOException, which are never
+     * occuring due to the simplicity of our query.
+     * @param muscle - muscle to request exercises for
+     * @param goal - goal to request exercises for
+     * @return - returns a list of valid exercises with the given muscle and goal
+     * @throws MalformedURLException - Explained above.
+     * @throws IOException - Explained above.
+     */
     public List<Exercise> makeExerciseAPIRequest(String muscle, String goal) throws MalformedURLException, IOException {
-        String apimuscle = muscle;
-        switch (muscle){
-            case "quads":
-                apimuscle = "quadriceps";
-                break;
-            case "shoulders":
-                apimuscle = "traps";
-                break;
-            case "upper back": case "delts":
-                apimuscle = "lats";
-                break;
-            case "lower back":
-                apimuscle = "lower_back";
-                break;
-            case "N/A": case "full body":
-                apimuscle = "";
-                break;
-        }
-        URL url = new URL("https://api.api-ninjas.com/v1/exercises?muscle=" + apimuscle);
+        // converts muscle query from front end to correct query for API
+        String apimuscle = switch (muscle) {
+          case "quads" -> "quadriceps";
+          case "shoulders" -> "traps";
+          case "upper back", "delts" -> "lats";
+          case "lower back" -> "lower_back";
+          case "N/A", "full body" -> "";
+          default -> muscle;
+        };
+      URL url = new URL("https://api.api-ninjas.com/v1/exercises?muscle=" + apimuscle);
         HttpURLConnection clientConnection = connect(url); // connect to api
         Moshi moshi = new Moshi.Builder().build();
         Type type = Types.newParameterizedType(List.class, Exercise.class);
@@ -43,20 +45,6 @@ public class ApiRequest {
         JsonAdapter<List<Exercise>> adapter =
                 moshi.adapter(type); // creates moshi object that will read json
         List<Exercise> exerciseList = adapter.fromJson(new Buffer().readFrom(clientConnection.getInputStream()));
-        clientConnection.disconnect();
-        return exerciseList;
-    }
-    // for cardio because the database can search cardio by type
-    public List<Exercise> makeExerciseAPIRequest(String goal) throws MalformedURLException, IOException {
-        URL url = new URL("https://api.api-ninjas.com/v1/exercises?difficulty=beginner&type=" + goal);
-        HttpURLConnection clientConnection = connect(url); // connect to api
-        Moshi moshi = new Moshi.Builder().build();
-        Type type = Types.newParameterizedType(List.class, Exercise.class);
-
-        JsonAdapter<List<Exercise>> adapter =
-                moshi.adapter(type); // creates moshi object that will read json
-        List<Exercise> exerciseList = adapter.fromJson(new Buffer().readFrom(clientConnection.getInputStream()));
-        System.out.println(exerciseList.get(0).instructions());
         clientConnection.disconnect();
         return exerciseList;
     }

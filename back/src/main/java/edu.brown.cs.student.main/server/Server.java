@@ -29,8 +29,6 @@ public class Server {
 
     /** Our main method that constructs and runs a new server */
     public static void main(String[] args) throws IOException {
-        //new NelsonMachineDatabase();
-        //new ShortAlgo("30 minutes or less", "chest", "chest", "strength", "hello");
         new Server();
         System.out.println("Server started at http://localhost:" + port + "; exiting main...");
 

@@ -16,9 +16,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Class called by server to generate a workout
+ */
 public class WorkoutHandler implements Route {
 
-    /** Handles a request to /broadband. Gets data then serializes into json that gets returned */
+    /**
+     * Handle method overriden from route which calls generate workout from the algorithm class. Requests
+     * query parameters and uses moshi to serialize data.
+     */
     @Override
     public Object handle(Request request, Response response) throws IOException {
         response.header("Access-Control-Allow-Origin", "*");
@@ -26,12 +32,14 @@ public class WorkoutHandler implements Route {
         Type listObject = Types.newParameterizedType(List.class, Object.class);
         JsonAdapter<List<Object>> adapter = moshi.adapter(listObject);
         try{
+            // parameters for the server call
             String duration = request.queryParams("duration");
             String muscle1 = request.queryParams("muscle1");
             String muscle2 = request.queryParams("muscle2");
             String goal = request.queryParams("goal");
             String username = request.queryParams("username");
 
+            // null checking, should never occur due to rigidity of front end calls
             if (duration == null || muscle1 == null || muscle2 == null || goal == null){
                 throw new InvalidInputException("Invalid inputs. Missing duration, muscle, or goal field");
             }
@@ -48,6 +56,7 @@ public class WorkoutHandler implements Route {
             map1.put(machine1, 5);
             map1.put(machine2, 1);
 
+            // calls algorithm to make workout with given parameters
             Algorithm salgo = new Algorithm();
             List<Object> returnMap = salgo.generateWorkout(duration, muscle1, muscle2, goal, new MockAccount(username, map1));
             return adapter.toJson(returnMap);

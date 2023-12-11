@@ -93,9 +93,6 @@ private List<String> goals;
                     break;
             }
         }
-        System.out.println(counter1);
-        System.out.println(counter2);
-        System.out.println(counter3);
         Assert.assertTrue((counter1 > counter3 + 1000) && (counter3 > counter2 + 1000));
     }
 
