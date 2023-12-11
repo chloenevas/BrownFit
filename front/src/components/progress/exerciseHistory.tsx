@@ -35,43 +35,42 @@ const [exerciseHistNames, setExerciseHistNames] = useState<string[]>([]);
   }
   const [exerciseHistory, setExerciseHistory] = useState<ExerciseInfo[]>([]);
 
-    if (auth.currentUser !== null) {
-      currentUser = auth.currentUser;
-      userID = currentUser?.uid;
+  function setupPage() {
+if (auth.currentUser !== null) {
+  currentUser = auth.currentUser;
+  userID = currentUser?.uid;
 
-      if (userID === undefined) {
-        setFirstName("");
-        setLastName("");
-      } else {
-        const currentUserDoc = doc(database, "users", userID); // get document of current logged in user
+  if (userID === undefined) {
+    setFirstName("");
+    setLastName("");
+  } else {
+    const currentUserDoc = doc(database, "users", userID); // get document of current logged in user
 
-        const getUserData = async () => {
-          try {
-            const docSnapshot = await getDoc(currentUserDoc);
-            if (docSnapshot.exists()) {
-              // check to see if the doc exists
-              const userData = docSnapshot.data();
-              const exerciseList: ExerciseInfo[] = userData.exerciseHistory // get user's current exercise history
-              setExerciseHistory(exerciseList); 
-            let names: string[] = [] // create empty array for storing exercise names
-              
-               {
-                Array.from(exerciseHistory).map((item) =>
-                  names.push(item.exercise) // add every name 
-                 );
-              }
-              setExerciseHistNames(names); // set exercise history to be those names
-              
-            }
-          } catch (error) {
-            console.error(error)
-          }
-        };
-         useEffect(() => {
-           getUserData();
-         }, []);
+    const getUserData = async () => {
+      try {
+        const docSnapshot = await getDoc(currentUserDoc);
+        if (docSnapshot.exists()) {
+          // check to see if the doc exists
+          const userData = docSnapshot.data();
+          const exerciseList: ExerciseInfo[] = userData.exerciseHistory; // get user's current exercise history
+          setExerciseHistory(exerciseList);
+          const names = exerciseList.map((item) => item.exercise);
+          
+          setExerciseHistNames(names); // set exercise history to be those names
+        }
+      } catch (error) {
+        console.error(error);
       }
-    }
+    };
+    getUserData();
+  }
+}
+  }
+    
+  
+   useEffect(() => {
+     setupPage();
+   }, []);
   
 
   function handleEditButton() {
