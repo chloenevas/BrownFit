@@ -23,8 +23,7 @@ export default function ExerciseHistory() {
   const [newFirstName, setNewFirstName] = useState("");
   const [newLastName, setNewLastName] = useState("");
 const [exerciseHistNames, setExerciseHistNames] = useState<string[]>([]);
-  let currentUser
-  let userID: string
+
   
 
   interface ExerciseInfo {
@@ -37,15 +36,15 @@ const [exerciseHistNames, setExerciseHistNames] = useState<string[]>([]);
 
   function setupPage() {
 if (auth.currentUser !== null) {
-  currentUser = auth.currentUser;
-  userID = currentUser?.uid;
+  const currentUser = auth.currentUser;
+  const userID = currentUser?.uid;
 
   if (userID === undefined) {
     setFirstName("");
     setLastName("");
   } else {
     const currentUserDoc = doc(database, "users", userID); // get document of current logged in user
-
+    console.log(userID)
     const getUserData = async () => {
       try {
         const docSnapshot = await getDoc(currentUserDoc);
@@ -83,43 +82,54 @@ if (auth.currentUser !== null) {
     // console.log(newHist)
     // setExerciseHistNames(newHist)
 
-        const currentUserDoc = doc(database, "users", userID); // get document of current logged in user
+    if (auth.currentUser !== null) {
+      const currentUser = auth.currentUser;
+      const userID = currentUser?.uid;
+      const currentUserDoc = doc(database, "users", userID); // get document of current logged in user
+      const deleteExercise = async () => {
+        try {
 
-        const deleteExercise = async () => {
-          try {
-            const docSnapshot = await getDoc(currentUserDoc);
-            if (docSnapshot.exists()) {
-              // check to see if the doc exists
-              const userData = docSnapshot.data();
-              const exerciseList: ExerciseInfo[] = userData.exerciseHistory // get user's current exercise history
-          //    setExerciseHistory(exerciseList); 
+          const docSnapshot = await getDoc(currentUserDoc);
+
+          if (docSnapshot.exists()) {
+
+            // check to see if the doc exists
+            const userData = docSnapshot.data();
+
+            const exerciseList: ExerciseInfo[] = userData.exerciseHistory // get user's current exercise history
+
+            //    setExerciseHistory(exerciseList); 
             let names: string[] = [] // create empty array for storing exercise names
-                let newHistory: ExerciseInfo[] = []
-              exerciseList.forEach((item, itemIndex) => {
-                if (exerciseHistNames[index] === item.exercise) {
-                   newHistory = exerciseList.splice(itemIndex, 1)
-                 }
-              })
-              
+            let newHistory: ExerciseInfo[] = []
 
-        const docData = {
-          exerciseHistory: newHistory,
-        };
-
-        if (userID !== undefined) {
-          await setDoc(doc(database, "users", userID), docData, {
-            merge: true,
-          });
-        }              
+            for (let itemIndex = 0; itemIndex < exerciseList.length; itemIndex++) {
+              if (exerciseHistNames[index] === exerciseList[itemIndex].exercise) {
+                exerciseList.splice(itemIndex, 1);
+                itemIndex--;
+              }
             }
-        } catch (error) {
-            console.error(error);
+
+            setExerciseHistNames(exerciseList.map((item) => item.exercise));
+
+
+            const docData = {
+              exerciseHistory: exerciseList,
+            };
+
+            if (userID !== undefined) {
+              await setDoc(doc(database, "users", userID), docData, {
+                merge: true,
+              });
+            }
           }
-        };
-    deleteExercise();
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      deleteExercise();
     }
 
-
+  }
   return (
     <div className="progress-page">
       <div className="content">
