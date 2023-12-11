@@ -3,8 +3,8 @@ package edu.brown.cs.testing;
 import edu.brown.cs.student.main.algorithm.ShortAlgo;
 import edu.brown.cs.student.main.database.MockAccount;
 import edu.brown.cs.student.main.records.Machine;
-import edu.brown.cs.student.main.records.WorkoutObject;
 import java.util.Collections;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.testng.Assert;
@@ -19,7 +19,6 @@ private List<String> duration;
 private List<String> muscles;
 private List<String> goals;
 
-// why does this not run before???
     @Before
     public void setUp(){
         System.out.println("here");
