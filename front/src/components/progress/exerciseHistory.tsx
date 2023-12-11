@@ -158,10 +158,13 @@ const handleRatingChange =
 
   }
   return (
-    <div className="progress-page">
+    <div>
       <div className="content">
         <p style={{ fontSize: "larger", fontWeight: "bold" }}>
           Exercise History:
+        </p>
+        <p>Welcome to your exercise history!! Here you can view exercises that you've saved, delete unwanted exercises, 
+          change the rating of an exercise so that it becomes more/less frequent, and add your own exercises!
         </p>
         <ul>
           {exerciseHistNames.map((item, index) => (
