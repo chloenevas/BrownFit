@@ -72,6 +72,7 @@
 
 .exercise {
     flex: 1;
+    margin-left: 20px;
 
 } 
 
@@ -80,5 +81,13 @@
 
 .delete-button:hover {
   cursor: pointer;
+}
 
+.rating-dropdown {
+  margin-left: 20px
+}
+
+.selector {
+  padding: 5px;
+  margin-left: 5px;
 }

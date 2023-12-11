@@ -20,8 +20,7 @@ export default function ExerciseHistory() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [editVisibility, setEditVisibility] = useState("none");
-  const [newFirstName, setNewFirstName] = useState("");
-  const [newLastName, setNewLastName] = useState("");
+
 const [exerciseHistNames, setExerciseHistNames] = useState<string[]>([]);
 
   
@@ -76,11 +75,45 @@ if (auth.currentUser !== null) {
     setEditVisibility("flex");
   }
 
+const handleRatingChange =
+  (index: number) => (event: React.ChangeEvent<{ value: string }>) => {
+    const rating = parseInt(event.target.value);
+    if (auth.currentUser !== null) {
+      const currentUser = auth.currentUser;
+      const userID = currentUser?.uid;
+      const currentUserDoc = doc(database, "users", userID); // get document of current logged in user
+      const changeRating = async () => {
+        try {
+          const docSnapshot = await getDoc(currentUserDoc);
+
+          if (docSnapshot.exists()) {
+            // check to see if the doc exists
+            const userData = docSnapshot.data();
+            const exerciseList: ExerciseInfo[] = userData.exerciseHistory; // get user's current exercise history
+            const exerciseListCopy = [...exerciseList]
+            exerciseListCopy[index].rating = rating;
+             // exerciseList[index]
+            const docData = {
+              exerciseHistory: exerciseListCopy,
+            };
+
+            
+            if (userID !== undefined) {
+              // set the exercise list with updated ratings
+              await setDoc(doc(database, "users", userID), docData, {
+                merge: true,
+              });
+            }
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      changeRating();
+    }
+  };
+
   function handleDeleteExercise(index: number) {
-    // console.log(exerciseHistNames)
-    // const newHist = exerciseHistNames.splice(index, 1);
-    // console.log(newHist)
-    // setExerciseHistNames(newHist)
 
     if (auth.currentUser !== null) {
       const currentUser = auth.currentUser;
@@ -95,12 +128,7 @@ if (auth.currentUser !== null) {
 
             // check to see if the doc exists
             const userData = docSnapshot.data();
-
             const exerciseList: ExerciseInfo[] = userData.exerciseHistory // get user's current exercise history
-
-            //    setExerciseHistory(exerciseList); 
-            let names: string[] = [] // create empty array for storing exercise names
-            let newHistory: ExerciseInfo[] = []
 
             for (let itemIndex = 0; itemIndex < exerciseList.length; itemIndex++) {
               if (exerciseHistNames[index] === exerciseList[itemIndex].exercise) {
@@ -109,14 +137,13 @@ if (auth.currentUser !== null) {
               }
             }
 
-            setExerciseHistNames(exerciseList.map((item) => item.exercise));
-
+            setExerciseHistNames(exerciseList.map((item) => item.exercise)); // extract exercise names from list
 
             const docData = {
               exerciseHistory: exerciseList,
             };
 
-            if (userID !== undefined) {
+            if (userID !== undefined) { // set the new  exercies list
               await setDoc(doc(database, "users", userID), docData, {
                 merge: true,
               });
@@ -139,19 +166,29 @@ if (auth.currentUser !== null) {
         <ul>
           {exerciseHistNames.map((item, index) => (
             <div className="exercise-pair" key={index}>
-              <p className="exercise">{item}</p>
               <span
                 className="delete-button"
                 onClick={() => handleDeleteExercise(index)}
               >
                 &times;
               </span>
+              <p className="exercise">{item}</p>
+
+              <label className="rating-dropdown">
+                Rating
+                <select className="selector" onChange={handleRatingChange(index)}>
+                  <option value="0">0</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                </select>
+              </label>
             </div>
           ))}
         </ul>
-        <button>
-          Add exercise
-        </button>
+        <button>Add exercise</button>
       </div>
     </div>
   );
