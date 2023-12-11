@@ -1,25 +1,18 @@
-import { useState, SetStateAction, useEffect } from "react";
-import { ControlledInput } from "../ControlledInput";
+import { useState, useEffect } from "react";
 import "../../styles/progress.css";
-import { auth, database, collectionRef, users } from "../../index";
+import { auth, database } from "../../index";
 import {
-  collection,
-  addDoc,
-  updateDoc,
   doc,
-  onSnapshot,
   getDoc,
-  query,
-  where,
   setDoc,
 } from "firebase/firestore";
-import { getUA } from "@firebase/util";
 
 export default function ExerciseHistory() {
  
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [editVisibility, setEditVisibility] = useState("none");
+  const [modalVisibility, setModalVisibility] = useState("none");
+  const [successMess, setSuccessMess] = useState("");
 
 const [exerciseHistNames, setExerciseHistNames] = useState<string[]>([]);
 
@@ -71,8 +64,13 @@ if (auth.currentUser !== null) {
    }, []);
   
 
-  function handleEditButton() {
-    setEditVisibility("flex");
+  function handleAddButton() {
+    setModalVisibility("flex");
+  }
+
+  function handleCloseClick() {
+    setModalVisibility("none");
+    setSuccessMess("")
   }
 
 const handleRatingChange =
@@ -159,12 +157,21 @@ const handleRatingChange =
   }
   return (
     <div>
+      <div className="add-exercise-modal" style={{ display: modalVisibility }}>
+        <span className="close-button" onClick={() => handleCloseClick()}>
+          &times;
+        </span>
+        <p>Add exercise</p>
+      </div>
       <div className="content">
         <p style={{ fontSize: "larger", fontWeight: "bold" }}>
           Exercise History:
         </p>
-        <p>Welcome to your exercise history!! Here you can view exercises that you've saved, delete unwanted exercises, 
-          change the rating of an exercise so that it becomes more/less frequent, and add your own exercises!
+        <p>
+          Welcome to your exercise history!! Here you can view exercises that
+          you've saved, delete unwanted exercises, change the rating of an
+          exercise so that it becomes more/less frequent, and add your own
+          exercises!
         </p>
         <ul>
           {exerciseHistNames.map((item, index) => (
@@ -179,7 +186,10 @@ const handleRatingChange =
 
               <label className="rating-dropdown">
                 Rating
-                <select className="selector" onChange={handleRatingChange(index)}>
+                <select
+                  className="selector"
+                  onChange={handleRatingChange(index)}
+                >
                   <option value="0">0</option>
                   <option value="1">1</option>
                   <option value="2">2</option>
@@ -191,7 +201,7 @@ const handleRatingChange =
             </div>
           ))}
         </ul>
-        <button>Add exercise</button>
+        <button onClick={handleAddButton}>Add exercise</button>
       </div>
     </div>
   );
