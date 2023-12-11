@@ -3,11 +3,7 @@
 import { useState } from "react";
 import { ControlledInput } from "../ControlledInput";
 import "../../styles/progress.css";
-import { auth, database, collectionRef, users} from "../../index";
-import {
- collection, addDoc, updateDoc, doc, onSnapshot, getDoc,
- query, where, setDoc
-} from "firebase/firestore";
+
 import ExerciseHistory from "./exerciseHistory";
 import Consistency from "./consistency";
 
@@ -15,12 +11,6 @@ import Consistency from "./consistency";
 
 
 export default function ProgressPage() {
- const [firstName, setFirstName] = useState("");
- const [lastName, setLastName] = useState("");
- const [email, setEmail] = useState("");
- const [editVisibility, setEditVisibility] = useState("none");
- const [newFirstName, setNewFirstName] = useState("");
- const [newLastName, setNewLastName] = useState("");
  const [currentPage, setCurrentPage] = useState("account info");
  const [infoButton, setInfoButton] = useState("red");
  const [exerciseHistoryButton, setExerciseHistoryButton] = useState("");
