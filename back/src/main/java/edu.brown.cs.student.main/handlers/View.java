@@ -4,6 +4,9 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 
+/**
+ * Coming soon! Users can view all the machines in the Nelson :)
+ */
 public class View implements Route {
 
   @Override
@@ -11,5 +14,3 @@ public class View implements Route {
     return "lets gooooo";
   }
 }
-
-
