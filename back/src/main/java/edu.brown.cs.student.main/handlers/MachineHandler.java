@@ -37,11 +37,12 @@ public class MachineHandler implements Route {
 
             Machine machine = new NelsonMachineDatabase().getDatabase().get(machineName);
             System.out.println(machine.getClass());
-            if (machine == null){
-                throw new Exception("No machine exists!");
-            }
 
-            return machine;
+            Moshi moshi = new Moshi.Builder().build();
+            Type machineObject = Types.newParameterizedType(Machine.class, Object.class);
+            JsonAdapter<Machine> adapter = moshi.adapter(machineObject);
+
+          return adapter.toJson(machine);
 
         }
         catch (Exception e){
