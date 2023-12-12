@@ -116,7 +116,6 @@ export default function RESULTMODAL({
 
   function onSaveClick() {
     if (saveSuccessMess === "") {
-     // console.log("saving exercises");
       updateExerciseHistory();
       setSaveSuccessMess("Exercises successfully saved to user history!");
     }
@@ -141,11 +140,8 @@ export default function RESULTMODAL({
   }
 
   function getWeight(val: string): string {
-   // console.log(val);
     if (val.includes("W:")) {
-    //  console.log("aaaaaa");
       if (val.includes("R:")) {
-       // console.log("aaaaaa");
     
        return val.substring(val.indexOf("W:") + 2, val.indexOf("R:"));
       }
@@ -165,15 +161,7 @@ export default function RESULTMODAL({
     
   }
 
-  //  const handleExerciseClick = (key: string) => {
-  //    setInfoVisibility("flex");
-  //    if (clickedItem === key) {
-  //      setClickedItem(null);
-  //      setInfoVisibility("none");
-  //    } else {
-  //      setClickedItem(key);
-  // //    }
-  //  };
+  
   const handleExerciseClick = (exercise: ExerciseInfo) => {
     if (selectedExercise?.exercise === exercise.exercise) {
       setSelectedExercise(null);
