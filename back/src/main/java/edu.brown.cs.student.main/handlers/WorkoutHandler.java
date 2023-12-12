@@ -59,6 +59,7 @@ public class WorkoutHandler implements Route {
             // calls algorithm to make workout with given parameters
             Algorithm algo = new Algorithm();
             List<Object> returnMap = algo.generateWorkout(duration, muscle1, muscle2, goal, new MockAccount(username, map1));
+            System.out.println(returnMap);
             return adapter.toJson(returnMap);
         }
         catch (InvalidInputException e){

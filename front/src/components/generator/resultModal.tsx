@@ -62,8 +62,8 @@ export default function RESULTMODAL({
     description: string;
     image: string | null;
     date: Timestamp;
-    reps: number | null;
-    weight: number | null;
+    reps: number | null | string;
+    weight: string | null;
   }
 
   let showImg = "none";
@@ -115,7 +115,7 @@ export default function RESULTMODAL({
 
   function onSaveClick() {
     if (saveSuccessMess === "") {
-      console.log("saving exercises");
+     // console.log("saving exercises");
       updateExerciseHistory();
       setSaveSuccessMess("Exercises successfully saved to user history!");
     }
@@ -139,27 +139,29 @@ export default function RESULTMODAL({
     }
   }
 
-  function getWeight(val: string) {
-    console.log(val);
+  function getWeight(val: string): string {
+   // console.log(val);
     if (val.includes("W:")) {
-      console.log("aaaaaa");
+    //  console.log("aaaaaa");
       if (val.includes("R:")) {
-        console.log("aaaaaa");
-        return val.substring(val.indexOf("W:") + 2, val.indexOf("R:"));
+       // console.log("aaaaaa");
+    
+       return val.substring(val.indexOf("W:") + 2, val.indexOf("R:"));
       }
-    } else {
-      return "";
     }
+    return "";
   }
 
-  function getReps(val: string) {
+  function getReps(val: string): string {
     if (val.includes("W:")) {
       if (val.includes("R:")) {
+        console.log(val.substring(val.indexOf("R:") + 2, val.length));
+
         return val.substring(val.indexOf("R:") + 2, val.length);
       }
-    } else {
+    } 
       return "";
-    }
+    
   }
 
   //  const handleExerciseClick = (key: string) => {
@@ -200,8 +202,8 @@ export default function RESULTMODAL({
         // check to see if the doc exists
         const userData = docSnapshot.data();
         const userExerciseHist: ExerciseInfo[] = userData.exerciseHistory;
-        console.log(typeof userExerciseHist);
-        console.log(typeof newExerciseHistory);
+        // console.log(typeof userExerciseHist);
+        // console.log(typeof newExerciseHistory);
 
         let historyNames: string[] = [];
         let newNames: string[] = [];
