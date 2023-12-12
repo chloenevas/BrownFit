@@ -65,7 +65,7 @@ export default function RESULTMODAL({
       image: string | null;
       date: Timestamp;
       reps: number | null;
-      weight: number | null;
+      weight: string | null;
     }
   
   let showImg = "none";

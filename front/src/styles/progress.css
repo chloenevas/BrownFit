@@ -160,3 +160,11 @@
 .exercise-info:hover {
   background-color: pink;
 }
+
+.calendar-popup {
+ width: 100px;
+    height: 10px;}
+
+.exercise-info-edit {
+  width: 25%;
+  }
