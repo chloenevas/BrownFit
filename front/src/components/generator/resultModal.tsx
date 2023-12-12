@@ -75,7 +75,9 @@ export default function RESULTMODAL({
   const map = new Map(
     exerciseList.map((obj) => [
       obj.name,
-      obj.img ? obj.img + " " + obj.instructions : " " + obj.instructions,
+      obj.img
+        ? obj.img + " " + obj.instructions + "W:" + obj.weight + "R:" + obj.reps
+        : " " + obj.instructions,
     ])
   );
 
@@ -94,8 +96,8 @@ export default function RESULTMODAL({
         image: getImg(value),
         description: getInstructions(value),
         date: currentTimestamp,
-        reps: null,
-        weight: null,
+        reps: getReps(value),
+        weight: getWeight(value),
       };
     }
   );
@@ -130,7 +132,34 @@ export default function RESULTMODAL({
 
   function getInstructions(val: string) {
     let spaceIndex = val.indexOf(" ");
-    return val.substring(spaceIndex, val.length);
+    if (val.includes("W:")) {
+      return "Instructions: " + val.substring(spaceIndex, val.indexOf("W:"));
+    } else {
+      return val.substring(spaceIndex, val.length);
+    }
+  }
+
+  function getWeight(val: string) {
+    console.log(val);
+    if (val.includes("W:")) {
+      console.log("aaaaaa");
+      if (val.includes("R:")) {
+        console.log("aaaaaa");
+        return val.substring(val.indexOf("W:") + 2, val.indexOf("R:"));
+      }
+    } else {
+      return "";
+    }
+  }
+
+  function getReps(val: string) {
+    if (val.includes("W:")) {
+      if (val.includes("R:")) {
+        return val.substring(val.indexOf("R:") + 2, val.length);
+      }
+    } else {
+      return "";
+    }
   }
 
   //  const handleExerciseClick = (key: string) => {
@@ -294,6 +323,8 @@ export default function RESULTMODAL({
                   </div>
 
                   <p>{selectedExercise.description}</p>
+                  <p>{"Weight: " + selectedExercise.weight}</p>
+                  <p>{"Reps: " + selectedExercise.reps}</p>
                 </div>
               )}
               {selectedExercise &&
