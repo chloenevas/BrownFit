@@ -17,6 +17,8 @@ export default function ExerciseHistory() {
   const [currentDate, setCurrentDate] = useState<Timestamp | null>();
   const [currentTimestamp, setCurrentTimestamp] = useState<Timestamp | null>();
   const [exerciseToAdd, setExerciseToAdd] = useState("none");
+  const [currentDescription, setCurrentDescription] = useState("");
+  const [currentImage, setCurrentImage] = useState("");
 
   const [viewDataVisibility, setViewDataVisibility] = useState("flex");
   const [editDataVisibility, setEditDataVisibility] = useState("none");
@@ -160,6 +162,8 @@ export default function ExerciseHistory() {
                     setCurrentWeight(weight.toString());
                   }
                   setCurrentRating(exerciseList[itemIndex].rating);
+                  setCurrentDescription(exerciseList[itemIndex].description);
+                  setCurrentImage(exerciseList[itemIndex].image);
                 }
               }
             }
@@ -309,7 +313,6 @@ export default function ExerciseHistory() {
     console.log(exerciseToAdd);
   }, [exerciseToAdd]);
 
- 
   async function onAddExerciseClick() {
     var apiFetchMap: Array<any> = await fetch(
       "http://localhost:3332/getMachine?machine=" + exerciseToAdd
@@ -322,7 +325,6 @@ export default function ExerciseHistory() {
     //sets workoutMap state to the json returned by generateWorkout
     console.log(apiFetchMap);
   }
-
 
   return (
     <div>
@@ -345,8 +347,24 @@ export default function ExerciseHistory() {
             &times;
           </span>
           <div>
+            <p style={{ fontSize: "larger", fontWeight: "bold" }}>
+              Exercise: {currentExercise}
+            </p>
+
+            <p style={{ display: viewDataVisibility }}>{currentDescription}</p>
+            {currentImage && (
+              <div className="image-container">
+                <img
+                  src={currentImage}
+                  alt={`Image for ${currentImage}`}
+                  style={{
+                    width: "400px",
+                    height: "400px",
+                  }}
+                />
+              </div>
+            )}
             <div style={{ display: "flex" }}>
-              <p className="exercise-info">Exercise: {currentExercise}</p>
               <div>
                 <div>
                   <p
