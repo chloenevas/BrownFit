@@ -10,10 +10,18 @@ export default function ExerciseHistory() {
   const [addModalVisibility, setAddModalVisibility] = useState("none");
   const [exerciseInfoVisibility, setExerciseInfoVisibility] = useState("none");
   const [currentExercise, setCurrentExercise] = useState("");
-  const [currentRating, setCurrentRating] = useState("");
-  const [currentReps, setCurrentReps] = useState<Number | null>();
-  const [currentWeight, setCurrentWeight] = useState<Number | null>();
+  const [currentRating, setCurrentRating] = useState<number>();
+  // useEffect(() => {
+  //   if (lastSelectedRating) {
+  //     setCurrentRating(lastSelectedRating);
+  //   } else {
+  //     setCurrentRating(0); // Set a default option if no previously selected option is available
+  //   }
+  // }, []);
+  const [currentReps, setCurrentReps] = useState<number | string | null>();
+  const [currentWeight, setCurrentWeight] = useState<number | string | null>();
   const [currentDate, setCurrentDate] = useState<Date | null>();
+  const [lastSelectedRating, setLastSelectedRating] = useState<number>();
 
   const [successMess, setSuccessMess] = useState("");
 
@@ -104,11 +112,28 @@ export default function ExerciseHistory() {
                 itemIndex < exerciseList.length;
                 itemIndex++
               ) {
-                const seconds = exerciseList[itemIndex].date.seconds;
+                for (let i = 0; i < exerciseList.length; i++) {
+                  if (currentEx === exerciseList[i].exercise) {
+                    setCurrentExercise(currentEx);
+                    const seconds = exerciseList[i].date.seconds;
+                    setCurrentDate(new Date(seconds * 1000));
 
-                setCurrentDate(new Date(seconds * 1000));
-                setCurrentReps(exerciseList[itemIndex].reps);
-                setCurrentWeight(exerciseList[itemIndex].weight);
+                    if (exerciseList[i].reps === null) {
+                      setCurrentReps("N/A");
+                    } else {
+                      setCurrentReps(exerciseList[i].reps);
+                    }
+
+                    if (exerciseList[i].weight === null) {
+                      setCurrentWeight("N/A");
+                    } else {
+                      setCurrentWeight(exerciseList[i].weight);
+                    }
+
+                    setCurrentRating(exerciseList[i].rating)
+                  }
+                }
+
               }
             }
           } catch (error) {
@@ -124,42 +149,11 @@ export default function ExerciseHistory() {
     setSuccessMess("");
   }
 
-  const handleRatingChange =
-    (index: number) => (event: React.ChangeEvent<{ value: string }>) => {
-      const rating = parseInt(event.target.value);
-      if (auth.currentUser !== null) {
-        const currentUser = auth.currentUser;
-        const userID = currentUser?.uid;
-        const currentUserDoc = doc(database, "users", userID); // get document of current logged in user
-        const changeRating = async () => {
-          try {
-            const docSnapshot = await getDoc(currentUserDoc);
-
-            if (docSnapshot.exists()) {
-              // check to see if the doc exists
-              const userData = docSnapshot.data();
-              const exerciseList: ExerciseInfo[] = userData.exerciseHistory; // get user's current exercise history
-              const exerciseListCopy = [...exerciseList];
-              exerciseListCopy[index].rating = rating;
-              // exerciseList[index]
-              const docData = {
-                exerciseHistory: exerciseListCopy,
-              };
-
-              if (userID !== undefined) {
-                // set the exercise list with updated ratings
-                await setDoc(doc(database, "users", userID), docData, {
-                  merge: true,
-                });
-              }
-            }
-          } catch (error) {
-            console.error(error);
-          }
-        };
-        changeRating();
-      }
-    };
+  const handleRatingChange = (event: React.ChangeEvent<{ value: string }>) => {
+    const rating = parseInt(event.target.value);
+    //setCurrentRating(rating)
+    setLastSelectedRating(rating);
+  };
 
   function handleDeleteExercise(index: number) {
     if (auth.currentUser !== null) {
@@ -208,6 +202,50 @@ export default function ExerciseHistory() {
       deleteExercise();
     }
   }
+
+  function handleSaveButton() {
+    if (auth.currentUser !== null) {
+      const currentUser = auth.currentUser;
+      const userID = currentUser?.uid;
+      const currentUserDoc = doc(database, "users", userID); // get document of current logged in user
+      const changeRating = async () => {
+        try {
+          const docSnapshot = await getDoc(currentUserDoc);
+
+          if (docSnapshot.exists()) {
+            // check to see if the doc exists
+            const userData = docSnapshot.data();
+            const exerciseList: ExerciseInfo[] = userData.exerciseHistory; // get user's current exercise history
+            const exerciseListCopy = [...exerciseList];
+            for (let i = 0; i < exerciseListCopy.length; i++) {
+              if (currentExercise === exerciseListCopy[i].exercise) {
+                if (currentRating !== undefined) {
+                  exerciseListCopy[i].rating = currentRating;
+                  setCurrentRating(exerciseListCopy[i].rating);
+
+                }
+              }
+            }
+            const docData = {
+              exerciseHistory: exerciseListCopy,
+            };
+
+
+            if (userID !== undefined) {
+              // set the exercise list with updated ratings
+              await setDoc(doc(database, "users", userID), docData, {
+                merge: true,
+              });
+            }
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      changeRating();
+    }
+  }
+
   return (
     <div>
       <div
@@ -234,48 +272,6 @@ export default function ExerciseHistory() {
           exercise so that it becomes more/less frequent, and add your own
           exercises!
         </p>
-        <div
-          className="exercise-info-modal"
-          style={{ display: exerciseInfoVisibility }}
-        >
-          <span className="close-button" onClick={() => closeInfoPopup()}>
-            &times;
-          </span>
-          <div>
-            <header className="exercise-info">Exercise: {currentExercise}</header>
-          </div>
-          <div>
-            <p className="exercise-info">
-              Last Used: {currentDate && currentDate.toDateString()}
-            </p>
-            <button>Edit</button>
-          </div>
-          <div>
-            <p className="exercise-info">
-              Latest Reps: {currentReps?.toString()}
-            </p>
-            <button>Edit</button>
-          </div>
-
-          <div>
-            <p className="exercise-info">
-              Latest Weights: {currentWeight?.toString()}
-            </p>
-            <button>Edit</button>
-          </div>
-
-          <label className="rating-dropdown exercise-info">
-            Rating
-            <select className="selector">
-              <option value="0">0</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-            </select>
-          </label>
-        </div>
         {exerciseHistNames.map((item, index) => (
           <div className="exercise-pair" key={index}>
             <span
@@ -291,6 +287,70 @@ export default function ExerciseHistory() {
           </div>
         ))}
         <button onClick={openAddExercise}>Add exercise</button>
+        <div
+          className="exercise-info-modal"
+          style={{ display: exerciseInfoVisibility }}
+        >
+          <span className="close-button" onClick={() => closeInfoPopup()}>
+            &times;
+          </span>
+          <div>
+            <div style={{ display: "flex" }}>
+              <p className="exercise-info">
+                <span style={{ fontWeight: "bold" }}>Exercise:</span>
+                {currentExercise}
+              </p>
+              <div>
+                <p className="exercise-info">
+                  <span style={{ fontWeight: "bold" }}>Last Used:</span>
+                  {currentDate && currentDate.toDateString()}
+                </p>
+                <button>Edit</button>
+              </div>
+              <div>
+                <p className="exercise-info">
+                  <span style={{ fontWeight: "bold" }}>Latest Reps:</span>
+                  {currentReps?.toString()}
+                </p>
+                <button>Edit</button>
+              </div>
+              {/* <label htmlFor="dateInput">Select a date:</label>
+<input type="date" id="dateInput" name="dateInput"></input> */}
+
+              <div>
+                <p className="exercise-info">
+                  <span style={{ fontWeight: "bold" }}>Latest Weight:</span>
+                  {currentWeight?.toString()}
+                </p>
+                <button>Edit</button>
+              </div>
+
+              <div>
+                <p className="exercise-info">
+                  <span style={{ fontWeight: "bold" }}>Rating:</span>
+                  {currentRating?.toString()}
+                </p>
+                <button>Edit</button>
+              </div>
+
+              <label className="rating-dropdown exercise-info">
+                <span style={{ fontWeight: "bold" }}>Rating</span>
+
+                <select className="selector" onChange={handleRatingChange}>
+                  <option value="0">0</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                </select>
+              </label>
+            </div>
+            <button style={{ marginTop: "50px" }} onClick={handleSaveButton}>
+              Save
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

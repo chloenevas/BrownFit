@@ -104,7 +104,6 @@ const nanoseconds: number = (currentDate.getTime() % 1000) * 1e6;
     );
 
 
-
  setInterval(() => {
    checkUser();
  }, 100);
