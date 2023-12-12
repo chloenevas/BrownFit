@@ -3,12 +3,7 @@ import React, { SetStateAction, useState, Component } from "react";
 import "../../styles/Workout.css";
 import RESULTMODAL from "./resultModal";
 
-export interface exercise {
-  name: string;
-  muscle: any;
-  instructions: any;
-}
-
+//in charge of modelling workout page
 export default function WorkoutPage() {
   const [durationValue, setDurationValue] =
     React.useState("30 minutes or less");
@@ -18,6 +13,7 @@ export default function WorkoutPage() {
   const [modalVisibility, setModalVisibility] = React.useState("none");
   const [workoutMap, setWorkoutMap] = React.useState(new Array<any>());
 
+  //responsible for duration  dropdown
   const handleChange = (event: {
     target: { value: React.SetStateAction<string> };
   }) => {
@@ -25,30 +21,35 @@ export default function WorkoutPage() {
     console.log(durationValue);
   };
 
+  //responsible for muscle1 dropdown
   const handleMuscleGroupChange = (event: {
     target: { value: React.SetStateAction<string> };
   }) => {
     setMuscleValue(event.target.value);
   };
 
+  //responsible for muscle2 dropdown
   const handleMuscleGroup2Change = (event: {
     target: { value: React.SetStateAction<string> };
   }) => {
     setMuscleValue2(event.target.value);
   };
 
+  //responsible for goal dropdown
   const handleGoalChange = (event: {
     target: { value: React.SetStateAction<string> };
   }) => {
     setGoalValue(event.target.value);
   };
 
+  //called everytime someone clicks the generate workout button
   async function clickHandler() {
     console.log(durationValue);
     console.log(muscleValue);
     console.log(muscleValue2);
     console.log(goalValue);
     setModalVisibility("flex");
+    //makes api call to get workout based on passed in info
     var apiFetchMap: Array<any> = await fetch(
       "http://localhost:3332/generateWorkout?duration=" +
         durationValue +
@@ -65,6 +66,7 @@ export default function WorkoutPage() {
         console.log(json);
         return json;
       });
+    //sets workoutMap state to the json returned by generateWorkout
     setWorkoutMap(apiFetchMap);
   }
 
