@@ -1,20 +1,23 @@
-import { useState, useEffect, ChangeEvent } from "react";
+import { useState, useEffect, ChangeEvent, SetStateAction } from "react";
 import "../../styles/progress.css";
 import { auth, database } from "../../index";
 import { doc, getDoc, setDoc, Timestamp } from "firebase/firestore";
 import { it } from "node:test";
 import { ControlledInput } from "../ControlledInput";
+import Select, { SingleValue } from "react-select";
 
 export default function ExerciseHistory() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [addModalVisibility, setAddModalVisibility] = useState("none");
   const [exerciseInfoVisibility, setExerciseInfoVisibility] = useState("none");
   const [currentExercise, setCurrentExercise] = useState("");
   const [currentRating, setCurrentRating] = useState<number | null>();
   const [currentReps, setCurrentReps] = useState("");
   const [currentWeight, setCurrentWeight] = useState("");
-  const [currentDate, setCurrentDate] = useState<Date | number | Timestamp| null>();
+  const [currentDate, setCurrentDate] = useState<Timestamp | null>();
+  const [currentTimestamp, setCurrentTimestamp] = useState<Timestamp | null>();
+  const [exerciseToAdd, setExerciseToAdd] = useState("none");
+
   const [viewDataVisibility, setViewDataVisibility] = useState("flex");
   const [editDataVisibility, setEditDataVisibility] = useState("none");
   const [saveEditButton, setSaveEditButton] = useState("Edit");
@@ -22,6 +25,40 @@ export default function ExerciseHistory() {
   const [successMess, setSuccessMess] = useState("");
 
   const [exerciseHistNames, setExerciseHistNames] = useState<string[]>([]);
+
+  const machineData = [
+    { label: "Ab Crunch", value: "Ab Crunch" },
+    { label: "Back Row", value: "Back Row" },
+    { label: "Bench Press", value: "Bench Press" },
+    { label: "Calf Raise", value: "Calf Raise" },
+    { label: "Chest Press", value: "Chest Press" },
+    { label: "Chin Dip", value: "Chin Dip" },
+    { label: "Dependent Curl", value: "Dependent Curl" },
+    { label: "Double Cable Stack", value: "Double Cable Stack" },
+    { label: "Elliptical", value: "Elliptical" },
+    { label: "Glute Trainer", value: "Glute Trainer" },
+    { label: "Hip Abductor", value: "Hip Abductor" },
+    { label: "Lat Pulldown", value: "Lat Pulldown" },
+    { label: "Leg Curl", value: "Leg Curl" },
+    { label: "Leg Extenstion", value: "Leg Extension" },
+    { label: "Leg Press", value: "Leg Press" },
+    { label: "Low Row", value: "Low Row" },
+    { label: "Rear Delt Pec Fly", value: "Rear Delt Pec Fly" },
+    { label: "Rotary Torso", value: "Rotary Torso" },
+    { label: "Shoulder Press", value: "Shoulder Press" },
+    { label: "Squat Rack", value: "Squat Rack" },
+    { label: "Stairmaster", value: "Stairmaster" },
+    { label: "Treadmill", value: "Treadmill" },
+    { label: "Triceps Press", value: "Triceps Press" },
+    { label: "Triceps Pulldown", value: "Triceps Pulldown" },
+    { label: "Vertical Bench Press", value: "Vertical Bench Press" },
+    { label: "Vertical Chest Press", value: "Vertical Chest Press" },
+  ];
+
+  type OptionType = {
+    label: string;
+    value: string;
+  };
 
   interface ExerciseInfo {
     rating: number;
@@ -71,15 +108,6 @@ export default function ExerciseHistory() {
     setupPage();
   }, []);
 
-  function openAddExercise() {
-    setAddModalVisibility("flex");
-  }
-
-  function closeAddExercise() {
-    setAddModalVisibility("none");
-    setSuccessMess("");
-  }
-
   function closeInfoPopup() {
     setExerciseInfoVisibility("none");
     setSuccessMess("");
@@ -113,8 +141,11 @@ export default function ExerciseHistory() {
               ) {
                 if (currentEx === exerciseList[itemIndex].exercise) {
                   const seconds = exerciseList[itemIndex].date.seconds;
+                  console.log(new Date(seconds * 1000));
+                  console.log(typeof new Date(seconds * 1000));
+                  const currentTimestamp = Timestamp.fromMillis(seconds * 1000);
 
-                  setCurrentDate(new Date(seconds * 1000));
+                  setCurrentDate(currentTimestamp);
                   const reps = exerciseList[itemIndex].reps;
                   if (reps === null || Number.isNaN(reps)) {
                     setCurrentReps("N/A");
@@ -147,42 +178,8 @@ export default function ExerciseHistory() {
 
   const handleRatingChange = (event: React.ChangeEvent<{ value: string }>) => {
     const rating = parseInt(event.target.value);
-    setCurrentRating(rating)
+    setCurrentRating(rating);
   };
-
-      // if (auth.currentUser !== null) {
-      //   const currentUser = auth.currentUser;
-      //   const userID = currentUser?.uid;
-      //   const currentUserDoc = doc(database, "users", userID); // get document of current logged in user
-      //   const changeRating = async () => {
-      //     try {
-      //       const docSnapshot = await getDoc(currentUserDoc);
-
-      //       if (docSnapshot.exists()) {
-      //         // check to see if the doc exists
-      //         const userData = docSnapshot.data();
-      //         const exerciseList: ExerciseInfo[] = userData.exerciseHistory; // get user's current exercise history
-      //         const exerciseListCopy = [...exerciseList];
-      //         exerciseListCopy[index].rating = rating;
-      //         // exerciseList[index]
-      //         const docData = {
-      //           exerciseHistory: exerciseListCopy,
-      //         };
-
-      //         if (userID !== undefined) {
-      //           // set the exercise list with updated ratings
-      //           await setDoc(doc(database, "users", userID), docData, {
-      //             merge: true,
-      //           });
-      //         }
-      //       }
-      //     } catch (error) {
-      //       console.error(error);
-      //     }
-    //      };
-    //     changeRating();
-      
-    // };
 
   function handleDeleteExercise(index: number) {
     if (auth.currentUser !== null) {
@@ -255,7 +252,9 @@ export default function ExerciseHistory() {
             if (currentExercise === exerciseList[itemIndex].exercise) {
               exerciseListCopy[itemIndex].reps = parseInt(currentReps);
               exerciseListCopy[itemIndex].weight = currentWeight;
-              //   exerciseListCopy[itemIndex].date = currentDate;
+              if (currentDate !== undefined && currentDate !== null) {
+                exerciseListCopy[itemIndex].date = currentDate;
+              }
               if (currentRating !== null && currentRating !== undefined) {
                 exerciseListCopy[itemIndex].rating = currentRating;
               }
@@ -278,14 +277,14 @@ export default function ExerciseHistory() {
     }
   };
 
-const handleDateChange = (event: ChangeEvent<HTMLInputElement>) => {
-  const selectedDate = event.target.value;
-  const timestamp = new Date(selectedDate).getTime();
-  setCurrentDate(timestamp);
-};
-  
+  const handleDateChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const currentTimestamp = Timestamp.fromMillis(
+      Date.parse(event.target.value)
+    );
+    setCurrentDate(currentTimestamp);
+  };
 
-  function onEditClick() {
+  function onSaveEditClick() {
     if (saveEditButton === "Save") {
       // save stuff
       saveData();
@@ -297,21 +296,42 @@ const handleDateChange = (event: ChangeEvent<HTMLInputElement>) => {
       setEditDataVisibility("block");
     }
   }
+
+  const selectNewExercise = (
+    option: SingleValue<{ label: string; value: string }>
+  ) => {
+    if (option !== null) {
+      setExerciseToAdd(option.value);
+    }
+  };
+
+  useEffect(() => {
+    console.log(exerciseToAdd);
+  }, [exerciseToAdd]);
+
+  function onAddExerciseClick() {
+    //  var apiFetchMap: Array<any> = await fetch(
+    //   "http://localhost:3332/generateWorkout?duration=" +
+    //     durationValue +
+    //     "&muscle1=" +
+    //     muscleValue +
+    //     "&muscle2=" +
+    //     muscleValue2 +
+    //     "&goal=" +
+    //     goalValue +
+    //     "&username=jackson"
+    // )
+    //   .then((response) => response.json())
+    //   .then((json) => {
+    //     console.log(json);
+    //     return json;
+    //   });
+    // //sets workoutMap state to the json returned by generateWorkout
+    // setWorkoutMap(apiFetchMap);
+  }
+
   return (
     <div>
-      <div
-        className="add-exercise-modal"
-        style={{ display: addModalVisibility }}
-      >
-        <span className="close-button" onClick={() => closeAddExercise()}>
-          &times;
-        </span>
-        <p>Select an exercise to add to your history:</p>
-        <select className="selector">
-          <option value="Treadmill">Treadmill</option>
-          <option value="Leg Press">Leg Press</option>
-        </select>
-      </div>
       <div className="content">
         <p style={{ fontSize: "larger", fontWeight: "bold" }}>
           Exercise History:
@@ -334,12 +354,17 @@ const handleDateChange = (event: ChangeEvent<HTMLInputElement>) => {
             <div style={{ display: "flex" }}>
               <p className="exercise-info">Exercise: {currentExercise}</p>
               <div>
-                <p
-                  className="exercise-info"
-                  style={{ display: viewDataVisibility }}
-                >
-                  Last Used: {currentDate && currentDate.toString()}
-                </p>
+                <div>
+                  <p
+                    className="exercise-info"
+                    style={{ display: viewDataVisibility }}
+                  >
+                    Last Used:{" "}
+                    {currentDate &&
+                      new Date(currentDate.toMillis()).toDateString()}
+                  </p>
+                </div>
+
                 <div style={{ display: editDataVisibility }}>
                   <label htmlFor="dateInput" className="calendar-popup">
                     Last Used:
@@ -349,6 +374,7 @@ const handleDateChange = (event: ChangeEvent<HTMLInputElement>) => {
                     id="dateInput"
                     name="dateInput"
                     style={{ display: "block" }}
+                    onChange={handleDateChange}
                   ></input>
                 </div>
               </div>
@@ -405,7 +431,10 @@ const handleDateChange = (event: ChangeEvent<HTMLInputElement>) => {
                   <div className="exercise-info-edit">
                     <label className="rating-dropdown exercise-info">
                       Rating
-                      <select className="selector" onChange={handleRatingChange}>
+                      <select
+                        className="selector"
+                        onChange={handleRatingChange}
+                      >
                         <option value="0">0</option>
                         <option value="1">1</option>
                         <option value="2">2</option>
@@ -418,20 +447,8 @@ const handleDateChange = (event: ChangeEvent<HTMLInputElement>) => {
                 </div>
               </div>
             </div>
-            <button onClick={() => onEditClick()}>{saveEditButton}</button>
+            <button onClick={() => onSaveEditClick()}>{saveEditButton}</button>
           </div>
-
-          {/* <label className="rating-dropdown exercise-info">
-            Rating
-            <select className="selector">
-              <option value="0">0</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-            </select>
-          </label> */}
         </div>
         {exerciseHistNames.map((item, index) => (
           <div className="exercise-pair" key={index}>
@@ -447,7 +464,13 @@ const handleDateChange = (event: ChangeEvent<HTMLInputElement>) => {
             </p>
           </div>
         ))}
-        <button onClick={openAddExercise}>Add exercise</button>
+        <div>
+          <p style={{ fontSize: "larger", fontWeight: "bold" }}>
+            Add an exercise to your history
+          </p>
+          <Select options={machineData} onChange={selectNewExercise} />
+        </div>
+        <button onClick={onAddExerciseClick}>Add exercise</button>
       </div>
     </div>
   );
