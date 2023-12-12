@@ -73,7 +73,7 @@
 
 .exercise {
     flex: 1;
-    padding: 10px;
+    padding: 1px;
     border: none;
 
 } 
@@ -93,14 +93,15 @@
 }
 
 .rating-dropdown {
-  margin-left: 20px;
-    border: none;
+  /* margin-left: 20px; */
+  /* padding: 0px;
+    border: none; */
 
 }
 
 .selector {
-  padding: 5px;
-  margin-left: 5px;
+  /* padding: 5px;
+  margin-left: 5px; */
 }
 
 
@@ -141,6 +142,8 @@
   border-radius: 10px; /* Add some border radius for style */
   overflow-y: auto;
   display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .result-table {
@@ -148,9 +151,20 @@
 }
 
 .exercise-info {
-  padding: 20px;
+   /* left: 5px;
+   border: dotted; */
+    flex: 1;
+  text-align: center; 
 }
 
 .exercise-info:hover {
-  background-color: blue;
+  background-color: pink;
 }
+
+.calendar-popup {
+ width: 100px;
+    height: 10px;}
+
+.exercise-info-edit {
+  width: 25%;
+  }
