@@ -62,7 +62,7 @@ export default function RESULTMODAL({
       rating: number;
       exercise: string;
       description: string;
-      image: string;
+      image: string | null;
       date: Timestamp;
       reps: number | null;
       weight: number | null;
@@ -84,23 +84,24 @@ export default function RESULTMODAL({
 
 const currentDate: Date = new Date();
 
-// Extract the timestamp components: seconds and nanoseconds
-const seconds: number = Math.floor(currentDate.getTime() / 1000); // Convert milliseconds to seconds
-const nanoseconds: number = (currentDate.getTime() % 1000) * 1e6; // Convert remaining milliseconds to nanoseconds
+const seconds: number = Math.floor(currentDate.getTime() / 1000); 
+const nanoseconds: number = (currentDate.getTime() % 1000) * 1e6; 
 
-// Create a Firebase Timestamp object manually
-const currentTimestamp: Timestamp = new Timestamp(seconds, nanoseconds);
-    return {
-      exercise: key,
-      rating: 0,
-      image: getImg(value),
-      description: getInstructions(value), // TODO: this is only returning the first letter of the description - need to fix - may have fixed? i can check when my quota is back :'(
-      date: currentTimestamp,
-      reps: null,
-      weight: null
-    };
-  }
-);
+// Create Firebase Timestamp object 
+  const currentTimestamp: Timestamp = new Timestamp(seconds, nanoseconds);
+    const newExerciseHistory: ExerciseInfo[] = Array.from(map).map(
+      ([key, value]) => {
+        return {
+          exercise: key,
+          rating: 0,
+          image: getImg(value),
+          description: getInstructions(value),
+          date: currentTimestamp,
+          reps: null,
+          weight: null,
+        };
+      }
+    );
 
 
 
