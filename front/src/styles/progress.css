@@ -116,8 +116,9 @@
   padding: 40px; /* Increase padding for larger modal */
   z-index: 1000;
   width: 30%; /* Adjust the width of the modal */
+  /* height: 100%; */
   max-width: 1200px; /* Set maximum width for responsiveness */
-  height: auto; /* Allow the modal to adjust its height */
+  /* height: auto; Allow the modal to adjust its height */
   overflow: auto;
   background-color: white;
   border-radius: 10px; /* Add some border radius for style */

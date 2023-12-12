@@ -19,12 +19,16 @@ public class MachineHandler implements Route {
      */
     @Override
     public Object handle(Request request, Response response) throws IOException {
+        System.out.println("hey");
+
         response.header("Access-Control-Allow-Origin", "*");
+
         try{
             String machineName = request.queryParams("machine");
 
+            System.out.println("uhhhh");
             if (machineName == null){
-                throw new InvalidInputException("Invalid inputs. Missing duration, muscle, or goal field");
+                throw new InvalidInputException("Invalid inputs. Missing machine");
             }
 
             Machine machine = new NelsonMachineDatabase().getDatabase().get(machineName);
