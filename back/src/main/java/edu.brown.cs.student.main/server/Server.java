@@ -1,8 +1,6 @@
 package edu.brown.cs.student.main.server;
 
 
-import edu.brown.cs.student.main.algorithm.ShortAlgo;
-import edu.brown.cs.student.main.database.NelsonMachineDatabase;
 import edu.brown.cs.student.main.handlers.MachineHandler;
 import edu.brown.cs.student.main.handlers.WorkoutHandler;
 import spark.Spark;
@@ -25,15 +23,12 @@ public class Server {
         Spark.port(this.port);
         // Listens and routes requests to a new Broadband object that references our global data src
         Spark.get("/generateWorkout", new WorkoutHandler());
-        Spark.get("/getMachineImage", new MachineHandler());
-        System.out.println("uhh");
+        Spark.get("/getMachine", new MachineHandler());
         Spark.awaitInitialization();
     }
 
     /** Our main method that constructs and runs a new server */
     public static void main(String[] args) throws IOException {
-        //new NelsonMachineDatabase();
-        //new ShortAlgo("30 minutes or less", "chest", "chest", "strength", "hello");
         new Server();
         System.out.println("Server started at http://localhost:" + port + "; exiting main...");
 

@@ -13,6 +13,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Class representing the nelson machine database. Parses the database and converst into a
+ * list of machines.
+ */
 public class NelsonMachineDatabase {
 
     private HashMap<String, Machine> database;
@@ -26,6 +30,10 @@ public class NelsonMachineDatabase {
 
     }
 
+    /**
+     * Populates database variable with the machines from the machineData.json file
+     * @throws IOException - throws exception if issue reading json, which never occurs
+     */
     private void parseData() throws IOException {
         Moshi moshi = new Moshi.Builder().build();
         Type type = Types.newParameterizedType(List.class, Machine.class);
@@ -34,12 +42,15 @@ public class NelsonMachineDatabase {
         List<Machine> machineList= adapter.fromJson(new String(Files.readAllBytes(Paths.get("data/machineData.json"))));
         this.database = new HashMap<>();
         for (Machine machine: machineList){
-            this.database.put(machine.name(), machine);
+            this.database.put(machine.getName(), machine);
         }
     }
 
 
-
+    /**
+     * returns database
+     * @return - map from name to machine objects
+     */
     public HashMap<String, Machine> getDatabase(){
         return this.database;
     }
