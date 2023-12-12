@@ -3,7 +3,7 @@ package edu.brown.cs.student.main.handlers;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
-import edu.brown.cs.student.main.algorithm.ShortAlgo;
+import edu.brown.cs.student.main.algorithm.Algorithm;
 import edu.brown.cs.student.main.database.MockAccount;
 import edu.brown.cs.student.main.records.Machine;
 import spark.Request;
@@ -15,11 +15,16 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+/**
+ * Class called by server to generate a workout
+ */
 public class WorkoutHandler implements Route {
 
-    /** Handles a request to /broadband. Gets data then serializes into json that gets returned */
+    /**
+     * Handle method overriden from route which calls generate workout from the algorithm class. Requests
+     * query parameters and uses moshi to serialize data.
+     */
     @Override
     public Object handle(Request request, Response response) throws IOException {
         response.header("Access-Control-Allow-Origin", "*");
@@ -27,16 +32,19 @@ public class WorkoutHandler implements Route {
         Type listObject = Types.newParameterizedType(List.class, Object.class);
         JsonAdapter<List<Object>> adapter = moshi.adapter(listObject);
         try{
+            // parameters for the server call
             String duration = request.queryParams("duration");
             String muscle1 = request.queryParams("muscle1");
             String muscle2 = request.queryParams("muscle2");
             String goal = request.queryParams("goal");
             String username = request.queryParams("username");
 
+            // null checking, should never occur due to rigidity of front end calls
             if (duration == null || muscle1 == null || muscle2 == null || goal == null){
                 throw new InvalidInputException("Invalid inputs. Missing duration, muscle, or goal field");
             }
 
+            // mock account, will delete
             ArrayList<Machine> machineList = new ArrayList<>();
             Machine machine1 = new Machine("1", "png", "blah", new String[0]);
             Machine machine2 = new Machine("2", "png", "blah", new String[0]);
@@ -48,8 +56,9 @@ public class WorkoutHandler implements Route {
             map1.put(machine1, 5);
             map1.put(machine2, 1);
 
-            ShortAlgo salgo = new ShortAlgo();
-            List<Object> returnMap = salgo.generateWorkout(duration, muscle1, muscle2, goal, new MockAccount(username, map1));
+            // calls algorithm to make workout with given parameters
+            Algorithm algo = new Algorithm();
+            List<Object> returnMap = algo.generateWorkout(duration, muscle1, muscle2, goal, new MockAccount(username, map1));
             return adapter.toJson(returnMap);
         }
         catch (InvalidInputException e){

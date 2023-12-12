@@ -1,14 +1,16 @@
+
+
 .overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.7); 
-  z-index: 999; 
-  backdrop-filter: blur(5px); 
-}
-
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 999;
+  backdrop-filter: blur(5px);
+ }
+ 
  
  .App-header-login {
   position: absolute;
@@ -39,13 +41,16 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  padding: 30px;
+  padding: 20px;
   z-index: 1000;
   width: 80%;
   max-width: 500px;
   border-radius: 10px;
   background-color: #f5f5f5;
+  box-sizing: border-box;
+  overflow-y: auto;
  }
+ 
  
  .close-button {
   color: #453131;
@@ -68,13 +73,16 @@
  }
  
  
- .ControlledInput {
+ .ControlledInput,
+ .email-input,
+ .password-input {
   padding: 8px;
   border-radius: 5px;
   border: 1px solid #ccc;
   margin-bottom: 10px;
   width: 100%;
   box-sizing: border-box;
+  background-color: #f9f9f9;
  }
  
  
@@ -98,46 +106,119 @@
  }
  
  
- .email-input,
- .password-input {
-  padding: 8px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  margin-bottom: 10px;
-  width: 100%;
-  box-sizing: border-box;
-  background-color: #f9f9f9;
- }
- 
- 
  .modal-content {
   background-color: #f5f5f5;
   width: 100%;
+  height: 600px;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
-}
-
-.modal-header {
+  box-sizing: border-box;
+  padding: 20px;
+  flex: 1;
+ }
+ 
+ 
+ .modal-header {
   text-align: left;
   text-transform: capitalize;
   margin-bottom: 10px;
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
-}
-
-.modal-header h3 {
+ }
+ 
+ 
+ .modal-header h3 {
   margin: 0;
   font-size: 1.2em;
-}
-
+ }
  
-.header-workout {
+ 
+ .header-workout {
   background-color: #f5f5f5;
   width: 90%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: flex-start; 
+  align-items: flex-start;
   padding: 20px;
-}
+ }
+ 
+ 
+ .horizontal-menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 200px;
+ }
+ 
+ 
+ .menu-item {
+  cursor: pointer;
+  padding: 8px 16px;
+  margin: 0;
+  border-bottom: 2px solid transparent;
+ }
+ 
+ 
+ .menu-item:hover {
+  background-color: #f0f0f0;
+ }
+ 
+ 
+ .menu-item.active {
+  font-weight: bold;
+ }
+ 
+ 
+ button:hover {
+  border-color: red;
+  border-radius: 20px;
+  border-width: 5px;
+ }
+ 
+ 
+ .exercise-info {
+  margin: 50px auto;
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  }
+ 
+ 
+ .workout-modal  {
+  width: 80%;
+  height: auto;
+  display: block;
+  max-width: 100%;
+  margin: 20px auto;
+  
+ }
+ 
+ 
+ .image-container {
+  background-color: white;
+  border-radius: 10px;
+  width: 400px;
+  height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px auto;
+ }
+ 
+ 
+ .image-container img {
+  max-width: 100%;
+  height: auto;
+ }
+ 
+ 
+ 
+ 
+ 
