@@ -1,5 +1,8 @@
 package edu.brown.cs.student.main.handlers;
 
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.Moshi;
+import com.squareup.moshi.Types;
 import edu.brown.cs.student.main.database.NelsonMachineDatabase;
 import edu.brown.cs.student.main.records.Machine;
 import spark.Request;
@@ -7,6 +10,12 @@ import spark.Response;
 import spark.Route;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.Map;
+
 /**
  *  Class used to get a machine based on a given name, used for adding exercises to user history in front end
  */
@@ -22,12 +31,12 @@ public class MachineHandler implements Route {
         response.header("Access-Control-Allow-Origin", "*");
         try{
             String machineName = request.queryParams("machine");
-
             if (machineName == null){
                 throw new InvalidInputException("Invalid inputs. Missing duration, muscle, or goal field");
             }
 
-            Machine machine = new NelsonMachineDatabase().getDatabaseLowercase().get(machineName);
+            Machine machine = new NelsonMachineDatabase().getDatabase().get(machineName);
+            System.out.println(machine.getClass());
             if (machine == null){
                 throw new Exception("No machine exists!");
             }

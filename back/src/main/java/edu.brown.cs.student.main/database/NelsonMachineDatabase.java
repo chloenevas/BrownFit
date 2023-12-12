@@ -20,8 +20,6 @@ import java.util.List;
 public class NelsonMachineDatabase {
 
     private HashMap<String, Machine> database;
-    private HashMap<String, Machine> databaseLowercase;
-
 
     public NelsonMachineDatabase() throws IOException {
         this.makeDatabase();
@@ -43,11 +41,9 @@ public class NelsonMachineDatabase {
                 moshi.adapter(type); // creates moshi object that will read json
         List<Machine> machineList= adapter.fromJson(new String(Files.readAllBytes(Paths.get("data/machineData.json"))));
         this.database = new HashMap<>();
-        this.databaseLowercase = new HashMap<>();
 
         for (Machine machine: machineList){
             this.database.put(machine.getName(), machine);
-            this.databaseLowercase.put(machine.getName().toLowerCase(), machine);
 
         }
     }
@@ -61,12 +57,4 @@ public class NelsonMachineDatabase {
         return this.database;
     }
 
-
-    /**
-     * Returns database but with all exercises lowercase for querying purposes
-     * @return
-     */
-    public HashMap<String, Machine> getDatabaseLowercase(){
-       return this.databaseLowercase;
-    }
 }

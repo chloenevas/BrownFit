@@ -309,26 +309,20 @@ export default function ExerciseHistory() {
     console.log(exerciseToAdd);
   }, [exerciseToAdd]);
 
-  function onAddExerciseClick() {
-    //  var apiFetchMap: Array<any> = await fetch(
-    //   "http://localhost:3332/generateWorkout?duration=" +
-    //     durationValue +
-    //     "&muscle1=" +
-    //     muscleValue +
-    //     "&muscle2=" +
-    //     muscleValue2 +
-    //     "&goal=" +
-    //     goalValue +
-    //     "&username=jackson"
-    // )
-    //   .then((response) => response.json())
-    //   .then((json) => {
-    //     console.log(json);
-    //     return json;
-    //   });
-    // //sets workoutMap state to the json returned by generateWorkout
-    // setWorkoutMap(apiFetchMap);
+ 
+  async function onAddExerciseClick() {
+    var apiFetchMap: Array<any> = await fetch(
+      "http://localhost:3332/getMachine?machine=" + exerciseToAdd
+    )
+      .then((response) => response.json())
+      .then((json) => {
+        console.log(json);
+        return json;
+      });
+    //sets workoutMap state to the json returned by generateWorkout
+    console.log(apiFetchMap);
   }
+
 
   return (
     <div>
