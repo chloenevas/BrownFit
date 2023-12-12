@@ -27,10 +27,11 @@ public class MachineHandler implements Route {
                 throw new InvalidInputException("Invalid inputs. Missing duration, muscle, or goal field");
             }
 
-            Machine machine = new NelsonMachineDatabase().getDatabase().get(machineName);
+            Machine machine = new NelsonMachineDatabase().getDatabaseLowercase().get(machineName);
             if (machine == null){
                 throw new Exception("No machine exists!");
             }
+
             return machine;
 
         }
