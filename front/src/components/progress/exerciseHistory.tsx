@@ -291,12 +291,13 @@ export default function ExerciseHistory() {
 
   function onSaveEditClick() {
     if (saveEditButton === "Save") {
-      // save stuff
       saveData();
+
     }
 
     if (saveEditButton === "Edit") {
       setSaveEditButton("Save");
+
       setViewDataVisibility("none");
       setEditDataVisibility("block");
     }
@@ -343,7 +344,7 @@ export default function ExerciseHistory() {
     const newExercise: ExerciseInfo = {
       exercise: exercise.name,
       rating: 0,
-      image: exercise.img,
+      image: "src/components" + exercise.img,
       description: exercise.instructions,
       reps: null,
       weight: null,
