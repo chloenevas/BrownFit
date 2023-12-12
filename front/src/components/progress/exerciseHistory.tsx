@@ -27,7 +27,7 @@ export default function ExerciseHistory() {
   const [successMess, setSuccessMess] = useState("");
 
   const [exerciseHistNames, setExerciseHistNames] = useState<string[]>([]);
-
+  let exerciseMap
   const machineData = [
     { label: "Ab Crunch", value: "Ab Crunch" },
     { label: "Back Row", value: "Back Row" },
@@ -56,6 +56,7 @@ export default function ExerciseHistory() {
     { label: "Vertical Bench Press", value: "Vertical Bench Press" },
     { label: "Vertical Chest Press", value: "Vertical Chest Press" },
   ];
+
 
   type OptionType = {
     label: string;
@@ -313,17 +314,72 @@ export default function ExerciseHistory() {
     console.log(exerciseToAdd);
   }, [exerciseToAdd]);
 
+  //converts the back-end generated workout json ito a useable object
+  //then splits that object into two values, one with its name and the other with
+  //a concactanated string of image path, instructions,
+ 
+
   async function onAddExerciseClick() {
-    var apiFetchMap: Array<any> = await fetch(
+    let exerciseMap: Array<any>
+    var apiFetchMap = await fetch(
       "http://localhost:3332/getMachine?machine=" + exerciseToAdd
     )
       .then((response) => response.json())
       .then((json) => {
-        console.log(json);
         return json;
       });
     //sets workoutMap state to the json returned by generateWorkout
-    console.log(apiFetchMap);
+    const exercise = apiFetchMap;
+
+
+    const currentDate: Date = new Date();
+
+    const seconds: number = Math.floor(currentDate.getTime() / 1000);
+    const nanoseconds: number = (currentDate.getTime() % 1000) * 1e6;
+
+    // Create Firebase Timestamp object
+    const currentTimestamp: Timestamp = new Timestamp(seconds, nanoseconds);
+    
+    const newExercise: ExerciseInfo = {
+      exercise: exercise.name,
+      rating: 0,
+      image: exercise.img,
+      description: exercise.instructions,
+      reps: null,
+      weight: null,
+      date: currentTimestamp
+    };
+
+    if (auth.currentUser !== null) {
+      const currentUser = auth.currentUser;
+      const userID = currentUser?.uid;
+      const currentUserDoc = doc(database, "users", userID); // get document of current logged in user
+
+      try {
+        const docSnapshot = await getDoc(currentUserDoc);
+
+        if (docSnapshot.exists()) {
+          const userData = docSnapshot.data();
+          const exerciseList: ExerciseInfo[] = userData.exerciseHistory; // get user's current exercise history
+
+          exerciseList.push(newExercise);
+          setExerciseHistNames(exerciseList.map((item) => item.exercise)); // extract exercise names from list
+
+          const docData = {
+            exerciseHistory: exerciseList,
+          };
+
+          if (userID !== undefined) {
+            await setDoc(doc(database, "users", userID), docData, {
+              merge: true,
+            });
+          }
+        }
+      } catch (error) {
+        console.error(error);
+      }
+        
+      }
   }
 
   return (
