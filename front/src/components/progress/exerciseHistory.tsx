@@ -4,6 +4,7 @@ import { auth, database } from "../../index";
 import { doc, getDoc, setDoc, Timestamp } from "firebase/firestore";
 import { it } from "node:test";
 import { ControlledInput } from "../ControlledInput";
+import { time } from "node:console";
 
 export default function ExerciseHistory() {
   const [firstName, setFirstName] = useState("");
@@ -14,7 +15,9 @@ export default function ExerciseHistory() {
   const [currentRating, setCurrentRating] = useState<number | null>();
   const [currentReps, setCurrentReps] = useState("");
   const [currentWeight, setCurrentWeight] = useState("");
-  const [currentDate, setCurrentDate] = useState<Date | number | Timestamp| null>();
+  const [currentDate, setCurrentDate] = useState<Timestamp | null>();
+    const [currentTimestamp, setCurrentTimestamp] = useState<Timestamp | null>();
+
   const [viewDataVisibility, setViewDataVisibility] = useState("flex");
   const [editDataVisibility, setEditDataVisibility] = useState("none");
   const [saveEditButton, setSaveEditButton] = useState("Edit");
@@ -113,8 +116,11 @@ export default function ExerciseHistory() {
               ) {
                 if (currentEx === exerciseList[itemIndex].exercise) {
                   const seconds = exerciseList[itemIndex].date.seconds;
+                  console.log(new Date(seconds * 1000));
+                                    console.log(typeof(new Date(seconds * 1000)));
+                  const currentTimestamp = Timestamp.fromMillis(seconds * 1000);
 
-                  setCurrentDate(new Date(seconds * 1000));
+                  setCurrentDate(currentTimestamp);
                   const reps = exerciseList[itemIndex].reps;
                   if (reps === null || Number.isNaN(reps)) {
                     setCurrentReps("N/A");
@@ -149,40 +155,6 @@ export default function ExerciseHistory() {
     const rating = parseInt(event.target.value);
     setCurrentRating(rating)
   };
-
-      // if (auth.currentUser !== null) {
-      //   const currentUser = auth.currentUser;
-      //   const userID = currentUser?.uid;
-      //   const currentUserDoc = doc(database, "users", userID); // get document of current logged in user
-      //   const changeRating = async () => {
-      //     try {
-      //       const docSnapshot = await getDoc(currentUserDoc);
-
-      //       if (docSnapshot.exists()) {
-      //         // check to see if the doc exists
-      //         const userData = docSnapshot.data();
-      //         const exerciseList: ExerciseInfo[] = userData.exerciseHistory; // get user's current exercise history
-      //         const exerciseListCopy = [...exerciseList];
-      //         exerciseListCopy[index].rating = rating;
-      //         // exerciseList[index]
-      //         const docData = {
-      //           exerciseHistory: exerciseListCopy,
-      //         };
-
-      //         if (userID !== undefined) {
-      //           // set the exercise list with updated ratings
-      //           await setDoc(doc(database, "users", userID), docData, {
-      //             merge: true,
-      //           });
-      //         }
-      //       }
-      //     } catch (error) {
-      //       console.error(error);
-      //     }
-    //      };
-    //     changeRating();
-      
-    // };
 
   function handleDeleteExercise(index: number) {
     if (auth.currentUser !== null) {
@@ -255,7 +227,10 @@ export default function ExerciseHistory() {
             if (currentExercise === exerciseList[itemIndex].exercise) {
               exerciseListCopy[itemIndex].reps = parseInt(currentReps);
               exerciseListCopy[itemIndex].weight = currentWeight;
-              //   exerciseListCopy[itemIndex].date = currentDate;
+              if (currentDate !== undefined && currentDate !== null) {
+                exerciseListCopy[itemIndex].date = currentDate;
+
+              }
               if (currentRating !== null && currentRating !== undefined) {
                 exerciseListCopy[itemIndex].rating = currentRating;
               }
@@ -278,14 +253,23 @@ export default function ExerciseHistory() {
     }
   };
 
-const handleDateChange = (event: ChangeEvent<HTMLInputElement>) => {
-  const selectedDate = event.target.value;
-  const timestamp = new Date(selectedDate).getTime();
-  setCurrentDate(timestamp);
+  const handleDateChange = (event: ChangeEvent<HTMLInputElement>) => {
+    
+    const currentTimestamp = Timestamp.fromMillis(Date.parse(event.target.value));
+
+    setCurrentDate(currentTimestamp);
+
+    
+  //   console.log(typeof(new Date(Date.parse(event.target.value))));
+  //   const timestamp = new Date(selectedDate).toLocaleDateString();
+  //  // console.log(timestamp)
+  //   //setCurrentDate(selectedDate);
+  //       console.log(typeof(currentDate));
+
 };
   
 
-  function onEditClick() {
+  function onSaveEditClick() {
     if (saveEditButton === "Save") {
       // save stuff
       saveData();
@@ -334,12 +318,16 @@ const handleDateChange = (event: ChangeEvent<HTMLInputElement>) => {
             <div style={{ display: "flex" }}>
               <p className="exercise-info">Exercise: {currentExercise}</p>
               <div>
-                <p
-                  className="exercise-info"
-                  style={{ display: viewDataVisibility }}
-                >
-                  Last Used: {currentDate && currentDate.toString()}
-                </p>
+                <div>
+                  <p
+                    className="exercise-info"
+                    style={{ display: viewDataVisibility }}
+                  >
+                    Last Used:{" "}
+                    {currentDate && (new Date(currentDate.toMillis())).toDateString()}
+                  </p>
+                </div>
+
                 <div style={{ display: editDataVisibility }}>
                   <label htmlFor="dateInput" className="calendar-popup">
                     Last Used:
@@ -349,6 +337,7 @@ const handleDateChange = (event: ChangeEvent<HTMLInputElement>) => {
                     id="dateInput"
                     name="dateInput"
                     style={{ display: "block" }}
+                    onChange={handleDateChange}
                   ></input>
                 </div>
               </div>
@@ -405,7 +394,10 @@ const handleDateChange = (event: ChangeEvent<HTMLInputElement>) => {
                   <div className="exercise-info-edit">
                     <label className="rating-dropdown exercise-info">
                       Rating
-                      <select className="selector" onChange={handleRatingChange}>
+                      <select
+                        className="selector"
+                        onChange={handleRatingChange}
+                      >
                         <option value="0">0</option>
                         <option value="1">1</option>
                         <option value="2">2</option>
@@ -418,7 +410,7 @@ const handleDateChange = (event: ChangeEvent<HTMLInputElement>) => {
                 </div>
               </div>
             </div>
-            <button onClick={() => onEditClick()}>{saveEditButton}</button>
+            <button onClick={() => onSaveEditClick()}>{saveEditButton}</button>
           </div>
 
           {/* <label className="rating-dropdown exercise-info">
