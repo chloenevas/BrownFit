@@ -1,27 +1,11 @@
-import { mock } from "node:test";
 import { useState } from "react";
-import abCrunch from "../nelsonMachines/abCrunch.png";
-import treadmill from "../nelsonMachines/treadmill.png";
-import legPress from "../nelsonMachines/legPress.png";
 
-import { auth, database, collectionRef, users } from "../../index";
-import {
-  collection,
-  addDoc,
-  updateDoc,
-  doc,
-  onSnapshot,
-  getDoc,
-  query,
-  where,
-  setDoc,
-  Timestamp,
-  FieldValue,
-} from "firebase/firestore";
+import { auth, database } from "../../index";
+import { doc, getDoc, setDoc, Timestamp } from "firebase/firestore";
 import "../../styles/login.css";
 
-//gets input values from dropdown menus, visibility variable from workoutPage,
-//and workoutMap from workout generated in back end
+/* Gets input values from dropdown menus, visibility variable from workoutPage,
+and workoutMap from workout generated in back end*/
 export interface InputProps {
   durationValue: string;
   muscleValue: string;
@@ -32,7 +16,9 @@ export interface InputProps {
   workoutMap: Array<any>;
 }
 
-//models the pop up pages that come up after the generate button is hit
+/**
+ * Models the pop up page that come up after the generate button is hit
+ */
 export default function RESULTMODAL({
   durationValue,
   muscleValue,
@@ -42,13 +28,7 @@ export default function RESULTMODAL({
   setModalVisibility,
   workoutMap,
 }: InputProps) {
-  //TODO: make call to backend and retrieve json with exercises
-  // Go through json and extract name, image, and instructions for each exercise
-  // add each to a list? map? tbd doesn't really matter
-
   let exerciseList: any[];
-  const [infoVisibility, setInfoVisibility] = useState("none"); // State for the input value
-  const [clickedItem, setClickedItem] = useState<string | null>(null);
   const [saveButtonVis, setSaveButtonVis] = useState("none");
   const [saveSuccessMess, setSaveSuccessMess] = useState("");
   const [selectedExercise, setSelectedExercise] = useState<ExerciseInfo | null>(
@@ -66,11 +46,10 @@ export default function RESULTMODAL({
     weight: string | null;
   }
 
-  let showImg = "none";
-
-  //converts the back-end generated workout json ito a useable object
-  //then splits that object into two values, one with its name and the other with
-  //a concactanated string of image path, instructions,
+  /* Converts the back-end generated workout json ito a useable object
+   * then splits that object into two values, one with its name and the other with
+   * a concactanated string of image path, instructions, reps, and weight
+   */
   exerciseList = workoutMap;
   const map = new Map(
     exerciseList.map((obj) => [
@@ -81,13 +60,13 @@ export default function RESULTMODAL({
     ])
   );
 
+  // Create Firebase Timestamp object based on current date
   const currentDate: Date = new Date();
-
   const seconds: number = Math.floor(currentDate.getTime() / 1000);
   const nanoseconds: number = (currentDate.getTime() % 1000) * 1e6;
-
-  // Create Firebase Timestamp object
   const currentTimestamp: Timestamp = new Timestamp(seconds, nanoseconds);
+
+  // Create a list of exercises based on the workouts that got generated
   const newExerciseHistory: ExerciseInfo[] = Array.from(map).map(
     ([key, value]) => {
       return {
@@ -102,18 +81,22 @@ export default function RESULTMODAL({
     }
   );
 
-
+  // constantly check if a user is signed in
   setInterval(() => {
     checkUser();
   }, 100);
 
+  /**
+   * Visibly close the modal and reset success message
+   */
   function handleCloseClick() {
     setModalVisibility("none");
     setSaveSuccessMess("");
-
-    return undefined;
   }
 
+  /**
+   * Make call to save the exercises and display a sucess message
+   */
   function onSaveClick() {
     if (saveSuccessMess === "") {
       updateExerciseHistory();
@@ -121,6 +104,13 @@ export default function RESULTMODAL({
     }
   }
 
+  /**
+   * Takes in a string containing object image, instructions, reps, and weight
+   * and returns just the image path
+   *
+   * @param val - string containing all exercise info
+   * @returns - image path
+   */
   function getImg(val: string) {
     let spaceIndex = val.indexOf(" ");
     let imgPath = val.substring(0, spaceIndex);
@@ -130,6 +120,13 @@ export default function RESULTMODAL({
       : null;
   }
 
+  /**
+   * Takes in a string containing object image, instructions, reps, and weight
+   * and returns just the instructions
+   *
+   * @param val - string containing all exercise info
+   * @returns - instructions
+   */
   function getInstructions(val: string) {
     let spaceIndex = val.indexOf(" ");
     if (val.includes("W:")) {
@@ -139,16 +136,29 @@ export default function RESULTMODAL({
     }
   }
 
+  /**
+   * Takes in a string containing object image, instructions, reps, and weight
+   * and returns just the weight
+   *
+   * @param val - string containing all exercise info
+   * @returns - weight
+   */
   function getWeight(val: string): string {
     if (val.includes("W:")) {
       if (val.includes("R:")) {
-    
-       return val.substring(val.indexOf("W:") + 2, val.indexOf("R:"));
+        return val.substring(val.indexOf("W:") + 2, val.indexOf("R:"));
       }
     }
     return "";
   }
 
+  /**
+   * Takes in a string containing object image, instructions, reps, and weight
+   * and returns just the reps
+   *
+   * @param val - string containing all exercise info
+   * @returns - reps
+   */
   function getReps(val: string): string {
     if (val.includes("W:")) {
       if (val.includes("R:")) {
@@ -156,12 +166,16 @@ export default function RESULTMODAL({
 
         return val.substring(val.indexOf("R:") + 2, val.length);
       }
-    } 
-      return "";
-    
+    }
+    return "";
   }
 
-  
+  /**
+   * Takes in exercise clicked by user and marks it as the currently selected exercise
+   * if it's not already selected, and unmarks it as the currently selected exercise if it
+   * is already selected.
+   * @param exercise - exercise clicked by user
+   */
   const handleExerciseClick = (exercise: ExerciseInfo) => {
     if (selectedExercise?.exercise === exercise.exercise) {
       setSelectedExercise(null);
@@ -170,6 +184,10 @@ export default function RESULTMODAL({
     }
   };
 
+  /**
+   * If a user is signed in, give them the option to save the exercies. If no user signed in,
+   * they can't save
+   */
   async function checkUser() {
     auth.onAuthStateChanged((user) => {
       if (user !== null) {
@@ -180,6 +198,9 @@ export default function RESULTMODAL({
     });
   }
 
+  /**
+   * Update user's information with their newly generated exercises.
+   */
   async function updateExerciseHistory() {
     if (auth.currentUser !== null) {
       const currentUser = auth.currentUser;
@@ -188,56 +209,54 @@ export default function RESULTMODAL({
 
       const docSnapshot = await getDoc(currentUserDoc);
       if (docSnapshot.exists()) {
-        // check to see if the doc exists
         const userData = docSnapshot.data();
         const userExerciseHist: ExerciseInfo[] = userData.exerciseHistory;
-        // console.log(typeof userExerciseHist);
-        // console.log(typeof newExerciseHistory);
 
-        let historyNames: string[] = [];
+        let historyNames: string[] = []; // create lists for just the names (not the full exercise object)
         let newNames: string[] = [];
 
         let mergedExerciseData;
 
-        {
-          Array.from(userExerciseHist).map(
-            (item) => historyNames.push(item.exercise) // add every name
+        { // add exercise names to historyNames
+          Array.from(userExerciseHist).map((item) =>
+            historyNames.push(item.exercise)
           );
         }
-        {
+        { // add exercise names to newNames
           Array.from(newExerciseHistory).map(
-            (item) => newNames.push(item.exercise) // add every name
+            (item) => newNames.push(item.exercise) 
           );
         }
 
         // if there are duplicate exercises, remove them from new exercise list before they get added to history
-
         newExerciseHistory.forEach((newExercise: ExerciseInfo, newIndex) => {
           for (
             let oldIndex = 0;
             oldIndex < userExerciseHist.length;
             oldIndex++
           ) {
-            if (newExercise.exercise === userExerciseHist[oldIndex].exercise) {
-              newExerciseHistory.splice(newIndex, 1);
+            if (newExercise.exercise === userExerciseHist[oldIndex].exercise) { // if an exercise from new is in old
+              newExerciseHistory.splice(newIndex, 1); // get rid of the exercise from new
             }
           }
         });
 
-        if (Object.keys(userExerciseHist).length == 0) {
-          // check that the history isn't empty
+        if (Object.keys(userExerciseHist).length == 0) { 
 
+          // If history is empty, just set the history to be the new exercises
           mergedExerciseData = newExerciseHistory;
         } else {
+          // If history isn't empty, add on the new exercises to the history
           mergedExerciseData = userExerciseHist.concat(newExerciseHistory);
         }
 
+        // create the new exerciseHistory field for the user's document
         const docData = {
           exerciseHistory: mergedExerciseData,
         };
 
         if (userID !== undefined) {
-          await setDoc(doc(database, "users", userID), docData, {
+          await setDoc(doc(database, "users", userID), docData, { // update the user's document
             merge: true,
           });
         }

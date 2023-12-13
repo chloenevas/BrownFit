@@ -11,24 +11,17 @@ import Consistency from "./consistency";
 
 
 export default function ProgressPage() {
- const [currentPage, setCurrentPage] = useState("account info");
- const [infoButton, setInfoButton] = useState("red");
- const [exerciseHistoryButton, setExerciseHistoryButton] = useState("");
+ const [currentPage, setCurrentPage] = useState("exercise history");
+ const [exerciseHistoryButton, setExerciseHistoryButton] = useState("red");
  const [consistencyButton, setConsistencyButton] = useState("");
 
 
  function changePage(page: string) {
    setCurrentPage(page);
-   if (page == "account info") {
-     setInfoButton("red");
-     setExerciseHistoryButton("");
-     setConsistencyButton("");
-   } else if (page == "exercise history") {
-     setInfoButton("");
+   if (page == "exercise history") {
      setExerciseHistoryButton("red");
      setConsistencyButton("");
    } else {
-     setInfoButton("");
      setExerciseHistoryButton("");
      setConsistencyButton("red");
    }

@@ -1,22 +1,15 @@
 import { useState } from "react";
-import { auth, database, collectionRef, users } from "../../index";
-import BrownFitLogo from '../imageBrown/BrownFit.png';
+import { auth, database } from "../../index";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-import { collection, addDoc, getDocs, doc, query, where , setDoc} from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 
 import "../../styles/login.css";
 import { ControlledInput } from "../ControlledInput";
-import { text } from "stream/consumers";
-import {
-  onAuthStateChanged,
-  setPersistence,
-  browserSessionPersistence,
-} from "firebase/auth";
-
+import { setPersistence, browserSessionPersistence } from "firebase/auth";
 
 export default function AUTHMODAL() {
   const [modalVisibility, setModalVisibility] = useState<string>("none");
@@ -30,28 +23,33 @@ export default function AUTHMODAL() {
   const [signinSignoutButton, setSigninSignoutButton] =
     useState("Login/Sign up");
   const [currentUser, setCurrentUser] = useState<string | null>("");
-  const [userID, setUserID] = useState<string | null>("");
-    const [enterNameVisibility, setEnterNameVisibility] = useState("none");
-
+  const [enterNameVisibility, setEnterNameVisibility] = useState("none");
   const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
+  const [lastName, setLastName] = useState("");
 
-
+  /**
+   * Handles click on login/sign up or logout button
+   * If user is currently signed in --> sign out and set button back to login/sign up
+   * If no user is signed in --> open the sign up/login modal
+   * @param loginStatus - whether or not a user is currently signed in
+   */
   function handleSigninSignoutClick(loginStatus: string) {
     if (loginStatus === "Logout") {
+      // if a user is signed in and wants to log out
       signOut(auth).then(() => {
         setSigninSignoutButton("Login/Sign up");
         setCurrentUser("");
       });
-      // logout
     } else {
+      // user is logged out and they click to sign up
       setLoginButtonColor("Red");
-      // makes modal appear
       setModalVisibility("flex");
     }
-    return undefined;
   }
 
+  /**
+   * Closes the login/sign up modal and resets all values
+   */
   function handleCloseClick() {
     setLoginButtonColor("#fff0e0");
     setModalVisibility("none");
@@ -60,9 +58,11 @@ export default function AUTHMODAL() {
     setAuthState("Enter email and password to sign up");
     setOptionsPageVisibility("flex");
     setLoginPageVisibility("none");
-    return undefined;
   }
 
+  /**
+   * Resets input fields and changes text to apply to login
+   */
   function handleLoginClick() {
     setEnterNameVisibility("none");
     setOptionsPageVisibility("none");
@@ -71,79 +71,96 @@ export default function AUTHMODAL() {
     setAuthState("Enter email and password to login");
   }
 
+  /**
+   * Resets input fields and changes text to apply to sign up
+   */
   function handleSignupClick() {
     setEnterNameVisibility("block");
     setOptionsPageVisibility("none");
     setLoginPageVisibility("block");
     setSubmitButtonText("Sign up");
     setAuthState("Enter email and password to sign up");
-    
   }
 
+  /**
+   * Depending on what the user chooses, this function carries out the authentication 
+   * to sign a user up or log them in. If they're signing up for the first time, it creates
+   * a document for them in the database connected to their user ID.
+   * 
+   * @param submitType - Sign up or login, depending on what the user chooses
+   */
   function handleSubmit(submitType: string) {
-    // sign up user
-    if (submitType === "Sign up") {
-      setPersistence(auth, browserSessionPersistence)
-        .then(() => {
-          createUserWithEmailAndPassword(auth, emailValue, passwordValue)
-            .then((cred) => {
-              setAuthState("Success!");
-              setSigninSignoutButton("Logout");
-              const userCred = cred.user;
-              const userEmail = userCred.email;
-              setCurrentUser(userEmail);
-              const userID = userCred.uid
-              setDoc(doc(database, "users", userID), {
-                // create a doc for that user within the database
-                email: userEmail,
-                firstName: firstName,
-                lastName: lastName,
-                exerciseHistory: {}
-              });
-            })
-            .catch((err) => {
-              console.log(err.code);
-              if (err.code == "auth/weak-password") {
-                setAuthState("Password must be at least 6 characters.");
-              } else if (err.code == "auth/email-already-in-use") {
-                setAuthState("Email already in use. Please sign in.");
-              } else if (err.code == "auth/invalid-email") {
-                setAuthState("Please enter a valid email.");
-              }
-            });
-        })
-    } else if (submitType === "Login") {
-      setPersistence(auth, browserSessionPersistence)
-        .then(() => {
-          signInWithEmailAndPassword(auth, emailValue, passwordValue)
-            .then((cred) => {
-              setAuthState("Success!");
-              setSigninSignoutButton("Logout");
-              const user = auth.currentUser;
-              if (user !== null) {
-                const userEmail = user.email;
-                setCurrentUser(userEmail);
-              }
-            })
-            .catch((err) => {
-              if (err.code == "auth/invalid-credential") {
-                setAuthState("Invalid email or password. Please try again.");
-              } else if (err.code == "auth/invalid-email") {
-                setAuthState("Please enter a valid email.");
-              } else if ((err.code = "auth/missing-password")) {
-                setAuthState("Please enter a password.");
-              }
-              // setAuthState(err.code)
+    if (submitType === "Sign up") { 
+
+      // Set persistance so that once browser is closed, user is no longer signed in
+      setPersistence(auth, browserSessionPersistence).then(() => {
+
+        // Sign user up with entered inputs
+        createUserWithEmailAndPassword(auth, emailValue, passwordValue)
+          .then((cred) => {
+            setAuthState("Success!");
+            setSigninSignoutButton("Logout");
+            const userCred = cred.user;
+            const userEmail = userCred.email;
+            setCurrentUser(userEmail);
+            const userID = userCred.uid;
+
+            // create a doc for that user within the database
+            setDoc(doc(database, "users", userID), {
+              email: userEmail,
+              firstName: firstName,
+              lastName: lastName,
+              exerciseHistory: {},
             });
           })
-        }
+
+          // catch possible errors with user inputs in regards to sign up
+          .catch((err) => {
+            if (err.code == "auth/weak-password") {
+              setAuthState("Password must be at least 6 characters.");
+            } else if (err.code == "auth/email-already-in-use") {
+              setAuthState("Email already in use. Please sign in.");
+            } else if (err.code == "auth/invalid-email") {
+              setAuthState("Please enter a valid email.");
+            }
+          });
+      });
+    } else if (submitType === "Login") {
+
+      // Set persistance so that once browser is closed, user is no longer signed in
+      setPersistence(auth, browserSessionPersistence).then(() => {
+
+        // Sign user in with entered inputs
+        signInWithEmailAndPassword(auth, emailValue, passwordValue)
+          .then((cred) => {
+            setAuthState("Success!");
+            setSigninSignoutButton("Logout");
+            const user = auth.currentUser;
+            if (user !== null) {
+              const userEmail = user.email;
+              setCurrentUser(userEmail);
+            }
+          })
+
+          // catch possible errors with user inputs in regards to login
+          .catch((err) => {
+            if (err.code == "auth/invalid-credential") {
+              setAuthState("Invalid email or password. Please try again.");
+            } else if (err.code == "auth/invalid-email") {
+              setAuthState("Please enter a valid email.");
+            } else if ((err.code = "auth/missing-password")) {
+              setAuthState("Please enter a password.");
+            }
+          });
+      });
+    }
   }
 
   return (
     <div>
       {modalVisibility === "flex" && <div className="overlay"></div>}
       <p className="App-header">
-        <button
+        <button // signup/login/sign out button
           className="App-header-login"
           aria-label="login button"
           style={{ backgroundColor: loginButtonColor }}
@@ -157,24 +174,25 @@ export default function AUTHMODAL() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            width: "100px", // Adjust the width and height as needed
-            height: "100px", // Adjust the width and height as needed
-            border: "2px solid red", // Red border
-            backgroundColor: "#fff", // White background
+            width: "100px",
+            height: "100px",
+            border: "2px solid red",
+            backgroundColor: "#fff",
           }}
         >
           <img
             src={"src/components/B.png"}
             alt="BrownFit Logo"
             style={{
-              width: "50px", // Adjust the width of the image as needed
-              height: "50px", // Adjust the height of the image as needed
+              width: "50px",
+              height: "50px",
             }}
           />
         </div>
         <h1 className="App-header-title">BrownFit</h1>
       </p>
 
+      {/* Popup for when a user clicks login/sign up */}
       <div className="modal" style={{ display: modalVisibility }}>
         <span className="close-button" onClick={() => handleCloseClick()}>
           &times;
@@ -191,17 +209,19 @@ export default function AUTHMODAL() {
               Sign up
             </button>
           </div>
+          {/* Login/sign up page */}
           <div style={{ display: loginPageVisibility }}>
             <fieldset className="input">
               <div className="input-label">
-                <div style={{display: enterNameVisibility}}>
+                <div style={{ display: enterNameVisibility }}>
+                  {/* First and last name fields only appear if it's sign up */}
                   <legend>First Name:</legend>
                   <ControlledInput
                     type="text"
                     value={firstName}
                     setValue={setFirstName}
                     ariaLabel={"first name input box"}
-                    className="email-input" // Add a class name for the password input
+                    className="email-input"
                   />
                   <legend>Last Name:</legend>
                   <ControlledInput
@@ -209,10 +229,9 @@ export default function AUTHMODAL() {
                     value={lastName}
                     setValue={setLastName}
                     ariaLabel={"last name input box"}
-                    className="password-input" // Add a class name for the password input
+                    className="password-input"
                   />
                 </div>
-
                 <legend>Email:</legend>
                 <ControlledInput
                   type="text"
