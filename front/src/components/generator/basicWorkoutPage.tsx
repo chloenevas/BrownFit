@@ -111,6 +111,7 @@ export default function WorkoutPage() {
     setModalVisibility("flex");
     //makes api call to get workout based on passed in info
     getUserRatings();
+    try {
     var apiFetchMap: Array<any> = await fetch(
       "http://localhost:3332/generateWorkout?duration=" +
         durationValue +
@@ -129,7 +130,38 @@ export default function WorkoutPage() {
         return json;
       });
     //sets workoutMap state to the json returned by generateWorkout
-    setWorkoutMap(apiFetchMap);
+      setWorkoutMap(apiFetchMap);
+    }
+    catch (err) {
+     // setWorkoutMap()
+      const exercise1 = {
+        name: "MOCKED: Back Row",
+        weight: "higher",
+        reps: "fewer: 4-8",
+        img: "/nelsonMachines/backRow.png",
+        instructions: "Instructions for Back Row",
+        muscle: ["upper back", "lower back"]
+      };
+      const exercise2 = {
+        name: "MOCKED: Shoulder Press",
+        weight: "lower",
+        reps: "fewer: 4-8",
+        img: "/nelsonMachines/shoulderPress.png",
+        instructions: "Instructions for Shoulder Press",
+        muscle: ["chest", "shoulders", "middle back", "triceps"]
+      };
+      const exercise3 = {
+        name: "MOCKED: Weighted Pull-up",
+        weight: "lower",
+        reps: "fewer: 4-8",
+        instructions: "Instructions for Weighted Pull-up",
+        muscle: ["lats"],
+      };
+      const exerciseArray: Array<any> = [exercise1, exercise2, exercise3];
+      setWorkoutMap(exerciseArray);
+
+    }
+
   }
 
   return (
