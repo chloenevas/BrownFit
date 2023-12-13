@@ -1,1 +1,0 @@
-// Class to have our toggle bar/directory switch between pages

@@ -1,23 +1,10 @@
-import React, { SetStateAction, useState, Component } from "react";
-//import "/Users/default/Desktop/cs32/term-project-jwschwar-amahns-cnevas-ibrauns/front/src/styles/Workout.css";
+import React, { useState } from "react";
 import "../../styles/Workout.css";
 import RESULTMODAL from "./resultModal";
-import { auth, database, collectionRef, users } from "../../index";
-import {
-  collection,
-  addDoc,
-  updateDoc,
-  doc,
-  onSnapshot,
-  getDoc,
-  query,
-  where,
-  setDoc,
-  Timestamp,
-  FieldValue,
-} from "firebase/firestore";
+import { auth, database } from "../../index";
+import { doc, getDoc, Timestamp} from "firebase/firestore";
 
-//in charge of modelling workout page
+//Models the generate workout page 
 export default function WorkoutPage() {
   const [durationValue, setDurationValue] =
     React.useState("30 minutes or less");
@@ -68,8 +55,15 @@ export default function WorkoutPage() {
     setGoalValue(event.target.value);
   };
 
+  /**
+   * Gets the current user's exercise history and creates a string matching
+   * exercise with rating to pass into the API on the backend. This is so that 
+   * the backend can take into account user rankings in its generation.
+   */
   async function getUserRatings() {
     if (auth.currentUser !== null) {
+      
+      // get current user
       const currentUser = auth.currentUser;
       const userID = currentUser?.uid;
       const currentUserDoc = doc(database, "users", userID);
@@ -78,6 +72,8 @@ export default function WorkoutPage() {
       if (docSnapshot.exists()) {
         // check to see if the doc exists
         const userData = docSnapshot.data();
+
+        // get exercise history
         const userExerciseHist: ExerciseInfo[] = userData.exerciseHistory;
         
         let userRatingsList: [string, string][] = []; 
@@ -102,45 +98,44 @@ export default function WorkoutPage() {
     
   }
 
-  //called everytime someone clicks the generate workout button
+  /**
+   * Called everytime someone clicks the generate workout button. Calls the backend and passes
+   * in the user input and user exercise rankings to produce a workout for the user
+   */
   async function clickHandler() {
-    console.log(durationValue);
-    console.log(muscleValue);
-    console.log(muscleValue2);
-    console.log(goalValue);
-    setModalVisibility("flex");
-    //makes api call to get workout based on passed in info
+    setModalVisibility("flex"); // make the result popup appear
     getUserRatings();
+
+    // makes API call to get workout based on passed in info
     try {
-    var apiFetchMap: Array<any> = await fetch(
-      "http://localhost:3332/generateWorkout?duration=" +
-        durationValue +
-        "&muscle1=" +
-        muscleValue +
-        "&muscle2=" +
-        muscleValue2 +
-        "&goal=" +
-        goalValue +
-      "&history=" +
-      userRatings
-    )
-      .then((response) => response.json())
-      .then((json) => {
-        console.log(json);
-        return json;
-      });
-    //sets workoutMap state to the json returned by generateWorkout
+      var apiFetchMap: Array<any> = await fetch(
+        "http://localhost:3332/generateWorkout?duration=" +
+          durationValue +
+          "&muscle1=" +
+          muscleValue +
+          "&muscle2=" +
+          muscleValue2 +
+          "&goal=" +
+          goalValue +
+          "&history=" +
+          userRatings
+      )
+        .then((response) => response.json())
+        .then((json) => {
+          console.log(json);
+          return json;
+        });
+      //sets workoutMap state to the json returned by generateWorkout
       setWorkoutMap(apiFetchMap);
-    }
-    catch (err) {
-     // setWorkoutMap()
+    } catch (err) {
+      // If server isn't currently running, return mocked data 
       const exercise1 = {
         name: "MOCKED: Back Row",
         weight: "higher",
         reps: "fewer: 4-8",
         img: "/nelsonMachines/backRow.png",
         instructions: "Instructions for Back Row",
-        muscle: ["upper back", "lower back"]
+        muscle: ["upper back", "lower back"],
       };
       const exercise2 = {
         name: "MOCKED: Shoulder Press",
@@ -148,7 +143,7 @@ export default function WorkoutPage() {
         reps: "fewer: 4-8",
         img: "/nelsonMachines/shoulderPress.png",
         instructions: "Instructions for Shoulder Press",
-        muscle: ["chest", "shoulders", "middle back", "triceps"]
+        muscle: ["chest", "shoulders", "middle back", "triceps"],
       };
       const exercise3 = {
         name: "MOCKED: Weighted Pull-up",
@@ -159,9 +154,7 @@ export default function WorkoutPage() {
       };
       const exerciseArray: Array<any> = [exercise1, exercise2, exercise3];
       setWorkoutMap(exerciseArray);
-
     }
-
   }
 
   return (

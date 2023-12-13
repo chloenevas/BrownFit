@@ -29,8 +29,8 @@
  
  .current-user {
   display: inline-block;
-  margin-left: 10px;
-  color: #453131;
+  right: 10px;
+  color: white;
  }
  
  
@@ -216,9 +216,8 @@
  .image-container img {
   max-width: 100%;
   height: auto;
+
  }
- 
- 
  
  
  
