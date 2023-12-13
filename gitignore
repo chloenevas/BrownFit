@@ -1,0 +1,24 @@
+.DS_Store
+
+#Frontend ignored
+front/node_modules/
+front/playwright-report/
+front/test-results/
+front/.vscode
+
+#Backend ignored
+back/.idea/
+back/target/
+back/.mvn
+back/.mvn-classpath
+back/pom.xml.bak
+
+.idea/checkstyle-idea.xml
+.idea/compiler.xml
+.idea/jarRepositories.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+.idea/workspace.xml
+config/
+node_modules/
