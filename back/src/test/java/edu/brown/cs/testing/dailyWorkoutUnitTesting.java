@@ -40,8 +40,8 @@ private List<String> goals;
     @Test
     public void testShortAlgoRatingUpdates() throws IOException {
         ArrayList<Machine> machineList = new ArrayList<>();
-        Machine machine1 = new Machine("1", "png", "blah", new String[0]);
-        Machine machine2 = new Machine("2", "png", "blah", new String[0]);
+        Machine machine1 = new Machine("Ab Crunch", "png", "blah", new String[0]);
+        Machine machine2 = new Machine("Back Row", "png", "blah", new String[0]);
         Machine machine3 = new Machine("3", "png", "blah", new String[0]);
         machineList.add(machine1);
         machineList.add(machine2);
@@ -52,10 +52,12 @@ private List<String> goals;
         map1.put(machine2, 1);
         MockAccount mAcc1 = new MockAccount("mock", map1);
 
+        String history = "Ab Crunch/5;Back Row/1";
+
         Algorithm salgo = new Algorithm();
-        List<Machine> returnList = salgo.getWeightedMachineList(machineList, "", mAcc1);
-        Assert.assertEquals(this.getNumInstaces(returnList, "1"), 5);
-        Assert.assertEquals(this.getNumInstaces(returnList, "2"), 1);
+        List<Machine> returnList = salgo.getWeightedMachineList(machineList, "", history);
+        Assert.assertEquals(this.getNumInstaces(returnList, "Ab Crunch"), 5);
+        Assert.assertEquals(this.getNumInstaces(returnList, "Back Row"), 1);
         Assert.assertEquals(this.getNumInstaces(returnList, "3"), 3);
 
     }
@@ -75,12 +77,15 @@ private List<String> goals;
         map1.put(machine2, 1);
         MockAccount mAcc1 = new MockAccount("mock", map1);
 
+        String history = "Ab Crunch/5;Back Row/1";
+
+
         Algorithm salgo = new Algorithm();
         int counter1 = 0;
         int counter2 = 0;
         int counter3 = 0;
         for (int i = 0; i < 10000; i ++){
-            Machine returnMachine = salgo.selectExercise(machineList, "", mAcc1);
+            Machine returnMachine = salgo.selectExercise(machineList, "", history);
             switch (returnMachine.getName()){
                 case "1":
                     counter1++;
@@ -114,8 +119,11 @@ private List<String> goals;
         map1.put(machine2, 1);
         MockAccount mAcc1 = new MockAccount("mock", map1);
 
+        String history = "Ab Crunch/5;Back Row/1";
+
+
         Algorithm salgo = new Algorithm();
-        List<Object> returnMap = salgo.generateWorkout("120 minutes or more", "shoulders", "biceps", "strength", mAcc1);
+        List<Object> returnMap = salgo.generateWorkout("120 minutes or more", "shoulders", "biceps", "strength", history);
         System.out.println(returnMap);
     }
 
@@ -132,6 +140,9 @@ private List<String> goals;
         HashMap<Machine, Integer> map1 = new HashMap<>();
         MockAccount mAcc1 = new MockAccount("mock", map1);
 
+        String history = "Ab Crunch/5;Back Row/1";
+
+
         Algorithm algo = new Algorithm();
         for (int i = 0; i < 20; i ++) {
             String duration = this.duration.get((int) (Math.random()*this.duration.size()));
@@ -139,7 +150,7 @@ private List<String> goals;
             String muscle2 = this.muscles.get((int) (Math.random()*this.muscles.size()));
             String goal = this.goals.get((int) (Math.random()*this.goals.size()));
             System.out.println(duration +  ' ' + muscle1 + ' ' + muscle2 + ' ' +  goal);
-            List<Object> testList = algo.generateWorkout(duration, muscle1, muscle2, goal, mAcc1);
+            List<Object> testList = algo.generateWorkout(duration, muscle1, muscle2, goal, history);
             Assert.assertTrue(testList.size() == algo.getDurationMap().get(duration));
         }
 

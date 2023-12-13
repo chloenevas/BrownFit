@@ -2,6 +2,20 @@ import React, { SetStateAction, useState, Component } from "react";
 //import "/Users/default/Desktop/cs32/term-project-jwschwar-amahns-cnevas-ibrauns/front/src/styles/Workout.css";
 import "../../styles/Workout.css";
 import RESULTMODAL from "./resultModal";
+import { auth, database, collectionRef, users } from "../../index";
+import {
+  collection,
+  addDoc,
+  updateDoc,
+  doc,
+  onSnapshot,
+  getDoc,
+  query,
+  where,
+  setDoc,
+  Timestamp,
+  FieldValue,
+} from "firebase/firestore";
 
 //in charge of modelling workout page
 export default function WorkoutPage() {
@@ -12,6 +26,18 @@ export default function WorkoutPage() {
   const [goalValue, setGoalValue] = React.useState("strength");
   const [modalVisibility, setModalVisibility] = React.useState("none");
   const [workoutMap, setWorkoutMap] = React.useState(new Array<any>());
+  const [userRatings, setUserRatings] = useState("");
+
+  //interace modeling the exercises that make up workouts
+  interface ExerciseInfo {
+    rating: number;
+    exercise: string;
+    description: string;
+    image: string | null;
+    date: Timestamp;
+    reps: number | null | string;
+    weight: string | null;
+  }
 
   //responsible for duration  dropdown
   const handleChange = (event: {
@@ -42,6 +68,40 @@ export default function WorkoutPage() {
     setGoalValue(event.target.value);
   };
 
+  async function getUserRatings() {
+    if (auth.currentUser !== null) {
+      const currentUser = auth.currentUser;
+      const userID = currentUser?.uid;
+      const currentUserDoc = doc(database, "users", userID);
+
+      const docSnapshot = await getDoc(currentUserDoc);
+      if (docSnapshot.exists()) {
+        // check to see if the doc exists
+        const userData = docSnapshot.data();
+        const userExerciseHist: ExerciseInfo[] = userData.exerciseHistory;
+        
+        let userRatingsList: [string, string][] = []; 
+
+        for (let i = 0; i < userExerciseHist.length; i++) { // add user exercises/ratings to a list of duples
+          userRatingsList.push([userExerciseHist[i].exercise, userExerciseHist[i].rating.toString()]);
+        }
+
+        let userRatingsString: string = ""
+        for (let i = 0; i < userRatingsList.length; i++) { // convert the list into a string to be parsed by backend
+          const exerciseRatePair = userRatingsList[i][0] + "/" + userRatingsList[i][1]
+          if (userRatingsString == "") {
+            userRatingsString = exerciseRatePair;
+          }
+          else {
+            userRatingsString += ";" + exerciseRatePair;
+          }
+        }
+        setUserRatings(userRatingsString);
+      }
+    }
+    
+  }
+
   //called everytime someone clicks the generate workout button
   async function clickHandler() {
     console.log(durationValue);
@@ -50,6 +110,7 @@ export default function WorkoutPage() {
     console.log(goalValue);
     setModalVisibility("flex");
     //makes api call to get workout based on passed in info
+    getUserRatings();
     var apiFetchMap: Array<any> = await fetch(
       "http://localhost:3332/generateWorkout?duration=" +
         durationValue +
@@ -59,7 +120,8 @@ export default function WorkoutPage() {
         muscleValue2 +
         "&goal=" +
         goalValue +
-        "&username=jackson"
+      "&history=" +
+      userRatings
     )
       .then((response) => response.json())
       .then((json) => {
