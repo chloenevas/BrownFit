@@ -41,13 +41,13 @@ public class Algorithm {
      * @param muscle - primary muscle targeted by workout
      * @param muscle2 - secondary muscle targeted by workout
      * @param goal - goal of the workout
-     * @param mock - account of user
+     * @param userWorkoutHistory - string model of user's workout history - includes machines and their ratings
      * @return - returns a list of machines and exercises, which is a full workout
      * @throws IOException - throws exception if API can not be properly connected to. API Ninjas returns empty sets
      * for malformed URLs, so should not ever be thrown
      */
 
-    public List<Object> generateWorkout(String duration, String muscle, String muscle2, String goal, MockAccount mock)
+    public List<Object> generateWorkout(String duration, String muscle, String muscle2, String goal, String userWorkoutHistory)
             throws IOException {
 
         List<Object> returnList = new ArrayList<>();
@@ -64,7 +64,7 @@ public class Algorithm {
         }
 
         //adds as many valid machines to workout as possible (max = workoutSize - 1)
-        addMachinesToWorkout(returnList, workoutSize, validMachines, muscle2, mock, goal);
+        addMachinesToWorkout(returnList, workoutSize, validMachines, muscle2, userWorkoutHistory, goal);
 
         int emptySpaces = workoutSize - returnList.size();
         //if there are not that many machines we add by primary muscle, fill in blanks with secondary muscle
@@ -79,7 +79,7 @@ public class Algorithm {
                     newValidMachines.add(machine);
                 }
             }
-            addMachinesToWorkout(returnList, emptySpaces - 2, newValidMachines, muscle, mock, goal);
+            addMachinesToWorkout(returnList, emptySpaces - 2, newValidMachines, muscle, userWorkoutHistory, goal);
         }
 
         // Calls API for the target muscle and goal
@@ -119,12 +119,12 @@ public class Algorithm {
      * @param account - account for user information
      * @param goal - goal for the workout
      */
-    public void addMachinesToWorkout(List<Object> returnList, int workoutSize, List<Machine> validMachines, String muscle2, MockAccount account, String goal){
+    public void addMachinesToWorkout(List<Object> returnList, int workoutSize, List<Machine> validMachines, String muscle2, String history, String goal){
         for(int i = workoutSize; i > 1; i--){
             if (validMachines.isEmpty()){
                 break;
             }
-            Machine machine = this.selectExercise(validMachines, muscle2, account);
+            Machine machine = this.selectExercise(validMachines, muscle2, history);
             switch (goal){
                 case "strength":
                     machine.setWeight("higher");
@@ -154,11 +154,11 @@ public class Algorithm {
      * @return - returns the machine that was selected
      */
 
-    public Machine selectExercise(List<Machine> machines, String muscle2, MockAccount account){
+    public Machine selectExercise(List<Machine> machines, String muscle2, String history){
 
         //gets random index in the list and returns that machine
 
-        List<Machine> weightedMachines = this.getWeightedMachineList(machines, muscle2, account);
+        List<Machine> weightedMachines = this.getWeightedMachineList(machines, muscle2, history);
         int rand = (int) (Math.random()*weightedMachines.size());
         Machine returnMachine = weightedMachines.get(rand);
         weightedMachines.remove(rand);
@@ -172,7 +172,7 @@ public class Algorithm {
      * @param account - account for user information
      * @return - returns a list of weighted machines to be selected for the workout
      */
-    public List<Machine> getWeightedMachineList(List<Machine> machines, String muscle2, MockAccount account){
+    public List<Machine> getWeightedMachineList(List<Machine> machines, String muscle2, String history){
         int num = machines.size();
 
         //make a list of machine objects to track the weights of how probable it is we choose that machine
@@ -193,12 +193,19 @@ public class Algorithm {
           }
         }
 
-        //if account has ranking for current machine
-        if (account.machineRatings().containsKey(machine)) {
+        //if account is passed in and account has ranking for current machine
+        if (!history.equals("") && history.contains(machine.getName())) {
+            //gets index of the machine name
+            int nameIndex = history.indexOf(machine.getName());
+            //gets index of the corresponding rating (+1 since / separates rating)
+            int ratingIndex = nameIndex + machine.getName().length()+1;
+            System.out.println("nameI " + nameIndex + "ratingI" + ratingIndex);
+            String machineRating = history.substring(ratingIndex, ratingIndex+1);
+            System.out.println(machineRating);
           //gets user's rating of that machine and subtracts it by 3
           //subtract by 3 so that high ranking of 5 will get positive update value and
           // low ranking of 1 will get negative update value
-          int weightUpdate = account.machineRatings().get(machine) - 3;
+          int weightUpdate = Integer.parseInt(machineRating) - 3;
           //if this difference is greater than 0, add that machine to the return list that many times
           if (weightUpdate >= 0) {
             for (int j = 0; j < weightUpdate; j++) {
