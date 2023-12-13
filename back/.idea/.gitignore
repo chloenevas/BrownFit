@@ -6,4 +6,4 @@
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
-back/src/main/java/private
+/back/src/main/java/private/

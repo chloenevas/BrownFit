@@ -92,7 +92,7 @@ export default function RESULTMODAL({
     ([key, value]) => {
       return {
         exercise: key,
-        rating: 0,
+        rating: 3,
         image: getImg(value),
         description: getInstructions(value),
         date: currentTimestamp,

@@ -69,7 +69,7 @@ export default function ExerciseHistory() {
     description: string;
     image: string;
     date: Timestamp;
-    reps: number | null;
+    reps: number | null | string;
     weight: string | null;
   }
 
@@ -150,14 +150,14 @@ export default function ExerciseHistory() {
 
                   setCurrentDate(currentTimestamp);
                   const reps = exerciseList[itemIndex].reps;
-                  if (reps === null || Number.isNaN(reps)) {
+                  if (reps === null || Number.isNaN(reps) || reps === "") {
                     setCurrentReps("N/A");
                   } else if (reps !== null) {
                     setCurrentReps(reps.toString());
                   }
 
                   const weight = exerciseList[itemIndex].weight;
-                  if (weight === null || Number.isNaN(weight)) {
+                  if (weight === null || Number.isNaN(weight) || weight === "") {
                     setCurrentWeight("N/A");
                   } else if (weight !== null) {
                     setCurrentWeight(weight.toString());
@@ -274,6 +274,7 @@ export default function ExerciseHistory() {
             await setDoc(doc(database, "users", userID), docData, {
               merge: true,
             });
+            setSuccessMess("Information saved!");
           }
         }
       } catch (error) {
@@ -286,13 +287,13 @@ export default function ExerciseHistory() {
     const currentTimestamp = Timestamp.fromMillis(
       Date.parse(event.target.value)
     );
+    console.log(currentTimestamp)
     setCurrentDate(currentTimestamp);
   };
 
   function onSaveEditClick() {
     if (saveEditButton === "Save") {
       saveData();
-
     }
 
     if (saveEditButton === "Edit") {
@@ -408,7 +409,7 @@ export default function ExerciseHistory() {
               Exercise: {currentExercise}
             </p>
 
-            <p style={{ display: viewDataVisibility }}>{currentDescription}</p>
+            <p>{currentDescription}</p>
             {currentImage && (
               <div className="image-container">
                 <img
@@ -504,7 +505,6 @@ export default function ExerciseHistory() {
                         className="selector"
                         onChange={handleRatingChange}
                       >
-                        <option value="0">0</option>
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -517,6 +517,7 @@ export default function ExerciseHistory() {
               </div>
             </div>
             <button onClick={() => onSaveEditClick()}>{saveEditButton}</button>
+            <p>{successMess}</p>
           </div>
         </div>
         {exerciseHistNames.map((item, index) => (
