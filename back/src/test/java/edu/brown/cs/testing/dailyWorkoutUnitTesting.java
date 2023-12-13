@@ -1,6 +1,8 @@
 package edu.brown.cs.testing;
 
 import edu.brown.cs.student.main.algorithm.Algorithm;
+import edu.brown.cs.student.main.algorithm.ListSorter;
+import edu.brown.cs.student.main.algorithm.WeightByUserRank;
 import edu.brown.cs.student.main.database.MockAccount;
 import edu.brown.cs.student.main.records.Machine;
 import java.util.Collections;
@@ -47,15 +49,11 @@ private List<String> goals;
         machineList.add(machine2);
         machineList.add(machine3);
 
-        HashMap<Machine, Integer> map1 = new HashMap<>();
-        map1.put(machine1, 5);
-        map1.put(machine2, 1);
-        MockAccount mAcc1 = new MockAccount("mock", map1);
 
+        //creates specific instance of listSorter interface
         String history = "Ab Crunch/5;Back Row/1";
-
-        Algorithm salgo = new Algorithm();
-        List<Machine> returnList = salgo.getWeightedMachineList(machineList, "", history);
+        ListSorter weighByUserRank = new WeightByUserRank("", history);
+        List<Machine> returnList = weighByUserRank.getWeightedMachineList(machineList);
         Assert.assertEquals(this.getNumInstaces(returnList, "Ab Crunch"), 5);
         Assert.assertEquals(this.getNumInstaces(returnList, "Back Row"), 1);
         Assert.assertEquals(this.getNumInstaces(returnList, "3"), 3);
@@ -65,32 +63,26 @@ private List<String> goals;
     @Test
     public void testShortAlgoMachineReturn() throws IOException {
         ArrayList<Machine> machineList = new ArrayList<>();
-        Machine machine1 = new Machine("1", "png", "blah", new String[0]);
-        Machine machine2 = new Machine("2", "png", "blah", new String[0]);
+        Machine machine1 = new Machine("Ab Crunch", "png", "blah", new String[0]);
+        Machine machine2 = new Machine("Back Row", "png", "blah", new String[0]);
         Machine machine3 = new Machine("3", "png", "blah", new String[0]);
         machineList.add(machine1);
         machineList.add(machine2);
         machineList.add(machine3);
 
-        HashMap<Machine, Integer> map1 = new HashMap<>();
-        map1.put(machine1, 5);
-        map1.put(machine2, 1);
-        MockAccount mAcc1 = new MockAccount("mock", map1);
-
         String history = "Ab Crunch/5;Back Row/1";
-
-
-        Algorithm salgo = new Algorithm();
+        ListSorter weighByUserRank = new WeightByUserRank("", history);
+        Algorithm salgo = new Algorithm(weighByUserRank);
         int counter1 = 0;
         int counter2 = 0;
         int counter3 = 0;
         for (int i = 0; i < 10000; i ++){
             Machine returnMachine = salgo.selectExercise(machineList, "", history);
             switch (returnMachine.getName()){
-                case "1":
+                case "Ab Crunch":
                     counter1++;
                     break;
-                case "2":
+                case "Back Row":
                     counter2++;
                     break;
                 case "3":
@@ -107,8 +99,8 @@ private List<String> goals;
     @Test
     public void testShortAlgoWorkoutGeneration() throws IOException {
         ArrayList<Machine> machineList = new ArrayList<>();
-        Machine machine1 = new Machine("1", "png", "blah", new String[0]);
-        Machine machine2 = new Machine("2", "png", "blah", new String[0]);
+        Machine machine1 = new Machine("Ab Crunch", "png", "blah", new String[0]);
+        Machine machine2 = new Machine("Back Row", "png", "blah", new String[0]);
         Machine machine3 = new Machine("3", "png", "blah", new String[0]);
         machineList.add(machine1);
         machineList.add(machine2);
@@ -119,10 +111,10 @@ private List<String> goals;
         map1.put(machine2, 1);
         MockAccount mAcc1 = new MockAccount("mock", map1);
 
+
         String history = "Ab Crunch/5;Back Row/1";
-
-
-        Algorithm salgo = new Algorithm();
+        ListSorter weighByUserRank = new WeightByUserRank("", history);
+        Algorithm salgo = new Algorithm(weighByUserRank);
         List<Object> returnMap = salgo.generateWorkout("120 minutes or more", "shoulders", "biceps", "strength", history);
         System.out.println(returnMap);
     }
@@ -130,20 +122,17 @@ private List<String> goals;
     @Test
     public void testGenerateWorkout() throws IOException {
         ArrayList<Machine> machineList = new ArrayList<>();
-        Machine machine1 = new Machine("1", "png", "blah", new String[0]);
-        Machine machine2 = new Machine("2", "png", "blah", new String[0]);
+        Machine machine1 = new Machine("Ab Crunch", "png", "blah", new String[0]);
+        Machine machine2 = new Machine("Back Row", "png", "blah", new String[0]);
         Machine machine3 = new Machine("3", "png", "blah", new String[0]);
         machineList.add(machine1);
         machineList.add(machine2);
         machineList.add(machine3);
 
-        HashMap<Machine, Integer> map1 = new HashMap<>();
-        MockAccount mAcc1 = new MockAccount("mock", map1);
 
         String history = "Ab Crunch/5;Back Row/1";
-
-
-        Algorithm algo = new Algorithm();
+        ListSorter weighByUserRank = new WeightByUserRank("", history);
+        Algorithm algo = new Algorithm(weighByUserRank);
         for (int i = 0; i < 20; i ++) {
             String duration = this.duration.get((int) (Math.random()*this.duration.size()));
             String muscle1 = this.muscles.get((int) (Math.random()*this.muscles.size()));

@@ -4,16 +4,14 @@ import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
 import edu.brown.cs.student.main.algorithm.Algorithm;
-import edu.brown.cs.student.main.database.MockAccount;
-import edu.brown.cs.student.main.records.Machine;
+import edu.brown.cs.student.main.algorithm.ListSorter;
+import edu.brown.cs.student.main.algorithm.WeightByUserRank;
 import spark.Request;
 import spark.Response;
 import spark.Route;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -47,20 +45,13 @@ public class WorkoutHandler implements Route {
                 userWorkoutHistory = "";
             }
 
-//            // mock account, will delete
-//            ArrayList<Machine> machineList = new ArrayList<>();
-//            Machine machine1 = new Machine("1", "png", "blah", new String[0]);
-//            Machine machine2 = new Machine("2", "png", "blah", new String[0]);
-//            Machine machine3 = new Machine("3", "png", "blah", new String[0]);
-//            machineList.add(machine1);
-//            machineList.add(machine2);
-//            machineList.add(machine3);
-//            HashMap<Machine, Integer> map1 = new HashMap<>();
-//            map1.put(machine1, 5);
-//            map1.put(machine2, 1);
+            //creates specific weightByUserRank instance of listSorter interface
+            ListSorter weighByUserRank = new WeightByUserRank(muscle2, userWorkoutHistory);
 
-            // calls algorithm to make workout with given parameters
-            Algorithm algo = new Algorithm();
+
+            // calls algorithm to make workout whose exercises are chosen based on the dependency injected listSorter
+            //since our sorter chooses machines based off of user rank, this algorithm instance will do the same
+            Algorithm algo = new Algorithm(weighByUserRank);
             List<Object> returnMap = algo.generateWorkout(duration, muscle1, muscle2, goal, userWorkoutHistory);
             System.out.println(returnMap);
             return adapter.toJson(returnMap);
