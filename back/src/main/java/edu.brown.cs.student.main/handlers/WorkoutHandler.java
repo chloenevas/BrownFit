@@ -12,6 +12,8 @@ import spark.Route;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -29,6 +31,21 @@ public class WorkoutHandler implements Route {
         Moshi moshi = new Moshi.Builder().build();
         Type listObject = Types.newParameterizedType(List.class, Object.class);
         JsonAdapter<List<Object>> adapter = moshi.adapter(listObject);
+
+        List<String> durationList = new ArrayList<>();
+        String[] dummyDur = new String[]{"30 minutes or less", "30-60 minutes", "60-90 minutes",
+                "90-120 minutes", "120 minutes or more"};
+        Collections.addAll(durationList, dummyDur);
+        List<String> muscleList=new ArrayList<>();
+        String[] dummyMusc = new String[]{"full body", "calves", "quads", "hamstrings",
+                "triceps", "biceps", "chest", "shoulders", "upper back", "lower back",
+                "delts", "glutes", "abdominals"};
+        Collections.addAll(muscleList, dummyMusc);
+        List<String> goalList=new ArrayList<>();
+        String[] dummyGoals = new String[]{"strengthen muscles", "increase muscle endurance",
+                "build muscles", "burn calories", "just get a good sweat in!"};
+        Collections.addAll(goalList, dummyGoals);
+
         try{
             // parameters for the server call
             String duration = request.queryParams("duration");
@@ -37,9 +54,19 @@ public class WorkoutHandler implements Route {
             String goal = request.queryParams("goal");
             String userWorkoutHistory = request.queryParams("history");
 
-            // null checking, should never occur due to rigidity of front end calls
-            if (duration == null || muscle1 == null || muscle2 == null || goal == null){
-                throw new InvalidInputException("Invalid inputs. Missing duration, muscle, or goal field");
+
+            // null/input checking, should never occur due to rigidity of front end calls
+            if (duration == null || !durationList.contains(duration)) {
+                throw new InvalidInputException("Invalid input: invalid or missing duration field. Duration = " + duration);
+            }
+            if (muscle1 == null || !muscleList.contains(muscle1)){
+                throw new InvalidInputException("Invalid input: invalid or missing muscle1 field. Muscle1 = " + muscle1);
+            }
+            if (muscle2 == null || !muscleList.contains(muscle2)){
+                throw new InvalidInputException("Invalid input: invalid or missing muscle2 field. Muscle2 = " + muscle2);
+            }
+            if (goal == null || !goalList.contains(goal)){
+                throw new InvalidInputException("Invalid input: invalid or missing goal field. Goal = " + goal);
             }
             if (userWorkoutHistory == null){
                 userWorkoutHistory = "";

@@ -62,9 +62,7 @@ public class WeightByUserRank implements ListSorter {
                 int nameIndex = history.indexOf(machine.getName());
                 //gets index of the corresponding rating (+1 since / separates rating)
                 int ratingIndex = nameIndex + machine.getName().length()+1;
-                System.out.println("nameI " + nameIndex + "ratingI" + ratingIndex);
                 String machineRating = history.substring(ratingIndex, ratingIndex+1);
-                System.out.println(machineRating);
                 //gets user's rating of that machine and subtracts it by 3
                 //subtract by 3 so that high ranking of 5 will get positive update value and
                 // low ranking of 1 will get negative update value

@@ -104,9 +104,12 @@ public class Algorithm {
         int emptySlotsAPI = workoutSize - returnList.size();
         for(int i = 0; i < emptySlotsAPI; i++) {
             Exercise exercise = APIlist.get((int) (Math.random() * APIlist.size()));
-
-            // check that the exercise is not already in the list from the machines (bench press is in both)
-            returnList.add(exercise);
+            if (returnList.contains(exercise)){
+                i--;
+            }
+            else{
+                returnList.add(exercise);
+            }
         }
 
         return returnList;
@@ -127,7 +130,7 @@ public class Algorithm {
             if (validMachines.isEmpty()){
                 break;
             }
-            Machine machine = this.selectExercise(validMachines, muscle2, history);
+            Machine machine = this.selectExercise(validMachines);
             switch (goal){
                 case "strength":
                     machine.setWeight("higher");
@@ -152,12 +155,10 @@ public class Algorithm {
      * exercise from the list. Weighted list takes into account the preference rankings of a user. Method is
      * public to test selection of exercises is weighted properly.
      * @param machines - list of valid machine
-     * @param muscle2 - secondary muscle from query
-     * @param history - account for user information
      * @return - returns the machine that was selected
      */
 
-    public Machine selectExercise(List<Machine> machines, String muscle2, String history){
+    public Machine selectExercise(List<Machine> machines){
 
         //gets random index in the list and returns that machine
 
