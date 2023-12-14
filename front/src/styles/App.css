@@ -15,6 +15,8 @@
   position: relative;
   z-index: 2;
   padding-bottom: 0%;
+    font-family: inherit;
+
 }
 
 .MenuBar {
@@ -45,6 +47,7 @@
 .aboutSection {
   color: #4e3629;
   margin: 0 20%;
+  font-size: larger;
 }
 
 .healthyWorkoutSection {
@@ -52,6 +55,7 @@
   margin-top: 5%;
   font-size: x-small;
   margin-left: 25%;
+
 }
 
 .aboutText {
@@ -62,18 +66,21 @@
 .homeContent p {
   color: #4e3629;
   font-weight: bold;
-  font-family: Arial, sans-serif;
+  font-family: inherit;
   line-height: 1.6;
 }
 
 .noBulletPoints {
   list-style: none;
   padding-left: 0;
+  font-size: 1.2em;
+    font-weight: bold;
+
 }
 
 .noBulletPoints li {
   margin-bottom: 8px;
-  font-size: 2em;
+  /* font-size: 2em; */
   color: #4e3629;
 }
 
