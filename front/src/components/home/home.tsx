@@ -21,7 +21,7 @@ class HomePage extends Component {
             <li>Listen to your body. Don't overlift!</li>
             <li>Stay hydrated.</li>
             <li>Build in rest time.</li>
-            <li>idk</li>
+            <li>Never stop slaying.</li>
           </ul>
         </section>
       </div>
