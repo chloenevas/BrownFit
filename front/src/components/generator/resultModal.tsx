@@ -162,8 +162,6 @@ export default function RESULTMODAL({
   function getReps(val: string): string {
     if (val.includes("W:")) {
       if (val.includes("R:")) {
-        console.log(val.substring(val.indexOf("R:") + 2, val.length));
-
         return val.substring(val.indexOf("R:") + 2, val.length);
       }
     }
