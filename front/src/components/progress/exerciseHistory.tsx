@@ -1,33 +1,32 @@
-import { useState, useEffect, ChangeEvent, SetStateAction } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import "../../styles/progress.css";
 import { auth, database } from "../../index";
-import { doc, getDoc, setDoc, Timestamp } from "firebase/firestore";
-import { it } from "node:test";
+import {
+  doc,
+  DocumentData,
+  getDoc,
+  setDoc,
+  Timestamp,
+} from "firebase/firestore";
 import { ControlledInput } from "../ControlledInput";
 import Select, { SingleValue } from "react-select";
 
 export default function ExerciseHistory() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
   const [exerciseInfoVisibility, setExerciseInfoVisibility] = useState("none");
   const [currentExercise, setCurrentExercise] = useState("");
   const [currentRating, setCurrentRating] = useState<number | null>();
   const [currentReps, setCurrentReps] = useState("");
   const [currentWeight, setCurrentWeight] = useState("");
   const [currentDate, setCurrentDate] = useState<Timestamp | null>();
-  const [currentTimestamp, setCurrentTimestamp] = useState<Timestamp | null>();
   const [exerciseToAdd, setExerciseToAdd] = useState("none");
   const [currentDescription, setCurrentDescription] = useState("");
   const [currentImage, setCurrentImage] = useState("");
-
   const [viewDataVisibility, setViewDataVisibility] = useState("flex");
   const [editDataVisibility, setEditDataVisibility] = useState("none");
   const [saveEditButton, setSaveEditButton] = useState("Edit");
-
   const [successMess, setSuccessMess] = useState("");
-
   const [exerciseHistNames, setExerciseHistNames] = useState<string[]>([]);
-  let exerciseMap
+
   const machineData = [
     { label: "Ab Crunch", value: "Ab Crunch" },
     { label: "Back Row", value: "Back Row" },
@@ -57,12 +56,6 @@ export default function ExerciseHistory() {
     { label: "Vertical Chest Press", value: "Vertical Chest Press" },
   ];
 
-
-  type OptionType = {
-    label: string;
-    value: string;
-  };
-
   interface ExerciseInfo {
     rating: number;
     exercise: string;
@@ -74,43 +67,62 @@ export default function ExerciseHistory() {
   }
 
   const [exerciseHistory, setExerciseHistory] = useState<ExerciseInfo[]>([]);
-
-  function setupPage() {
-    if (auth.currentUser !== null) {
-      const currentUser = auth.currentUser;
-      const userID = currentUser?.uid;
-
-      if (userID === undefined) {
-        setFirstName("");
-        setLastName("");
-      } else {
-        const currentUserDoc = doc(database, "users", userID); // get document of current logged in user
-        console.log(userID);
-        const getUserData = async () => {
-          try {
-            const docSnapshot = await getDoc(currentUserDoc);
-            if (docSnapshot.exists()) {
-              // check to see if the doc exists
-              const userData = docSnapshot.data();
-              const exerciseList: ExerciseInfo[] = userData.exerciseHistory; // get user's current exercise history
-              setExerciseHistory(exerciseList);
-              const names = exerciseList.map((item) => item.exercise);
-
-              setExerciseHistNames(names); // set exercise history to be those names
-            }
-          } catch (error) {
-            console.error(error);
-          }
-        };
-        getUserData();
-      }
-    }
-  }
+  const [userData, setUserData] = useState<DocumentData>();
 
   useEffect(() => {
-    setupPage();
-  }, []);
+    async function accessCurrentUserInfo() {
+      if (auth.currentUser !== null) {
+        const currentUser = auth.currentUser;
+        const userID = currentUser?.uid;
 
+        if (userID !== undefined) {
+          const currentUserDoc = doc(database, "users", userID); // get document of current logged in user
+          const getUserData = async () => {
+            try {
+              const docSnapshot = await getDoc(currentUserDoc);
+              if (docSnapshot.exists()) {
+                // check to see if the doc exists
+                console.log("access called");
+                setUserData(docSnapshot.data());
+              }
+            } catch (error) {
+              console.error(error);
+            }
+          };
+          getUserData();
+        }
+      }
+    }
+    accessCurrentUserInfo();
+  }, []); // only fetch data once upon page opening, otherwise will reach Firebase quota for reads
+
+  /**
+   * Setup initial exercise history with user's current workout history from database
+   */
+  function setupPage() {
+    console.log("called");
+    const getUserData = () => {
+      if (userData !== undefined) {
+        const exerciseList: ExerciseInfo[] = userData.exerciseHistory; // get user's current exercise history
+        setExerciseHistory(exerciseList);
+        const names = exerciseList.map((item) => item.exercise);
+        console.log("setup called");
+
+        setExerciseHistNames(names); // set exercise history to be those names
+      }
+    };
+    getUserData();
+  }
+  useEffect(() => {
+    if (userData !== undefined) {
+      // only set it up once userData is no longer
+      setupPage();
+    }
+  }, [userData]);
+
+  /**
+   * Close the individual exercise info popup
+   */
   function closeInfoPopup() {
     setExerciseInfoVisibility("none");
     setSuccessMess("");
@@ -119,178 +131,155 @@ export default function ExerciseHistory() {
     setSaveEditButton("Edit");
   }
 
+  /**
+   * Accesses all of the user's information for the current exercise to be displayed
+   *
+   * @param currentEx - current exercise being displayed
+   */
   function openInfoPopup(currentEx: string) {
-    if (auth.currentUser !== null) {
-      const currentUser = auth.currentUser;
-      const userID = currentUser?.uid;
+    if (userData !== undefined) {
+      const exerciseList: ExerciseInfo[] = userData.exerciseHistory; // get user's current exercise history
 
-      if (userID === undefined) {
-        setFirstName("");
-        setLastName("");
-      } else {
-        const currentUserDoc = doc(database, "users", userID); // get document of current logged in user
-        console.log(userID);
-        const getCurrentData = async () => {
-          try {
-            const docSnapshot = await getDoc(currentUserDoc);
-            if (docSnapshot.exists()) {
-              // check to see if the doc exists
-              const userData = docSnapshot.data();
-              const exerciseList: ExerciseInfo[] = userData.exerciseHistory; // get user's current exercise history
-              for (
-                let itemIndex = 0;
-                itemIndex < exerciseList.length;
-                itemIndex++
-              ) {
-                if (currentEx === exerciseList[itemIndex].exercise) {
-                  const seconds = exerciseList[itemIndex].date.seconds;
-                  console.log(new Date(seconds * 1000));
-                  console.log(typeof new Date(seconds * 1000));
-                  const currentTimestamp = Timestamp.fromMillis(seconds * 1000);
+      // go through user's exercise history and access the one that they clicked on
+      for (let itemIndex = 0; itemIndex < exerciseList.length; itemIndex++) {
+        if (currentEx === exerciseList[itemIndex].exercise) {
+          // match current exercise to history exercise
+          const seconds = exerciseList[itemIndex].date.seconds;
+          const currentTimestamp = Timestamp.fromMillis(seconds * 1000);
 
-                  setCurrentDate(currentTimestamp);
-                  const reps = exerciseList[itemIndex].reps;
-                  if (reps === null || Number.isNaN(reps) || reps === "") {
-                    setCurrentReps("N/A");
-                  } else if (reps !== null) {
-                    setCurrentReps(reps.toString());
-                  }
+          //update the info (date, reps, weght, etc.) to be displayed with the info from history
+          setCurrentDate(currentTimestamp); // update date
 
-                  const weight = exerciseList[itemIndex].weight;
-                  if (weight === null || Number.isNaN(weight) || weight === "") {
-                    setCurrentWeight("N/A");
-                  } else if (weight !== null) {
-                    setCurrentWeight(weight.toString());
-                  }
-                  setCurrentRating(exerciseList[itemIndex].rating);
-                  setCurrentDescription(exerciseList[itemIndex].description);
-                  setCurrentImage(exerciseList[itemIndex].image);
-                }
-              }
-            }
-          } catch (error) {
-            console.error(error);
+          const reps = exerciseList[itemIndex].reps; // update reps
+          if (reps === null || Number.isNaN(reps) || reps === "") {
+            setCurrentReps("N/A");
+          } else if (reps !== null) {
+            setCurrentReps(reps.toString());
           }
-        };
-        getCurrentData();
+
+          const weight = exerciseList[itemIndex].weight; // update weight
+          if (weight === null || Number.isNaN(weight) || weight === "") {
+            setCurrentWeight("N/A");
+          } else if (weight !== null) {
+            setCurrentWeight(weight.toString());
+          }
+
+          setCurrentRating(exerciseList[itemIndex].rating); // update rating
+          setCurrentDescription(exerciseList[itemIndex].description); // update description
+          setCurrentImage(exerciseList[itemIndex].image); // update image
+        }
       }
     }
-
-    setCurrentExercise(currentEx);
-    setExerciseInfoVisibility("flex");
+    setCurrentExercise(currentEx); // set the current exercise to be the one passed in
+    setExerciseInfoVisibility("flex"); // make popup appear
     setSuccessMess("");
   }
 
+  /**
+   * Update the current rating based on what the dropdown was changed to
+   *
+   * @param event - change in rating dropdown
+   */
   const handleRatingChange = (event: React.ChangeEvent<{ value: string }>) => {
     const rating = parseInt(event.target.value);
     setCurrentRating(rating);
   };
 
-  function handleDeleteExercise(index: number) {
-    if (auth.currentUser !== null) {
-      const currentUser = auth.currentUser;
-      const userID = currentUser?.uid;
-      const currentUserDoc = doc(database, "users", userID); // get document of current logged in user
-      const deleteExercise = async () => {
-        try {
-          const docSnapshot = await getDoc(currentUserDoc);
+  /**
+   * Deletes an exercise when a user clicks on the "x" next to it.
+   *
+   * @param index - index of exercise in the history
+   */
+  async function handleDeleteExercise(index: number) {
+    if (userData !== undefined) {
+      const exerciseList: ExerciseInfo[] = userData.exerciseHistory; // get user's current exercise history
 
-          if (docSnapshot.exists()) {
-            // check to see if the doc exists
-            const userData = docSnapshot.data();
-            const exerciseList: ExerciseInfo[] = userData.exerciseHistory; // get user's current exercise history
-
-            for (
-              let itemIndex = 0;
-              itemIndex < exerciseList.length;
-              itemIndex++
-            ) {
-              if (
-                exerciseHistNames[index] === exerciseList[itemIndex].exercise
-              ) {
-                exerciseList.splice(itemIndex, 1);
-                itemIndex--;
-              }
-            }
-
-            setExerciseHistNames(exerciseList.map((item) => item.exercise)); // extract exercise names from list
-
-            const docData = {
-              exerciseHistory: exerciseList,
-            };
-
-            if (userID !== undefined) {
-              // set the new  exercies list
-              await setDoc(doc(database, "users", userID), docData, {
-                merge: true,
-              });
-            }
-          }
-        } catch (error) {
-          console.error(error);
+      for (let itemIndex = 0; itemIndex < exerciseList.length; itemIndex++) {
+        if (
+          exerciseHistNames[index] === exerciseList[itemIndex].exercise // access the exercise from history
+        ) {
+          exerciseList.splice(itemIndex, 1); // delete it from the list
+          itemIndex--; // decrement index because we're doing deletion
         }
+      }
+
+      setExerciseHistNames(exerciseList.map((item) => item.exercise)); // extract exercise names from list
+
+      const docData = {
+        exerciseHistory: exerciseList, // update history with new list
       };
-      deleteExercise();
+
+      if (auth.currentUser !== null) {
+        const currentUser = auth.currentUser;
+        const userID = currentUser?.uid;
+
+        if (userID !== undefined) {
+          // set the new  exercies list
+          await setDoc(doc(database, "users", userID), docData, {
+            merge: true,
+          });
+        }
+      }
     }
   }
 
+  /**
+   * Update the user's database to reflect what they changed
+   */
   const saveData = async () => {
-    if (auth.currentUser !== null) {
-      const currentUser = auth.currentUser;
-      const userID = currentUser?.uid;
-      const currentUserDoc = doc(database, "users", userID); // get document of current logged in user
+    if (userData !== undefined) {
+      const exerciseList: ExerciseInfo[] = userData.exerciseHistory; // get user's current exercise history
+      const exerciseListCopy: ExerciseInfo[] = [...exerciseList]; // make copy of exerciseList
 
-      try {
-        const docSnapshot = await getDoc(currentUserDoc);
+      for (let itemIndex = 0; itemIndex < exerciseList.length; itemIndex++) {
+        if (currentExercise === exerciseList[itemIndex].exercise) { // access exercise in database
 
-        if (docSnapshot.exists()) {
-          // check to see if the doc exists
-          const userData = docSnapshot.data();
-          const exerciseList: ExerciseInfo[] = userData.exerciseHistory; // get user's current exercise history
-          const exerciseListCopy: ExerciseInfo[] = [...exerciseList]; // make copy of exerciseList
-
-          for (
-            let itemIndex = 0;
-            itemIndex < exerciseList.length;
-            itemIndex++
-          ) {
-            if (currentExercise === exerciseList[itemIndex].exercise) {
-              exerciseListCopy[itemIndex].reps = parseInt(currentReps);
-              exerciseListCopy[itemIndex].weight = currentWeight;
-              if (currentDate !== undefined && currentDate !== null) {
-                exerciseListCopy[itemIndex].date = currentDate;
-              }
-              if (currentRating !== null && currentRating !== undefined) {
-                exerciseListCopy[itemIndex].rating = currentRating;
-              }
-            }
+          // set reps, weight, date, and rating
+          exerciseListCopy[itemIndex].reps = parseInt(currentReps);
+          exerciseListCopy[itemIndex].weight = currentWeight;
+          if (currentDate !== undefined && currentDate !== null) {
+            exerciseListCopy[itemIndex].date = currentDate;
           }
-
-          const docData = {
-            exerciseHistory: exerciseListCopy,
-          };
-
-          if (userID !== undefined) {
-            await setDoc(doc(database, "users", userID), docData, {
-              merge: true,
-            });
-            setSuccessMess("Information saved!");
+          if (currentRating !== null && currentRating !== undefined) {
+            exerciseListCopy[itemIndex].rating = currentRating;
           }
         }
-      } catch (error) {
-        console.error(error);
+      }
+
+      const docData = {
+        exerciseHistory: exerciseListCopy,
+      };
+
+      if (auth.currentUser !== null) {
+        const currentUser = auth.currentUser;
+        const userID = currentUser?.uid;
+
+        // update the user's database
+        if (userID !== undefined) {
+          await setDoc(doc(database, "users", userID), docData, {
+            merge: true,
+          });
+          setSuccessMess("Information saved!");
+        }
       }
     }
   };
 
+  /**
+   * Update the current date based on what was inputted on the calendar
+   * @param event - change made by user
+   */
   const handleDateChange = (event: ChangeEvent<HTMLInputElement>) => {
     const currentTimestamp = Timestamp.fromMillis(
       Date.parse(event.target.value)
     );
-    console.log(currentTimestamp)
     setCurrentDate(currentTimestamp);
   };
 
+  /**
+   * Change the save/edit button when the user clicks. Save data/change popup depending
+   * on what the button was
+   */
   function onSaveEditClick() {
     if (saveEditButton === "Save") {
       saveData();
@@ -298,12 +287,17 @@ export default function ExerciseHistory() {
 
     if (saveEditButton === "Edit") {
       setSaveEditButton("Save");
-
       setViewDataVisibility("none");
       setEditDataVisibility("block");
     }
   }
 
+  /**
+   * Register what the user clicked from the add new exercise drop down and call the method 
+   * to add it to their database
+   * 
+   * @param option - exercise that the user selects
+   */
   const selectNewExercise = (
     option: SingleValue<{ label: string; value: string }>
   ) => {
@@ -312,17 +306,16 @@ export default function ExerciseHistory() {
     }
   };
 
-  useEffect(() => {
-    console.log(exerciseToAdd);
-  }, [exerciseToAdd]);
+  useEffect(() => {}, [exerciseToAdd]);
 
-  //converts the back-end generated workout json ito a useable object
-  //then splits that object into two values, one with its name and the other with
-  //a concactanated string of image path, instructions,
- 
 
+  /**
+   * Adds a new exercise to the user's database by calling the backend to retrieve
+   * info about that exercise
+   */
   async function onAddExerciseClick() {
-    let exerciseMap: Array<any>
+
+    // call the backend to access a json of the selected exercise 
     var apiFetchMap = await fetch(
       "http://localhost:3332/getMachine?machine=" + exerciseToAdd
     )
@@ -330,18 +323,19 @@ export default function ExerciseHistory() {
       .then((json) => {
         return json;
       });
-    //sets workoutMap state to the json returned by generateWorkout
+    
+    // sets workoutMap state to the json returned by generateWorkout
     const exercise = apiFetchMap;
-
 
     const currentDate: Date = new Date();
 
     const seconds: number = Math.floor(currentDate.getTime() / 1000);
     const nanoseconds: number = (currentDate.getTime() % 1000) * 1e6;
 
-    // Create Firebase Timestamp object
+    // create Firebase Timestamp object
     const currentTimestamp: Timestamp = new Timestamp(seconds, nanoseconds);
-    
+
+    // create an object that contains all of the info
     const newExercise: ExerciseInfo = {
       exercise: exercise.name,
       rating: 0,
@@ -349,39 +343,29 @@ export default function ExerciseHistory() {
       description: exercise.instructions,
       reps: null,
       weight: null,
-      date: currentTimestamp
+      date: currentTimestamp,
     };
 
-    if (auth.currentUser !== null) {
-      const currentUser = auth.currentUser;
-      const userID = currentUser?.uid;
-      const currentUserDoc = doc(database, "users", userID); // get document of current logged in user
+    if (userData !== undefined) {
+      const exerciseList: ExerciseInfo[] = userData.exerciseHistory; // get user's current exercise history
 
-      try {
-        const docSnapshot = await getDoc(currentUserDoc);
+      exerciseList.push(newExercise);
+      setExerciseHistNames(exerciseList.map((item) => item.exercise)); // extract exercise names from list
 
-        if (docSnapshot.exists()) {
-          const userData = docSnapshot.data();
-          const exerciseList: ExerciseInfo[] = userData.exerciseHistory; // get user's current exercise history
+      const docData = {
+        exerciseHistory: exerciseList,
+      };
 
-          exerciseList.push(newExercise);
-          setExerciseHistNames(exerciseList.map((item) => item.exercise)); // extract exercise names from list
-
-          const docData = {
-            exerciseHistory: exerciseList,
-          };
-
-          if (userID !== undefined) {
-            await setDoc(doc(database, "users", userID), docData, {
-              merge: true,
-            });
-          }
+      if (auth.currentUser !== null) {
+        const currentUser = auth.currentUser;
+        const userID = currentUser?.uid;
+        if (userID !== undefined) {
+          await setDoc(doc(database, "users", userID), docData, { // update the user's doc with the new exercise
+            merge: true,
+          });
         }
-      } catch (error) {
-        console.error(error);
       }
-        
-      }
+    }
   }
 
   return (

@@ -4,6 +4,11 @@ import "../../styles/progress.css";
 import { auth, database } from "../../index";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 
+/**
+ * Displays user account info and allows them to edit their name
+ * 
+ * @returns - jsx component for account info
+ */
 export default function AccountInfo() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -12,6 +17,10 @@ export default function AccountInfo() {
   const [newFirstName, setNewFirstName] = useState("");
   const [newLastName, setNewLastName] = useState("");
 
+  /**
+   * Get the user's account info (first and last name and email) and
+   * set the corresponding states
+   */
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -33,13 +42,18 @@ export default function AccountInfo() {
           }
         }
       } catch (error) {
-        console.error("Error fetching user data:", error);
+        setFirstName("User unavailable");
+        setLastName("User unavailable");
+        setEmail("User unavailable");
       }
     };
 
     fetchUserData();
-  }, []);
+  }, []); // only fetch data once upon page opening, otherwise will reach Firebase quota for reads
 
+  /**
+   * Save user entered data to their database
+   */
   async function handleSaveClick() {
     try {
       const currentUser = auth.currentUser;
@@ -60,23 +74,30 @@ export default function AccountInfo() {
         }
       }
     } catch (error) {
-      console.error("Error updating user data:", error);
+      setFirstName("Error updating info")
+      setLastName("Error updating info");
     }
 
     setEditVisibility("none");
   }
 
+  /**
+   * Make edit popup appear
+   */
   function handleEditButton() {
     setEditVisibility("flex");
   }
 
+  /**
+   * Close edit popup
+   */
   function handleCloseClick() {
     setEditVisibility("none");
   }
 
   return (
     <div className="progress-page">
-      <div className="content">
+      <div className="account-info-display">
         <p style={{ fontSize: "larger", fontWeight: "bold" }}>
           Account Information
         </p>

@@ -1,22 +1,11 @@
-import { useState, useEffect } from "react";
-import { ControlledInput } from "../ControlledInput";
 import "../../styles/progress.css";
-import { auth, database, collectionRef, users } from "../../index";
-import {
-  collection,
-  addDoc,
-  updateDoc,
-  doc,
-  onSnapshot,
-  getDoc,
-  query,
-  where,
-  setDoc,
-} from "firebase/firestore";
 
 export default function Consistency() {
 
 
+  /**
+   * A "coming soon" feature that would display information about the user's gym-going consistency
+   */
   return (
     <div className="progress-page">
       <div className="content">

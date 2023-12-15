@@ -1,21 +1,25 @@
 
 
 import { useState } from "react";
-import { ControlledInput } from "../ControlledInput";
 import "../../styles/progress.css";
 
 import ExerciseHistory from "./exerciseHistory";
 import Consistency from "./consistency";
 
-
-
-
+/**
+ * Landing page for tracking user progress. Provides toggle buttons to exercise history and consistency
+ * @returns jsx component that sets up the page
+ */
 export default function ProgressPage() {
  const [currentPage, setCurrentPage] = useState("exercise history");
  const [exerciseHistoryButton, setExerciseHistoryButton] = useState("red");
  const [consistencyButton, setConsistencyButton] = useState("");
 
 
+  /**
+   * Toggles between exercise history and consistency pages
+   * @param page - current page
+   */
  function changePage(page: string) {
    setCurrentPage(page);
    if (page == "exercise history") {
@@ -29,8 +33,6 @@ export default function ProgressPage() {
     return (
      <div className="progress-page">
        <div className="button-sidebar">
-
-
          <button
            className="navigation-button"
            style={{ backgroundColor: exerciseHistoryButton }}

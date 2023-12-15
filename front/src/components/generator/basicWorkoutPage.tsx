@@ -31,7 +31,6 @@ export default function WorkoutPage() {
     target: { value: React.SetStateAction<string> };
   }) => {
     setDurationValue(event.target.value);
-    console.log(durationValue);
   };
 
   //responsible for muscle1 dropdown
@@ -125,7 +124,6 @@ export default function WorkoutPage() {
       )
         .then((response) => response.json())
         .then((json) => {
-          console.log(json);
           return json;
         });
       //sets workoutMap state to the json returned by generateWorkout

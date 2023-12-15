@@ -37,11 +37,11 @@
         Another "coming soon" idea that we have is the machine page. This would display all the exercises that we have in our Nelson
     database and allow a user to scroll through and view them as well as search for specific ones. 
     
-    [INSERT ANIKA EXPLANATION ABOUT ADDITIONAL]
+    [ANIKA EXPLANATION ABOUT ADDITIONAL]
 
     BACK:
-
-
+    [JACKSON & ILAN EXPLANATION ABOUT BACK]
+ 
 ### Data Structures/High Level Explanations
    
 ## Errors/Bugs
