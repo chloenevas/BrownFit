@@ -132,7 +132,7 @@ public class Algorithm {
             }
             Machine machine = this.selectExercise(validMachines);
             switch (goal){
-                case "strength":
+                case "strengthen muscles":
                     machine.setWeight("higher");
                     machine.setReps("fewer: 4-8");
                     break;

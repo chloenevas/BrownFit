@@ -2,15 +2,15 @@ import React, { useState } from "react";
 import "../../styles/Workout.css";
 import RESULTMODAL from "./resultModal";
 import { auth, database } from "../../index";
-import { doc, getDoc, Timestamp} from "firebase/firestore";
+import { doc, getDoc, Timestamp } from "firebase/firestore";
 
-//Models the generate workout page 
+//Models the generate workout page
 export default function WorkoutPage() {
   const [durationValue, setDurationValue] =
     React.useState("30 minutes or less");
   const [muscleValue, setMuscleValue] = React.useState("full body");
   const [muscleValue2, setMuscleValue2] = React.useState("N/A");
-  const [goalValue, setGoalValue] = React.useState("strength");
+  const [goalValue, setGoalValue] = React.useState("strengthen muscles");
   const [modalVisibility, setModalVisibility] = React.useState("none");
   const [workoutMap, setWorkoutMap] = React.useState(new Array<any>());
   const [userRatings, setUserRatings] = useState("");
@@ -57,12 +57,11 @@ export default function WorkoutPage() {
 
   /**
    * Gets the current user's exercise history and creates a string matching
-   * exercise with rating to pass into the API on the backend. This is so that 
+   * exercise with rating to pass into the API on the backend. This is so that
    * the backend can take into account user rankings in its generation.
    */
   async function getUserRatings() {
     if (auth.currentUser !== null) {
-      
       // get current user
       const currentUser = auth.currentUser;
       const userID = currentUser?.uid;
@@ -75,27 +74,31 @@ export default function WorkoutPage() {
 
         // get exercise history
         const userExerciseHist: ExerciseInfo[] = userData.exerciseHistory;
-        
-        let userRatingsList: [string, string][] = []; 
 
-        for (let i = 0; i < userExerciseHist.length; i++) { // add user exercises/ratings to a list of duples
-          userRatingsList.push([userExerciseHist[i].exercise, userExerciseHist[i].rating.toString()]);
+        let userRatingsList: [string, string][] = [];
+
+        for (let i = 0; i < userExerciseHist.length; i++) {
+          // add user exercises/ratings to a list of duples
+          userRatingsList.push([
+            userExerciseHist[i].exercise,
+            userExerciseHist[i].rating.toString(),
+          ]);
         }
 
-        let userRatingsString: string = ""
-        for (let i = 0; i < userRatingsList.length; i++) { // convert the list into a string to be parsed by backend
-          const exerciseRatePair = userRatingsList[i][0] + "/" + userRatingsList[i][1]
+        let userRatingsString: string = "";
+        for (let i = 0; i < userRatingsList.length; i++) {
+          // convert the list into a string to be parsed by backend
+          const exerciseRatePair =
+            userRatingsList[i][0] + "/" + userRatingsList[i][1];
           if (userRatingsString == "") {
             userRatingsString = exerciseRatePair;
-          }
-          else {
+          } else {
             userRatingsString += ";" + exerciseRatePair;
           }
         }
         setUserRatings(userRatingsString);
       }
     }
-    
   }
 
   /**
@@ -128,7 +131,8 @@ export default function WorkoutPage() {
       //sets workoutMap state to the json returned by generateWorkout
       setWorkoutMap(apiFetchMap);
     } catch (err) {
-      // If server isn't currently running, return mocked data 
+      console.log(err);
+      // If server isn't currently running, return mocked data
       const exercise1 = {
         name: "MOCKED: Back Row",
         weight: "higher",

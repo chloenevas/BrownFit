@@ -39,12 +39,14 @@ public class WorkoutHandler implements Route {
         List<String> muscleList=new ArrayList<>();
         String[] dummyMusc = new String[]{"full body", "calves", "quads", "hamstrings",
                 "triceps", "biceps", "chest", "shoulders", "upper back", "lower back",
-                "delts", "glutes", "abdominals"};
+                "delts", "glutes", "abdominals", "N/A"};
         Collections.addAll(muscleList, dummyMusc);
         List<String> goalList=new ArrayList<>();
         String[] dummyGoals = new String[]{"strengthen muscles", "increase muscle endurance",
                 "build muscles", "burn calories", "just get a good sweat in!"};
         Collections.addAll(goalList, dummyGoals);
+
+
 
         try{
             // parameters for the server call
@@ -52,6 +54,7 @@ public class WorkoutHandler implements Route {
             String muscle1 = request.queryParams("muscle1");
             String muscle2 = request.queryParams("muscle2");
             String goal = request.queryParams("goal");
+            System.out.println(goal);
             String userWorkoutHistory = request.queryParams("history");
 
 
@@ -68,7 +71,7 @@ public class WorkoutHandler implements Route {
             if (goal == null || !goalList.contains(goal)){
                 throw new InvalidInputException("Invalid input: invalid or missing goal field. Goal = " + goal);
             }
-            if (userWorkoutHistory == null){
+            if (userWorkoutHistory == ""){
                 userWorkoutHistory = "";
             }
 
