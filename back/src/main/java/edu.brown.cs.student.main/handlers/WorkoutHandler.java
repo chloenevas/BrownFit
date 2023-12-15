@@ -4,8 +4,8 @@ import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
 import edu.brown.cs.student.main.algorithm.Algorithm;
-import edu.brown.cs.student.main.database.MockAccount;
-import edu.brown.cs.student.main.records.Machine;
+import edu.brown.cs.student.main.algorithm.ListSorter;
+import edu.brown.cs.student.main.algorithm.WeightByUserRank;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -13,7 +13,7 @@ import spark.Route;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -31,6 +31,21 @@ public class WorkoutHandler implements Route {
         Moshi moshi = new Moshi.Builder().build();
         Type listObject = Types.newParameterizedType(List.class, Object.class);
         JsonAdapter<List<Object>> adapter = moshi.adapter(listObject);
+
+        List<String> durationList = new ArrayList<>();
+        String[] dummyDur = new String[]{"30 minutes or less", "30-60 minutes", "60-90 minutes",
+                "90-120 minutes", "120 minutes or more"};
+        Collections.addAll(durationList, dummyDur);
+        List<String> muscleList=new ArrayList<>();
+        String[] dummyMusc = new String[]{"full body", "calves", "quads", "hamstrings",
+                "triceps", "biceps", "chest", "shoulders", "upper back", "lower back",
+                "delts", "glutes", "abdominals"};
+        Collections.addAll(muscleList, dummyMusc);
+        List<String> goalList=new ArrayList<>();
+        String[] dummyGoals = new String[]{"strengthen muscles", "increase muscle endurance",
+                "build muscles", "burn calories", "just get a good sweat in!"};
+        Collections.addAll(goalList, dummyGoals);
+
         try{
             // parameters for the server call
             String duration = request.queryParams("duration");
@@ -39,28 +54,31 @@ public class WorkoutHandler implements Route {
             String goal = request.queryParams("goal");
             String userWorkoutHistory = request.queryParams("history");
 
-            // null checking, should never occur due to rigidity of front end calls
-            if (duration == null || muscle1 == null || muscle2 == null || goal == null){
-                throw new InvalidInputException("Invalid inputs. Missing duration, muscle, or goal field");
+
+            // null/input checking, should never occur due to rigidity of front end calls
+            if (duration == null || !durationList.contains(duration)) {
+                throw new InvalidInputException("Invalid input: invalid or missing duration field. Duration = " + duration);
+            }
+            if (muscle1 == null || !muscleList.contains(muscle1)){
+                throw new InvalidInputException("Invalid input: invalid or missing muscle1 field. Muscle1 = " + muscle1);
+            }
+            if (muscle2 == null || !muscleList.contains(muscle2)){
+                throw new InvalidInputException("Invalid input: invalid or missing muscle2 field. Muscle2 = " + muscle2);
+            }
+            if (goal == null || !goalList.contains(goal)){
+                throw new InvalidInputException("Invalid input: invalid or missing goal field. Goal = " + goal);
             }
             if (userWorkoutHistory == null){
                 userWorkoutHistory = "";
             }
 
-//            // mock account, will delete
-//            ArrayList<Machine> machineList = new ArrayList<>();
-//            Machine machine1 = new Machine("1", "png", "blah", new String[0]);
-//            Machine machine2 = new Machine("2", "png", "blah", new String[0]);
-//            Machine machine3 = new Machine("3", "png", "blah", new String[0]);
-//            machineList.add(machine1);
-//            machineList.add(machine2);
-//            machineList.add(machine3);
-//            HashMap<Machine, Integer> map1 = new HashMap<>();
-//            map1.put(machine1, 5);
-//            map1.put(machine2, 1);
+            //creates specific weightByUserRank instance of listSorter interface
+            ListSorter weighByUserRank = new WeightByUserRank(muscle2, userWorkoutHistory);
 
-            // calls algorithm to make workout with given parameters
-            Algorithm algo = new Algorithm();
+
+            // calls algorithm to make workout whose exercises are chosen based on the dependency injected listSorter
+            //since our sorter chooses machines based off of user rank, this algorithm instance will do the same
+            Algorithm algo = new Algorithm(weighByUserRank);
             List<Object> returnMap = algo.generateWorkout(duration, muscle1, muscle2, goal, userWorkoutHistory);
             System.out.println(returnMap);
             return adapter.toJson(returnMap);

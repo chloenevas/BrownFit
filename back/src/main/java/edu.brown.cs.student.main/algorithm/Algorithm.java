@@ -1,7 +1,6 @@
 package edu.brown.cs.student.main.algorithm;
 
 import edu.brown.cs.student.main.database.ApiRequest;
-import edu.brown.cs.student.main.database.MockAccount;
 import edu.brown.cs.student.main.database.NelsonMachineDatabase;
 import edu.brown.cs.student.main.records.Exercise;
 import edu.brown.cs.student.main.records.Machine;
@@ -19,16 +18,20 @@ public class Algorithm {
     private HashMap<String, Integer> durationMap;
     private HashMap<String, Machine> database;
 
+    private ListSorter weighMachines;
+
     /**
      * Constructor initializes the nelson database and sets up database and also initializes the duration hashmap,
      * which maps front end queries to number of exercises in the workout.
+     * @param weighMachines the listSorter object that specifies how the algorithm should pick machines
      * @throws IOException - Throws IO exception from machine database, which should never be called because we created
      * the database and know that no error is produced but handled in case.
      */
-    public Algorithm() throws IOException {
+    public Algorithm(ListSorter weighMachines) throws IOException {
         NelsonMachineDatabase database = new NelsonMachineDatabase();
         this.database = database.getDatabase();
         this.initializeDuration();
+        this.weighMachines = weighMachines;
     }
 
     /**
@@ -101,9 +104,12 @@ public class Algorithm {
         int emptySlotsAPI = workoutSize - returnList.size();
         for(int i = 0; i < emptySlotsAPI; i++) {
             Exercise exercise = APIlist.get((int) (Math.random() * APIlist.size()));
-
-            // check that the exercise is not already in the list from the machines (bench press is in both)
-            returnList.add(exercise);
+            if (returnList.contains(exercise)){
+                i--;
+            }
+            else{
+                returnList.add(exercise);
+            }
         }
 
         return returnList;
@@ -116,7 +122,7 @@ public class Algorithm {
      * @param workoutSize - number of exercises that need to still be added to the workout
      * @param validMachines - list of valid machines for the current query
      * @param muscle2 - secondary muscle of the workout
-     * @param account - account for user information
+     * @param history - user's machine history information
      * @param goal - goal for the workout
      */
     public void addMachinesToWorkout(List<Object> returnList, int workoutSize, List<Machine> validMachines, String muscle2, String history, String goal){
@@ -124,7 +130,7 @@ public class Algorithm {
             if (validMachines.isEmpty()){
                 break;
             }
-            Machine machine = this.selectExercise(validMachines, muscle2, history);
+            Machine machine = this.selectExercise(validMachines);
             switch (goal){
                 case "strength":
                     machine.setWeight("higher");
@@ -149,81 +155,20 @@ public class Algorithm {
      * exercise from the list. Weighted list takes into account the preference rankings of a user. Method is
      * public to test selection of exercises is weighted properly.
      * @param machines - list of valid machine
-     * @param muscle2 - secondary muscle from query
-     * @param account - account for user information
      * @return - returns the machine that was selected
      */
 
-    public Machine selectExercise(List<Machine> machines, String muscle2, String history){
+    public Machine selectExercise(List<Machine> machines){
 
         //gets random index in the list and returns that machine
 
-        List<Machine> weightedMachines = this.getWeightedMachineList(machines, muscle2, history);
+        List<Machine> weightedMachines = this.weighMachines.getWeightedMachineList(machines);;
         int rand = (int) (Math.random()*weightedMachines.size());
         Machine returnMachine = weightedMachines.get(rand);
         weightedMachines.remove(rand);
         return returnMachine;
     }
 
-    /**
-     * Converts a list of valid machines into a weighted list of machines by user preference. Public method for testing.
-     * @param machines - list of valid machines
-     * @param muscle2 - secondary muscle
-     * @param account - account for user information
-     * @return - returns a list of weighted machines to be selected for the workout
-     */
-    public List<Machine> getWeightedMachineList(List<Machine> machines, String muscle2, String history){
-        int num = machines.size();
-
-        //make a list of machine objects to track the weights of how probable it is we choose that machine
-        //i.e., the more times that machine is added to the list, the more likely we are to pick it
-        ArrayList<Machine> machineWeights = new ArrayList<>();
-
-      for (Machine machine : machines) {
-        //if machine contains secondary muscle, add it 5 times to return list
-        if (contains(machine.getMuscle(), muscle2)) {
-          for (int j = 0; j < 5; j++) {
-            machineWeights.add(machine);
-          }
-        }
-        //if machine does not contain secondary muscle, only add it 3 times to return list
-        else {
-          for (int j = 0; j < 3; j++) {
-            machineWeights.add(machine);
-          }
-        }
-
-        //if account is passed in and account has ranking for current machine
-        if (!history.equals("") && history.contains(machine.getName())) {
-            //gets index of the machine name
-            int nameIndex = history.indexOf(machine.getName());
-            //gets index of the corresponding rating (+1 since / separates rating)
-            int ratingIndex = nameIndex + machine.getName().length()+1;
-            System.out.println("nameI " + nameIndex + "ratingI" + ratingIndex);
-            String machineRating = history.substring(ratingIndex, ratingIndex+1);
-            System.out.println(machineRating);
-          //gets user's rating of that machine and subtracts it by 3
-          //subtract by 3 so that high ranking of 5 will get positive update value and
-          // low ranking of 1 will get negative update value
-          int weightUpdate = Integer.parseInt(machineRating) - 3;
-          //if this difference is greater than 0, add that machine to the return list that many times
-          if (weightUpdate >= 0) {
-            for (int j = 0; j < weightUpdate; j++) {
-              machineWeights.add(machine);
-            }
-          }
-          //if this difference is less than 0, remove that machine from the return list that many times
-          //will never error since max subtractions is 2 and min occurrences in list is 3
-          else {
-            for (int j = -weightUpdate; j > 0; j--) {
-              machineWeights.remove(machine);
-            }
-          }
-        }
-      }
-        //goal: return list of machines where prevalence of machine is correlated to how highly it is weighted
-        return machineWeights;
-    }
 
     /**
      * Simple containment in an array plus fact that it will always return true if muscle is noted as full body or N/A
