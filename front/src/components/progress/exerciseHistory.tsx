@@ -82,7 +82,7 @@ export default function ExerciseHistory() {
               const docSnapshot = await getDoc(currentUserDoc);
               if (docSnapshot.exists()) {
                 // check to see if the doc exists
-                console.log("access called" )
+                console.log("access called");
                 setUserData(docSnapshot.data());
               }
             } catch (error) {
@@ -90,8 +90,6 @@ export default function ExerciseHistory() {
             }
           };
           getUserData();
-
-  
         }
       }
     }
@@ -102,27 +100,26 @@ export default function ExerciseHistory() {
    * Setup initial exercise history with user's current workout history from database
    */
   function setupPage() {
-    console.log("called")
-      const getUserData = () => {
-        if (userData !== undefined) {
-          const exerciseList: ExerciseInfo[] = userData.exerciseHistory; // get user's current exercise history
-          setExerciseHistory(exerciseList);
-          const names = exerciseList.map((item) => item.exercise);
-                console.log("setup called");
+    console.log("called");
+    const getUserData = () => {
+      if (userData !== undefined) {
+        const exerciseList: ExerciseInfo[] = userData.exerciseHistory; // get user's current exercise history
+        setExerciseHistory(exerciseList);
+        const names = exerciseList.map((item) => item.exercise);
+        console.log("setup called");
 
-          setExerciseHistNames(names); // set exercise history to be those names
-        }
-      };
-      getUserData();
-    
-    
+        setExerciseHistNames(names); // set exercise history to be those names
+      }
+    };
+    getUserData();
   }
- useEffect(() => {
-   if (userData !== undefined) { // only set it up once userData is no longer
-     setupPage();
-   }
- }, [userData]); 
-  
+  useEffect(() => {
+    if (userData !== undefined) {
+      // only set it up once userData is no longer
+      setupPage();
+    }
+  }, [userData]);
+
   /**
    * Close the individual exercise info popup
    */
@@ -141,47 +138,38 @@ export default function ExerciseHistory() {
    */
   function openInfoPopup(currentEx: string) {
     if (userData !== undefined) {
- const exerciseList: ExerciseInfo[] = userData.exerciseHistory; // get user's current exercise history
+      const exerciseList: ExerciseInfo[] = userData.exerciseHistory; // get user's current exercise history
 
-              // go through user's exercise history and access the one that they clicked on
-              for (
-                let itemIndex = 0;
-                itemIndex < exerciseList.length;
-                itemIndex++
-              ) {
-                if (currentEx === exerciseList[itemIndex].exercise) {
-                  // match current exercise to history exercise
-                  const seconds = exerciseList[itemIndex].date.seconds;
-                  const currentTimestamp = Timestamp.fromMillis(seconds * 1000);
+      // go through user's exercise history and access the one that they clicked on
+      for (let itemIndex = 0; itemIndex < exerciseList.length; itemIndex++) {
+        if (currentEx === exerciseList[itemIndex].exercise) {
+          // match current exercise to history exercise
+          const seconds = exerciseList[itemIndex].date.seconds;
+          const currentTimestamp = Timestamp.fromMillis(seconds * 1000);
 
-                  //update the info (date, reps, weght, etc.) to be displayed with the info from history
-                  setCurrentDate(currentTimestamp); // update date
+          //update the info (date, reps, weght, etc.) to be displayed with the info from history
+          setCurrentDate(currentTimestamp); // update date
 
-                  const reps = exerciseList[itemIndex].reps; // update reps
-                  if (reps === null || Number.isNaN(reps) || reps === "") {
-                    setCurrentReps("N/A");
-                  } else if (reps !== null) {
-                    setCurrentReps(reps.toString());
-                  }
+          const reps = exerciseList[itemIndex].reps; // update reps
+          if (reps === null || Number.isNaN(reps) || reps === "") {
+            setCurrentReps("N/A");
+          } else if (reps !== null) {
+            setCurrentReps(reps.toString());
+          }
 
-                  const weight = exerciseList[itemIndex].weight; // update weight
-                  if (
-                    weight === null ||
-                    Number.isNaN(weight) ||
-                    weight === ""
-                  ) {
-                    setCurrentWeight("N/A");
-                  } else if (weight !== null) {
-                    setCurrentWeight(weight.toString());
-                  }
+          const weight = exerciseList[itemIndex].weight; // update weight
+          if (weight === null || Number.isNaN(weight) || weight === "") {
+            setCurrentWeight("N/A");
+          } else if (weight !== null) {
+            setCurrentWeight(weight.toString());
+          }
 
-                  setCurrentRating(exerciseList[itemIndex].rating); // update rating
-                  setCurrentDescription(exerciseList[itemIndex].description); // update description
-                  setCurrentImage(exerciseList[itemIndex].image); // update image
-                }
-              }
-            
-        };
+          setCurrentRating(exerciseList[itemIndex].rating); // update rating
+          setCurrentDescription(exerciseList[itemIndex].description); // update description
+          setCurrentImage(exerciseList[itemIndex].image); // update image
+        }
+      }
+    }
     setCurrentExercise(currentEx); // set the current exercise to be the one passed in
     setExerciseInfoVisibility("flex"); // make popup appear
     setSuccessMess("");
@@ -202,103 +190,85 @@ export default function ExerciseHistory() {
    *
    * @param index - index of exercise in the history
    */
-  function handleDeleteExercise(index: number) {
-    if (auth.currentUser !== null) {
-      const currentUser = auth.currentUser;
-      const userID = currentUser?.uid;
-      const currentUserDoc = doc(database, "users", userID); // get document of current logged in user
-      const deleteExercise = async () => {
-        try {
-          const docSnapshot = await getDoc(currentUserDoc);
+  async function handleDeleteExercise(index: number) {
+    if (userData !== undefined) {
+      const exerciseList: ExerciseInfo[] = userData.exerciseHistory; // get user's current exercise history
 
-          if (docSnapshot.exists()) {
-            // check to see if the doc exists
-            const userData = docSnapshot.data();
-            const exerciseList: ExerciseInfo[] = userData.exerciseHistory; // get user's current exercise history
-
-            for (
-              let itemIndex = 0;
-              itemIndex < exerciseList.length;
-              itemIndex++
-            ) {
-              if (
-                exerciseHistNames[index] === exerciseList[itemIndex].exercise // access the exercise from history
-              ) {
-                exerciseList.splice(itemIndex, 1); // delete it from the list
-                itemIndex--; // decrement index because we're doing deletion
-              }
-            }
-
-            setExerciseHistNames(exerciseList.map((item) => item.exercise)); // extract exercise names from list
-
-            const docData = {
-              exerciseHistory: exerciseList, // update history with new list
-            };
-
-            if (userID !== undefined) {
-              // set the new  exercies list
-              await setDoc(doc(database, "users", userID), docData, {
-                merge: true,
-              });
-            }
-          }
-        } catch (error) {
-          console.error(error);
+      for (let itemIndex = 0; itemIndex < exerciseList.length; itemIndex++) {
+        if (
+          exerciseHistNames[index] === exerciseList[itemIndex].exercise // access the exercise from history
+        ) {
+          exerciseList.splice(itemIndex, 1); // delete it from the list
+          itemIndex--; // decrement index because we're doing deletion
         }
+      }
+
+      setExerciseHistNames(exerciseList.map((item) => item.exercise)); // extract exercise names from list
+
+      const docData = {
+        exerciseHistory: exerciseList, // update history with new list
       };
-      deleteExercise();
+
+      if (auth.currentUser !== null) {
+        const currentUser = auth.currentUser;
+        const userID = currentUser?.uid;
+
+        if (userID !== undefined) {
+          // set the new  exercies list
+          await setDoc(doc(database, "users", userID), docData, {
+            merge: true,
+          });
+        }
+      }
     }
   }
 
+  /**
+   * Update the user's database to reflect what they changed
+   */
   const saveData = async () => {
-    if (auth.currentUser !== null) {
-      const currentUser = auth.currentUser;
-      const userID = currentUser?.uid;
-      const currentUserDoc = doc(database, "users", userID); // get document of current logged in user
+    if (userData !== undefined) {
+      const exerciseList: ExerciseInfo[] = userData.exerciseHistory; // get user's current exercise history
+      const exerciseListCopy: ExerciseInfo[] = [...exerciseList]; // make copy of exerciseList
 
-      try {
-        const docSnapshot = await getDoc(currentUserDoc);
+      for (let itemIndex = 0; itemIndex < exerciseList.length; itemIndex++) {
+        if (currentExercise === exerciseList[itemIndex].exercise) { // access exercise in database
 
-        if (docSnapshot.exists()) {
-          // check to see if the doc exists
-          const userData = docSnapshot.data();
-          const exerciseList: ExerciseInfo[] = userData.exerciseHistory; // get user's current exercise history
-          const exerciseListCopy: ExerciseInfo[] = [...exerciseList]; // make copy of exerciseList
-
-          for (
-            let itemIndex = 0;
-            itemIndex < exerciseList.length;
-            itemIndex++
-          ) {
-            if (currentExercise === exerciseList[itemIndex].exercise) {
-              exerciseListCopy[itemIndex].reps = parseInt(currentReps);
-              exerciseListCopy[itemIndex].weight = currentWeight;
-              if (currentDate !== undefined && currentDate !== null) {
-                exerciseListCopy[itemIndex].date = currentDate;
-              }
-              if (currentRating !== null && currentRating !== undefined) {
-                exerciseListCopy[itemIndex].rating = currentRating;
-              }
-            }
+          // set reps, weight, date, and rating
+          exerciseListCopy[itemIndex].reps = parseInt(currentReps);
+          exerciseListCopy[itemIndex].weight = currentWeight;
+          if (currentDate !== undefined && currentDate !== null) {
+            exerciseListCopy[itemIndex].date = currentDate;
           }
-
-          const docData = {
-            exerciseHistory: exerciseListCopy,
-          };
-
-          if (userID !== undefined) {
-            await setDoc(doc(database, "users", userID), docData, {
-              merge: true,
-            });
-            setSuccessMess("Information saved!");
+          if (currentRating !== null && currentRating !== undefined) {
+            exerciseListCopy[itemIndex].rating = currentRating;
           }
         }
-      } catch (error) {
-        console.error(error);
+      }
+
+      const docData = {
+        exerciseHistory: exerciseListCopy,
+      };
+
+      if (auth.currentUser !== null) {
+        const currentUser = auth.currentUser;
+        const userID = currentUser?.uid;
+
+        // update the user's database
+        if (userID !== undefined) {
+          await setDoc(doc(database, "users", userID), docData, {
+            merge: true,
+          });
+          setSuccessMess("Information saved!");
+        }
       }
     }
   };
 
+  /**
+   * Update the current date based on what was inputted on the calendar
+   * @param event - change made by user
+   */
   const handleDateChange = (event: ChangeEvent<HTMLInputElement>) => {
     const currentTimestamp = Timestamp.fromMillis(
       Date.parse(event.target.value)
@@ -306,6 +276,10 @@ export default function ExerciseHistory() {
     setCurrentDate(currentTimestamp);
   };
 
+  /**
+   * Change the save/edit button when the user clicks. Save data/change popup depending
+   * on what the button was
+   */
   function onSaveEditClick() {
     if (saveEditButton === "Save") {
       saveData();
@@ -313,12 +287,17 @@ export default function ExerciseHistory() {
 
     if (saveEditButton === "Edit") {
       setSaveEditButton("Save");
-
       setViewDataVisibility("none");
       setEditDataVisibility("block");
     }
   }
 
+  /**
+   * Register what the user clicked from the add new exercise drop down and call the method 
+   * to add it to their database
+   * 
+   * @param option - exercise that the user selects
+   */
   const selectNewExercise = (
     option: SingleValue<{ label: string; value: string }>
   ) => {
@@ -327,14 +306,16 @@ export default function ExerciseHistory() {
     }
   };
 
-  useEffect(() => { }, [exerciseToAdd]);
+  useEffect(() => {}, [exerciseToAdd]);
 
-  //converts the back-end generated workout json ito a useable object
-  //then splits that object into two values, one with its name and the other with
-  //a concactanated string of image path, instructions,
 
+  /**
+   * Adds a new exercise to the user's database by calling the backend to retrieve
+   * info about that exercise
+   */
   async function onAddExerciseClick() {
-    let exerciseMap: Array<any>;
+
+    // call the backend to access a json of the selected exercise 
     var apiFetchMap = await fetch(
       "http://localhost:3332/getMachine?machine=" + exerciseToAdd
     )
@@ -342,7 +323,8 @@ export default function ExerciseHistory() {
       .then((json) => {
         return json;
       });
-    //sets workoutMap state to the json returned by generateWorkout
+    
+    // sets workoutMap state to the json returned by generateWorkout
     const exercise = apiFetchMap;
 
     const currentDate: Date = new Date();
@@ -350,9 +332,10 @@ export default function ExerciseHistory() {
     const seconds: number = Math.floor(currentDate.getTime() / 1000);
     const nanoseconds: number = (currentDate.getTime() % 1000) * 1e6;
 
-    // Create Firebase Timestamp object
+    // create Firebase Timestamp object
     const currentTimestamp: Timestamp = new Timestamp(seconds, nanoseconds);
 
+    // create an object that contains all of the info
     const newExercise: ExerciseInfo = {
       exercise: exercise.name,
       rating: 0,
@@ -363,199 +346,186 @@ export default function ExerciseHistory() {
       date: currentTimestamp,
     };
 
-    if (auth.currentUser !== null) {
-      const currentUser = auth.currentUser;
-      const userID = currentUser?.uid;
-      const currentUserDoc = doc(database, "users", userID); // get document of current logged in user
+    if (userData !== undefined) {
+      const exerciseList: ExerciseInfo[] = userData.exerciseHistory; // get user's current exercise history
 
-      try {
-        const docSnapshot = await getDoc(currentUserDoc);
+      exerciseList.push(newExercise);
+      setExerciseHistNames(exerciseList.map((item) => item.exercise)); // extract exercise names from list
 
-        if (docSnapshot.exists()) {
-          const userData = docSnapshot.data();
-          const exerciseList: ExerciseInfo[] = userData.exerciseHistory; // get user's current exercise history
+      const docData = {
+        exerciseHistory: exerciseList,
+      };
 
-          exerciseList.push(newExercise);
-          setExerciseHistNames(exerciseList.map((item) => item.exercise)); // extract exercise names from list
-
-          const docData = {
-            exerciseHistory: exerciseList,
-          };
-
-          if (userID !== undefined) {
-            await setDoc(doc(database, "users", userID), docData, {
-              merge: true,
-            });
-          }
+      if (auth.currentUser !== null) {
+        const currentUser = auth.currentUser;
+        const userID = currentUser?.uid;
+        if (userID !== undefined) {
+          await setDoc(doc(database, "users", userID), docData, { // update the user's doc with the new exercise
+            merge: true,
+          });
         }
-      } catch (error) {
-        console.error(error);
       }
     }
   }
 
-  
-      
+  return (
+    <div>
+      <div className="content">
+        <p style={{ fontSize: "larger", fontWeight: "bold" }}>
+          Exercise History:
+        </p>
 
-  
-    return (
-      <div>
-        <div className="content">
-          <p style={{ fontSize: "larger", fontWeight: "bold" }}>
-            Exercise History:
-          </p>
+        <p>
+          Welcome to your exercise history!! Here you can view exercises that
+          you've saved, delete unwanted exercises, change the rating of an
+          exercise so that it becomes more/less frequent, and add your own
+          exercises!
+        </p>
+        <div
+          className="exercise-info-modal"
+          style={{ display: exerciseInfoVisibility }}
+        >
+          <span className="close-button" onClick={() => closeInfoPopup()}>
+            &times;
+          </span>
+          <div>
+            <p style={{ fontSize: "larger", fontWeight: "bold" }}>
+              Exercise: {currentExercise}
+            </p>
 
-          <p>
-            Welcome to your exercise history!! Here you can view exercises that
-            you've saved, delete unwanted exercises, change the rating of an
-            exercise so that it becomes more/less frequent, and add your own
-            exercises!
-          </p>
-          <div
-            className="exercise-info-modal"
-            style={{ display: exerciseInfoVisibility }}
-          >
-            <span className="close-button" onClick={() => closeInfoPopup()}>
-              &times;
-            </span>
-            <div>
-              <p style={{ fontSize: "larger", fontWeight: "bold" }}>
-                Exercise: {currentExercise}
-              </p>
-
-              <p>{currentDescription}</p>
-              {currentImage && (
-                <div className="image-container">
-                  <img
-                    src={currentImage}
-                    alt={`Image for ${currentImage}`}
-                    style={{
-                      width: "400px",
-                      height: "400px",
-                    }}
-                  />
-                </div>
-              )}
-              <div style={{ display: "flex" }}>
-                <div>
-                  <div>
-                    <p
-                      className="exercise-info"
-                      style={{ display: viewDataVisibility }}
-                    >
-                      Last Used:{" "}
-                      {currentDate &&
-                        new Date(currentDate.toMillis()).toDateString()}
-                    </p>
-                  </div>
-
-                  <div style={{ display: editDataVisibility }}>
-                    <label htmlFor="dateInput" className="calendar-popup">
-                      Last Used:
-                    </label>
-                    <input
-                      type="date"
-                      id="dateInput"
-                      name="dateInput"
-                      style={{ display: "block" }}
-                      onChange={handleDateChange}
-                    ></input>
-                  </div>
-                </div>
+            <p>{currentDescription}</p>
+            {currentImage && (
+              <div className="image-container">
+                <img
+                  src={currentImage}
+                  alt={`Image for ${currentImage}`}
+                  style={{
+                    width: "400px",
+                    height: "400px",
+                  }}
+                />
+              </div>
+            )}
+            <div style={{ display: "flex" }}>
+              <div>
                 <div>
                   <p
                     className="exercise-info"
                     style={{ display: viewDataVisibility }}
                   >
-                    Latest Reps: {currentReps?.toString()}
+                    Last Used:{" "}
+                    {currentDate &&
+                      new Date(currentDate.toMillis()).toDateString()}
                   </p>
-                  <div style={{ display: editDataVisibility }}>
-                    <div className="exercise-info-edit">
-                      <legend>Reps:</legend>
-                      <ControlledInput
-                        type="text"
-                        value={currentReps}
-                        setValue={setCurrentReps}
-                        ariaLabel={"reps input box"}
-                        className="exercise-info-edit"
-                      />
-                    </div>
-                  </div>
                 </div>
 
-                <div>
-                  <p
-                    className="exercise-info"
-                    style={{ display: viewDataVisibility }}
-                  >
-                    Latest Weights: {currentWeight?.toString()}
-                  </p>
-                  <div style={{ display: editDataVisibility }}>
-                    <div className="exercise-info-edit">
-                      <legend>Weight:</legend>
-                      <ControlledInput
-                        type="text"
-                        value={currentWeight}
-                        setValue={setCurrentWeight}
-                        ariaLabel={"weight input box"}
-                        className="exercise-info-edit"
-                      />
-                    </div>
-                  </div>
+                <div style={{ display: editDataVisibility }}>
+                  <label htmlFor="dateInput" className="calendar-popup">
+                    Last Used:
+                  </label>
+                  <input
+                    type="date"
+                    id="dateInput"
+                    name="dateInput"
+                    style={{ display: "block" }}
+                    onChange={handleDateChange}
+                  ></input>
                 </div>
-
-                <div>
-                  <p
-                    className="exercise-info"
-                    style={{ display: viewDataVisibility }}
-                  >
-                    Rating: {currentRating?.toString()}
-                  </p>
-                  <div style={{ display: editDataVisibility }}>
-                    <div className="exercise-info-edit">
-                      <label className="rating-dropdown exercise-info">
-                        Rating
-                        <select
-                          className="selector"
-                          onChange={handleRatingChange}
-                        >
-                          <option value="1">1</option>
-                          <option value="2">2</option>
-                          <option value="3">3</option>
-                          <option value="4">4</option>
-                          <option value="5">5</option>
-                        </select>
-                      </label>
-                    </div>
+              </div>
+              <div>
+                <p
+                  className="exercise-info"
+                  style={{ display: viewDataVisibility }}
+                >
+                  Latest Reps: {currentReps?.toString()}
+                </p>
+                <div style={{ display: editDataVisibility }}>
+                  <div className="exercise-info-edit">
+                    <legend>Reps:</legend>
+                    <ControlledInput
+                      type="text"
+                      value={currentReps}
+                      setValue={setCurrentReps}
+                      ariaLabel={"reps input box"}
+                      className="exercise-info-edit"
+                    />
                   </div>
                 </div>
               </div>
-              <button onClick={() => onSaveEditClick()}>{saveEditButton}</button>
-              <p>{successMess}</p>
-            </div>
-          </div>
-          {exerciseHistNames.map((item, index) => (
-            <div className="exercise-pair" key={index}>
-              <span
-                className="delete-button"
-                onClick={() => handleDeleteExercise(index)}
-              >
-                &times;
-              </span>
 
-              <p className="exercise" onClick={() => openInfoPopup(item)}>
-                {item}
-              </p>
+              <div>
+                <p
+                  className="exercise-info"
+                  style={{ display: viewDataVisibility }}
+                >
+                  Latest Weights: {currentWeight?.toString()}
+                </p>
+                <div style={{ display: editDataVisibility }}>
+                  <div className="exercise-info-edit">
+                    <legend>Weight:</legend>
+                    <ControlledInput
+                      type="text"
+                      value={currentWeight}
+                      setValue={setCurrentWeight}
+                      ariaLabel={"weight input box"}
+                      className="exercise-info-edit"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <p
+                  className="exercise-info"
+                  style={{ display: viewDataVisibility }}
+                >
+                  Rating: {currentRating?.toString()}
+                </p>
+                <div style={{ display: editDataVisibility }}>
+                  <div className="exercise-info-edit">
+                    <label className="rating-dropdown exercise-info">
+                      Rating
+                      <select
+                        className="selector"
+                        onChange={handleRatingChange}
+                      >
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                      </select>
+                    </label>
+                  </div>
+                </div>
+              </div>
             </div>
-          ))}
-          <div>
-            <p style={{ fontSize: "larger", fontWeight: "bold" }}>
-              Add an exercise to your history
-            </p>
-            <Select options={machineData} onChange={selectNewExercise} />
+            <button onClick={() => onSaveEditClick()}>{saveEditButton}</button>
+            <p>{successMess}</p>
           </div>
-          <button onClick={onAddExerciseClick}>Add exercise</button>
         </div>
+        {exerciseHistNames.map((item, index) => (
+          <div className="exercise-pair" key={index}>
+            <span
+              className="delete-button"
+              onClick={() => handleDeleteExercise(index)}
+            >
+              &times;
+            </span>
+
+            <p className="exercise" onClick={() => openInfoPopup(item)}>
+              {item}
+            </p>
+          </div>
+        ))}
+        <div>
+          <p style={{ fontSize: "larger", fontWeight: "bold" }}>
+            Add an exercise to your history
+          </p>
+          <Select options={machineData} onChange={selectNewExercise} />
+        </div>
+        <button onClick={onAddExerciseClick}>Add exercise</button>
       </div>
-    );
-  }
+    </div>
+  );
+}
