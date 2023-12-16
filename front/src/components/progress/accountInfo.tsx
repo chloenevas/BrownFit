@@ -66,7 +66,9 @@ export default function AccountInfo() {
         };
 
         if (userID) {
-          await setDoc(doc(database, "users", userID), docData);
+           await setDoc(doc(database, "users", userID), docData, {
+             merge: true,
+           });
           // Update state with new values
           setFirstName(newFirstName);
           setLastName(newLastName);
