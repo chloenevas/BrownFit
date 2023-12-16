@@ -110,15 +110,7 @@ export default function AUTHMODAL() {
               email: userEmail,
               firstName: firstName,
               lastName: lastName,
-              exerciseHistory: {
-                 rating: Number,
-                exercise: String,
-                description: String,
-                image: null,
-                date: Timestamp,
-                reps: null,
-                weight: null
-              },
+              exerciseHistory: [],
             });
           })
 

@@ -110,7 +110,6 @@ export default function ExerciseHistory() {
           setExerciseHistNames(names); // set exercise history to be those names
         }
         console.log("setup called");
-
       }
     };
     getUserData();
