@@ -105,10 +105,12 @@ export default function ExerciseHistory() {
       if (userData !== undefined) {
         const exerciseList: ExerciseInfo[] = userData.exerciseHistory; // get user's current exercise history
         setExerciseHistory(exerciseList);
-        const names = exerciseList.map((item) => item.exercise);
+        if (exerciseList.length !== 0) {
+          const names = exerciseList.map((item) => item.exercise);
+          setExerciseHistNames(names); // set exercise history to be those names
+        }
         console.log("setup called");
 
-        setExerciseHistNames(names); // set exercise history to be those names
       }
     };
     getUserData();
@@ -203,7 +205,9 @@ export default function ExerciseHistory() {
         }
       }
 
-      setExerciseHistNames(exerciseList.map((item) => item.exercise)); // extract exercise names from list
+      if (exerciseList.length !== 0) {
+        setExerciseHistNames(exerciseList.map((item) => item.exercise)); // extract exercise names from list
+      }
 
       const docData = {
         exerciseHistory: exerciseList, // update history with new list
@@ -232,7 +236,8 @@ export default function ExerciseHistory() {
       const exerciseListCopy: ExerciseInfo[] = [...exerciseList]; // make copy of exerciseList
 
       for (let itemIndex = 0; itemIndex < exerciseList.length; itemIndex++) {
-        if (currentExercise === exerciseList[itemIndex].exercise) { // access exercise in database
+        if (currentExercise === exerciseList[itemIndex].exercise) {
+          // access exercise in database
 
           // set reps, weight, date, and rating
           exerciseListCopy[itemIndex].reps = parseInt(currentReps);
@@ -293,9 +298,9 @@ export default function ExerciseHistory() {
   }
 
   /**
-   * Register what the user clicked from the add new exercise drop down and call the method 
+   * Register what the user clicked from the add new exercise drop down and call the method
    * to add it to their database
-   * 
+   *
    * @param option - exercise that the user selects
    */
   const selectNewExercise = (
@@ -308,14 +313,12 @@ export default function ExerciseHistory() {
 
   useEffect(() => {}, [exerciseToAdd]);
 
-
   /**
    * Adds a new exercise to the user's database by calling the backend to retrieve
    * info about that exercise
    */
   async function onAddExerciseClick() {
-
-    // call the backend to access a json of the selected exercise 
+    // call the backend to access a json of the selected exercise
     var apiFetchMap = await fetch(
       "http://localhost:3332/getMachine?machine=" + exerciseToAdd
     )
@@ -323,7 +326,7 @@ export default function ExerciseHistory() {
       .then((json) => {
         return json;
       });
-    
+
     // sets workoutMap state to the json returned by generateWorkout
     const exercise = apiFetchMap;
 
@@ -350,7 +353,9 @@ export default function ExerciseHistory() {
       const exerciseList: ExerciseInfo[] = userData.exerciseHistory; // get user's current exercise history
 
       exerciseList.push(newExercise);
-      setExerciseHistNames(exerciseList.map((item) => item.exercise)); // extract exercise names from list
+      if (exerciseList.length !== 0) {
+        setExerciseHistNames(exerciseList.map((item) => item.exercise)); // extract exercise names from list
+      }
 
       const docData = {
         exerciseHistory: exerciseList,
@@ -360,7 +365,8 @@ export default function ExerciseHistory() {
         const currentUser = auth.currentUser;
         const userID = currentUser?.uid;
         if (userID !== undefined) {
-          await setDoc(doc(database, "users", userID), docData, { // update the user's doc with the new exercise
+          await setDoc(doc(database, "users", userID), docData, {
+            // update the user's doc with the new exercise
             merge: true,
           });
         }
@@ -439,17 +445,19 @@ export default function ExerciseHistory() {
                 >
                   Latest Reps: {currentReps?.toString()}
                 </p>
-                <div style={{ display: editDataVisibility }}>
-                  <div className="exercise-info-edit">
-                    <legend>Reps:</legend>
-                    <ControlledInput
-                      type="text"
-                      value={currentReps}
-                      setValue={setCurrentReps}
-                      ariaLabel={"reps input box"}
-                      className="exercise-info-edit"
-                    />
-                  </div>
+                <div
+                  className="exercise-info-edit"
+                  style={{ display: editDataVisibility }}
+                >
+                  {" "}
+                  <legend>Reps:</legend>
+                  <ControlledInput
+                    type="text"
+                    value={currentReps}
+                    setValue={setCurrentReps}
+                    ariaLabel={"reps input box"}
+                    className="exercise-info-edit"
+                  />
                 </div>
               </div>
 
@@ -460,17 +468,18 @@ export default function ExerciseHistory() {
                 >
                   Latest Weights: {currentWeight?.toString()}
                 </p>
-                <div style={{ display: editDataVisibility }}>
-                  <div className="exercise-info-edit">
-                    <legend>Weight:</legend>
-                    <ControlledInput
-                      type="text"
-                      value={currentWeight}
-                      setValue={setCurrentWeight}
-                      ariaLabel={"weight input box"}
-                      className="exercise-info-edit"
-                    />
-                  </div>
+                <div
+                  className="exercise-info-edit"
+                  style={{ display: editDataVisibility }}
+                >
+                  <legend>Weight:</legend>
+                  <ControlledInput
+                    type="text"
+                    value={currentWeight}
+                    setValue={setCurrentWeight}
+                    ariaLabel={"weight input box"}
+                    className="exercise-info-edit"
+                  />
                 </div>
               </div>
 
@@ -481,22 +490,20 @@ export default function ExerciseHistory() {
                 >
                   Rating: {currentRating?.toString()}
                 </p>
-                <div style={{ display: editDataVisibility }}>
-                  <div className="exercise-info-edit">
-                    <label className="rating-dropdown exercise-info">
-                      Rating
-                      <select
-                        className="selector"
-                        onChange={handleRatingChange}
-                      >
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                      </select>
-                    </label>
-                  </div>
+                <div
+                  className="exercise-info-edit"
+                  style={{ display: editDataVisibility }}
+                >
+                  <label className="rating-dropdown exercise-info">
+                    Rating
+                    <select className="selector" onChange={handleRatingChange}>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                    </select>
+                  </label>
                 </div>
               </div>
             </div>
