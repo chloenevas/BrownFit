@@ -204,9 +204,8 @@ export default function ExerciseHistory() {
         }
       }
 
-      if (exerciseList.length !== 0) {
         setExerciseHistNames(exerciseList.map((item) => item.exercise)); // extract exercise names from list
-      }
+      
 
       const docData = {
         exerciseHistory: exerciseList, // update history with new list
