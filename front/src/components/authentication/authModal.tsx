@@ -5,7 +5,7 @@ import {
   createUserWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, Timestamp } from "firebase/firestore";
 
 import "../../styles/login.css";
 import { ControlledInput } from "../ControlledInput";
@@ -110,7 +110,7 @@ export default function AUTHMODAL() {
               email: userEmail,
               firstName: firstName,
               lastName: lastName,
-              exerciseHistory: {},
+              exerciseHistory: [],
             });
           })
 
