@@ -8,6 +8,15 @@
 
 ## Design Choices
 
+    Some design choices on the backend include strategy pattern for the API and the algorithm chosen. The API strategy 
+    pattern makes it very convienient for us or a future developer to connect to a different API using dependency
+    injection. Simply adding another end point and depency injecting the new API, and implementing the method in the 
+    new API class will allow a new database of exercises to be used. The entire algorithm class is full of design choices. 
+    One would be the decision to weight exercises based on primary and secondary muscle prevelance, and also the weighting
+    of exercises based on the user's rating in the database. 
+    
+    In the front end... TODO
+
 ### Class/Interface Relationships
     FRONT: 
         In the front, we have several different sections such as App, authentication, generator, home, progress, 
@@ -39,25 +48,50 @@
     
     [ANIKA EXPLANATION ABOUT ADDITIONAL]
 
-    BACK:
-    [JACKSON & ILAN EXPLANATION ABOUT BACK]
+    The backend of this project uses an algorithm to select a combination of nelson specific machines and API free weight exercises to 
+    design a workout based on certain queries and possibly a user's account information. The first important feature of the backend is the 
+    nelson database, which is a json file with information of every machine in the nelson fitness center. The nelson machine database 
+    class parses the json and turns it into a map of machine names to machine objects, which are defined by the machine class. The basic 
+    functionality of the backend is in the algorithm class, which connects to the workout handler. The handler connects to the front end, 
+    which recieves a query involving a duration, two muscles, and a goal to convert into a workout. The algorithm converts these queries into 
+    a workout by contacting the nelson database and also the external API in the algorithm class. If the user is signed in on the frontend, 
+    the backend also recieves the user account information to process user ratings into the workout. All of these factors combine to create
+    a nelson specific workout for a user who is signed in or not signed in. The server has two endpoints: one for the workout generation
+    (/generateWorkout) and one for the adding of machines (/getMachine). The front end can query any machine by name and be returned the 
+    full machine object to process by contacting the machine handler class. This is used when the user adds a machine to their workout history 
+    by name. Our testing is explained thoroughly in the testing section. We use stategy pattern with our list sorting and API. Our list sorter
+    interface can be implemented to any class, but must define the weighted machine method, which can weight machines differtly when being 
+    decided for our final workout. The API interface requires the implementation of querying an API and getting a list of exercises. These
+    strategy patterns are only used in 1 class each in our program, but could help a later developer seemlessly transition to their 
+    adapted algorithm, or if we later wanted to create a second algorithm or API connection. 
  
 ### Data Structures/High Level Explanations
    
 ## Errors/Bugs
 
+    There are no known errors or bugs in the program!!
+
 ## Tests
-    
+    The backend testing contains both unit testing and integration testing. The unit tests thoroughly test the algorithm. Our unit tests
+    consists or random, fuzz, and mock testing. Our most complex test randomly generates a front end query and generates a workout based on 
+    this query. We then repeatedly make assertions about the workout to make sure it is properly formatted and other details are correct. 
+    We fuzz test this, so this run thousands of times without failure. We also check that our algorithm weighs user preferences more 
+    significantly by fuzz testing three exercises with different ratings and making sure the appear in increasing rating order from least 
+    to most prevelant. Our integration testing consists of mocking the API using our strategy pattern and asserting that the mocked API 
+    exercise appears in the workout generated. We also assert that the workout generates with a given query. This is also tivially tested
+    because our program integrates properly. 
 
 ## How to...
 
 ### Run the tests:
-    
+
+    In the backend, simply enter one of the testing files in the test folder and click the green play button. Note that some tests may 
+    fail intentionally, so be sure to note which tests pass and fail rather than running the entire class. 
+    In the frontend, RUN THE PLAYWRIGHT TESTS
 
 ### Run the program:
-To run the program, start the server from the backend using the play button from the Server file and ensure that it's running
-by viewing the localhost in the terminal. From the front, ensure that you've done npm install as well as npm install
-react-select@3.1.0 (this is repsonsible for the add exercise drop down). Then navigate to the "front" directory and enter
-npm start. From here, open the front end and you should be all set to navigate through and interact with the website!
-
-   
+    To run the program, start the server from the backend using the play button from the Server file and ensure that it's running
+    by viewing the localhost in the terminal. From the front, ensure that you've done npm install as well as npm install
+    react-select@3.1.0 (this is repsonsible for the add exercise drop down). Then navigate to the "front" directory and enter
+    npm start. From here, open the front end and you should be all set to navigate through and interact with the website!
+    
