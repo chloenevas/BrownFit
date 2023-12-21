@@ -27,7 +27,7 @@ public class Algorithm {
      */
     public Algorithm(ListSorter weighMachines, HashMap<String, Machine> database, ExerciseAPI API)
         throws IOException {
-        this.database = new NelsonMachineDatabase().getDatabase();
+        this.database = database;
         this.API = API;
         this.weighMachines = weighMachines;
         this.initializeDuration();

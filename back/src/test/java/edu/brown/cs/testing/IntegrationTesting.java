@@ -7,14 +7,17 @@ import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
 import edu.brown.cs.student.main.database.NelsonMachineDatabase;
 import edu.brown.cs.student.main.handlers.WorkoutHandler;
+import edu.brown.cs.student.main.records.Exercise;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import okio.Buffer;
+import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,8 +36,8 @@ public class IntegrationTesting {
   }
 
   // Helping Moshi serialize Json responses; see the gearup for more info.
-  private final Type mapStringObject = Types.newParameterizedType(Map.class, String.class, Object.class);
-  private JsonAdapter<Map<String, Object>> adapter;
+  private final Type mapStringObject = Types.newParameterizedType(List.class, Object.class);
+  private JsonAdapter<List<Object>> adapter;
   //private JsonAdapter<CensusData> censusDataAdapter;
 
   @BeforeEach
@@ -44,7 +47,8 @@ public class IntegrationTesting {
     // Use *MOCKED* data when in this test environment.
     // Notice that the WeatherHandler code doesn't need to care whether it has
     // "real" data or "fake" data. Good separation of concerns enables better testing.
-    Spark.get("/generateWorkout", new WorkoutHandler(new NelsonMachineDatabase().getDatabase(), new MockAPI()));
+    Spark.get("/generateWorkout",
+        new WorkoutHandler(new NelsonMachineDatabase().getDatabase(), new MockAPI()));
     Spark.awaitInitialization(); // don't continue until the server is listening
 
     // New Moshi adapter for responses (and requests, too; see a few lines below)
@@ -69,8 +73,8 @@ public class IntegrationTesting {
   /**
    * Helper to start a connection to a specific API endpoint/params
    *
-   * @param apiCall the call string, including endpoint
-   *                (Note: this would be better if it had more structure!)
+   * @param apiCall the call string, including endpoint (Note: this would be better if it had more
+   *                structure!)
    * @return the connection for the given URL, just after connecting
    * @throws IOException if the connection fails for some reason
    */
@@ -91,35 +95,27 @@ public class IntegrationTesting {
   public void testGenerateSuccess() throws IOException {
     /////////// LOAD DATASOURCE ///////////
     // Set up the request, make the request
-    HttpURLConnection loadConnection = tryRequest("generateWorkout?duration=30%20minutes%20or%20less&"
-        + "muscle1=biceps&muscle2=N/A&goal=strengthen%20muscles&userWorkoutHistory=");
+    HttpURLConnection loadConnection = tryRequest(
+        "generateWorkout?duration=30%20minutes%20or%20less&"
+            + "&muscle1=biceps&muscle2=N/A&goal=strengthen%20muscles&history=");
     // Get an OK response (the *connection* worked, the *API* provides an error response)
     assertEquals(200, loadConnection.getResponseCode());
     // Get the expected response: a success
-    Map<String, Object> body = adapter.fromJson(new Buffer().readFrom(loadConnection.getInputStream()));
-    showDetailsIfError(body);
-    assertEquals("success", body.get("type"));
-
-    // Mocked data: correct temp? We know what it is, because we mocked.
-    assertEquals(
-        //censusDataAdapter.toJson(new CensusData(83.5)),
-        "83.5",
-        body.get("broadband_data"));
-    assertEquals(
-        "California",
-        body.get("state_name"));
-    assertEquals(
-        "Kings County, California",
-        body.get("county_name"));
-    assertEquals(
-        "success",
-        body.get("type"));
-    loadConnection.disconnect();
-  }
-
-  private void showDetailsIfError(Map<String, Object> body) {
-    if (body.containsKey("type") && "error".equals(body.get("type"))) {
-      System.out.println(body.toString());
-    }
+    List<Object> body = adapter.fromJson(new Buffer().readFrom(loadConnection.getInputStream()));
+    System.out.println(body.get(2));
+    String name = "Incline Hammer Curls";
+    String type = "strength";
+    String muscle = "biceps";
+    String equipment = "dumbbell";
+    String difficulty = "beginner";
+    String instructions = "Seat yourself on an incline bench with a dumbbell in each hand. "
+        + "You should pressed firmly against he back with your feet together. "
+        + "Allow the dumbbells to hang straight down at your side, holding them with a neutral grip. "
+        + "This will be your starting position. Initiate the movement by flexing at the elbow, "
+        + "attempting to keep the upper arm stationary. Continue to the top of the movement and pause, "
+        + "then slowly return to the start position.";
+    Exercise exercise = new Exercise(name, type, muscle, equipment, difficulty, instructions);
+    // asserts that the workout contains the mock workout from the mock API, fails due to formatting only
+    assertEquals(body.get(2), exercise);
   }
 }
