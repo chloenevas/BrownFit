@@ -1,6 +1,7 @@
 package edu.brown.cs.student.main.algorithm;
 
 import edu.brown.cs.student.main.database.ApiRequest;
+import edu.brown.cs.student.main.database.ExerciseAPI;
 import edu.brown.cs.student.main.database.NelsonMachineDatabase;
 import edu.brown.cs.student.main.records.Exercise;
 import edu.brown.cs.student.main.records.Machine;
@@ -17,6 +18,7 @@ import java.util.Map;
 public class Algorithm {
     private HashMap<String, Integer> durationMap;
     private HashMap<String, Machine> database;
+    private ExerciseAPI API;
 
     private ListSorter weighMachines;
 
@@ -27,9 +29,9 @@ public class Algorithm {
      * @throws IOException - Throws IO exception from machine database, which should never be called because we created
      * the database and know that no error is produced but handled in case.
      */
-    public Algorithm(ListSorter weighMachines) throws IOException {
-        NelsonMachineDatabase database = new NelsonMachineDatabase();
-        this.database = database.getDatabase();
+    public Algorithm(ListSorter weighMachines, HashMap<String, Machine> database, ExerciseAPI API) throws IOException {
+        this.database = database;
+        this.API = API;
         this.initializeDuration();
         this.weighMachines = weighMachines;
     }
@@ -86,8 +88,6 @@ public class Algorithm {
         }
 
         // Calls API for the target muscle and goal
-
-        ApiRequest API = new ApiRequest();
         String apiGoal;
         if (goal.equals("just get a good sweat in!") || goal.equals("burn calories")){
             apiGoal = "cardio";
@@ -95,7 +95,7 @@ public class Algorithm {
         else{
             apiGoal = "strength";
         }
-        List<Exercise> APIlist= API.makeExerciseAPIRequest(muscle, apiGoal);
+        List<Exercise> APIlist= this.API.makeExerciseAPIRequest(muscle, apiGoal);
         if (APIlist.isEmpty()){
             return new ArrayList<>();
         }

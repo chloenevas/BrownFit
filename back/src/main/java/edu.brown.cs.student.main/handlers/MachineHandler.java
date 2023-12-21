@@ -36,7 +36,6 @@ public class MachineHandler implements Route {
             }
 
             Machine machine = new NelsonMachineDatabase().getDatabase().get(machineName);
-            System.out.println(machine.getClass());
 
             Moshi moshi = new Moshi.Builder().build();
             Type machineObject = Types.newParameterizedType(Machine.class, Object.class);

@@ -6,8 +6,6 @@ package edu.brown.cs.student.main.records;
 public class Machine {
 
     private String name;
-    private String img;
-    private String instructions;
     private String[] muscle;
     private String weight;
     private String reps;
@@ -20,8 +18,6 @@ public class Machine {
      */
     public Machine(String name, String img, String instructions, String[] muscle){
         this.name = name;
-        this.img = img;
-        this.instructions = instructions;
         this.muscle = muscle;
         this.weight = "";
         this.reps = "";

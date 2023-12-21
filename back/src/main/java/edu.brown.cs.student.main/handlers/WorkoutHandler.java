@@ -6,6 +6,9 @@ import com.squareup.moshi.Types;
 import edu.brown.cs.student.main.algorithm.Algorithm;
 import edu.brown.cs.student.main.algorithm.ListSorter;
 import edu.brown.cs.student.main.algorithm.WeightByUserRank;
+import edu.brown.cs.student.main.database.ExerciseAPI;
+import edu.brown.cs.student.main.records.Machine;
+import java.util.HashMap;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -20,6 +23,13 @@ import java.util.List;
  * Class called by server to generate a workout
  */
 public class WorkoutHandler implements Route {
+
+    private ExerciseAPI API;
+    private HashMap<String, Machine> database;
+    public WorkoutHandler(HashMap<String, Machine> database, ExerciseAPI API) {
+        this.API = API;
+        this.database = database;
+    }
 
     /**
      * Handle method overriden from route which calls generate workout from the algorithm class. Requests
@@ -54,7 +64,6 @@ public class WorkoutHandler implements Route {
             String muscle1 = request.queryParams("muscle1");
             String muscle2 = request.queryParams("muscle2");
             String goal = request.queryParams("goal");
-            System.out.println(goal);
             String userWorkoutHistory = request.queryParams("history");
 
 
@@ -81,12 +90,12 @@ public class WorkoutHandler implements Route {
 
             // calls algorithm to make workout whose exercises are chosen based on the dependency injected listSorter
             //since our sorter chooses machines based off of user rank, this algorithm instance will do the same
-            Algorithm algo = new Algorithm(weighByUserRank);
+            Algorithm algo = new Algorithm(weighByUserRank, this.database, this.API);
             List<Object> returnMap = algo.generateWorkout(duration, muscle1, muscle2, goal, userWorkoutHistory);
-            System.out.println(returnMap);
             return adapter.toJson(returnMap);
         }
         catch (InvalidInputException e){
+            System.out.println(e.getMessage());
             return e.getMessage();
         }
     }

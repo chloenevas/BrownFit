@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Class connecting to the API that makes request based on muscle and goal.
  */
-public class ApiRequest {
+public class ApiRequest implements ExerciseAPI {
 
   /**
    * Calls the API with a given muscle and goal. Throws exceptions if malformed URL or IOException, which are never
@@ -27,6 +27,7 @@ public class ApiRequest {
    * @throws MalformedURLException - Explained above.
    * @throws IOException - Explained above.
    */
+  @Override
     public List<Exercise> makeExerciseAPIRequest(String muscle, String goal) throws MalformedURLException, IOException {
       // converts muscle query from front end to correct query for API
         String apimuscle = switch (muscle) {
