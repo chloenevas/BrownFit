@@ -15,8 +15,14 @@
     One would be the decision to weight exercises based on primary and secondary muscle prevelance, and also the weighting
     of exercises based on the user's rating in the database. 
     
-    In the front end... TODO
-
+    In the front end, something we made use of a lot were popups to display further info about topics. The design strategy
+    for this was using the visibility of the popup to make it either appear or disappear upon certain actions. Another design
+    choice was to set up the firebase authentication/database in index.tsx and then import that throughout to the different 
+    files that needed it. This way, it was stored in one general location but could then be accessed throughout all the files.
+    To work with the database and the structure of the exercise field, we created an exercise interface that had the necessary
+    categories such as reps, weight, date, exercise name, image, and description. This way, when we wanted to create a new 
+    exercise to add to the database, we could create it of this interface type so that everything was standardized.
+ 
 ### Class/Interface Relationships
     FRONT: 
         In the front, we have several different sections such as App, authentication, generator, home, progress, 

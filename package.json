@@ -3,6 +3,6 @@
     "@types/react-select": "^5.0.1"
   },
   "dependencies": {
-    "react-select": "^3.1.0"
+    "react-select": "^3.2.0"
   }
 }
