@@ -22,6 +22,9 @@
     To work with the database and the structure of the exercise field, we created an exercise interface that had the necessary
     categories such as reps, weight, date, exercise name, image, and description. This way, when we wanted to create a new 
     exercise to add to the database, we could create it of this interface type so that everything was standardized.
+
+    We've expanded our platform to offer even more valuable information through an additional information page. This section covers essential elements that could significantly enhance user experience if integrated into our site upon deployment. Included are FAQs, hyperlinked to provide  answers to user queries. Visitors can explore comprehensive details on hypertrophy and the significance of rest days, ensuring a well-rounded understanding of fitness concepts. Moreover, we've curated an exclusive gym playlist directly accessible from Spotify. These static components hold immense potential to benefit our users, providing indispensable resources and information.
+
  
 ### Class/Interface Relationships
     FRONT: 
