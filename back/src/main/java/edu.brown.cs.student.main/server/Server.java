@@ -41,7 +41,9 @@ public class Server {
 
     /** Our main method that constructs and runs a new server */
     public static void main(String[] args) throws IOException {
-        new Server(new NelsonMachineDatabase().getDatabase(), new ApiRequest());
+        NelsonMachineDatabase nelsonMachineDatabase = new NelsonMachineDatabase();
+        HashMap<String, Machine> database = nelsonMachineDatabase.getDatabase();
+        new Server(database, new ApiRequest());
         System.out.println("Server started at http://localhost:" + port + "; exiting main...");
 
     }

@@ -90,12 +90,12 @@ public class WorkoutHandler implements Route {
 
             // calls algorithm to make workout whose exercises are chosen based on the dependency injected listSorter
             //since our sorter chooses machines based off of user rank, this algorithm instance will do the same
+            System.out.println(this.database);
             Algorithm algo = new Algorithm(weighByUserRank, this.database, this.API);
             List<Object> returnMap = algo.generateWorkout(duration, muscle1, muscle2, goal, userWorkoutHistory);
             return adapter.toJson(returnMap);
         }
         catch (InvalidInputException e){
-            System.out.println(e.getMessage());
             return e.getMessage();
         }
     }

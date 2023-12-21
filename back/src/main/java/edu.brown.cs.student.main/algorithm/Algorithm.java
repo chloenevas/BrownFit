@@ -1,6 +1,5 @@
 package edu.brown.cs.student.main.algorithm;
 
-import edu.brown.cs.student.main.database.ApiRequest;
 import edu.brown.cs.student.main.database.ExerciseAPI;
 import edu.brown.cs.student.main.database.NelsonMachineDatabase;
 import edu.brown.cs.student.main.records.Exercise;
@@ -19,21 +18,19 @@ public class Algorithm {
     private HashMap<String, Integer> durationMap;
     private HashMap<String, Machine> database;
     private ExerciseAPI API;
-
     private ListSorter weighMachines;
 
     /**
      * Constructor initializes the nelson database and sets up database and also initializes the duration hashmap,
      * which maps front end queries to number of exercises in the workout.
      * @param weighMachines the listSorter object that specifies how the algorithm should pick machines
-     * @throws IOException - Throws IO exception from machine database, which should never be called because we created
-     * the database and know that no error is produced but handled in case.
      */
-    public Algorithm(ListSorter weighMachines, HashMap<String, Machine> database, ExerciseAPI API) throws IOException {
-        this.database = database;
+    public Algorithm(ListSorter weighMachines, HashMap<String, Machine> database, ExerciseAPI API)
+        throws IOException {
+        this.database = new NelsonMachineDatabase().getDatabase();
         this.API = API;
-        this.initializeDuration();
         this.weighMachines = weighMachines;
+        this.initializeDuration();
     }
 
     /**

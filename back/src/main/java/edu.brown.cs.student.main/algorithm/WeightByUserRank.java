@@ -36,7 +36,6 @@ public class WeightByUserRank implements ListSorter {
      * @return - returns a list of weighted machines to be selected for the workout
      */
     public List<Machine> getListWeightedByUserRank(List<Machine> machines, String muscle2, String history){
-        int num = machines.size();
 
         //make a list of machine objects to track the weights of how probable it is we choose that machine
         //i.e., the more times that machine is added to the list, the more likely we are to pick it

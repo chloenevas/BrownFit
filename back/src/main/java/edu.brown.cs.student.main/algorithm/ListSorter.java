@@ -1,7 +1,6 @@
 package edu.brown.cs.student.main.algorithm;
 
 import edu.brown.cs.student.main.records.Machine;
-
 import java.util.List;
 
 
